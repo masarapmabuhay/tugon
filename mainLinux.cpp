@@ -222,7 +222,9 @@ void doInput(void)
 void prepareScene(void)
 {
 	//note: SDL color max 255; GIMP color max 100
-	SDL_SetRenderDrawColor(mySDLRenderer, 0, 255*0.667, 255*0.494, 255); //blue green
+	//edited by Mike, 20211111
+//	SDL_SetRenderDrawColor(mySDLRenderer, 0, 255*0.667, 255*0.494, 255); //blue green
+	SDL_SetRenderDrawColor(mySDLRenderer, 0, 0, 0, 255); //black
 	
 	SDL_RenderClear(mySDLRenderer);
 }
@@ -244,13 +246,39 @@ SDL_Texture *loadTexture(char *filename)
 	return texture;
 }
 
+
+//added by Mike, 20211111
+void drawGrid()
+{
+  int iRowCountMax=10;
+  int iColumnCountMax=18;
+  
+  float fGridSquareWidth = (myWindowWidthAsPixel)/iColumnCountMax; //example: 136.60
+  float fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 76.80
+
+  //note: SDL color max 255; GIMP color max 100
+	SDL_SetRenderDrawColor(mySDLRenderer, 0, 255*1, 0, 255); //green
+    
+  // Draw a Green Line
+  //rows
+  for (int iRowCount=0; iRowCount<=iRowCountMax; iRowCount++) {
+			SDL_RenderDrawLine(mySDLRenderer,
+        0, iRowCount*fGridSquareHeight, iColumnCountMax*fGridSquareWidth, iRowCount*fGridSquareHeight);
+   }
+
+  //columns
+  for (int iColumnCount=0; iColumnCount<=iColumnCountMax; iColumnCount++) {
+			SDL_RenderDrawLine(mySDLRenderer,
+        iColumnCount*fGridSquareWidth, 0, iColumnCount*fGridSquareWidth, iRowCountMax*fGridSquareHeight);
+   }
+}
+
 //Reference: http://wiki.libsdl.org/SDL_RenderCopy;
 //last accessed: 20211111
 void draw(SDL_Texture *texture, int x, int y)
 {
 	int iPilotWidth=64;
 	int iPilotHeight=64;
-
 	
   //Rectangles for drawing which will specify source (inside the texture)
   //and target (on the screen) for rendering our textures.
@@ -258,7 +286,6 @@ void draw(SDL_Texture *texture, int x, int y)
   SDL_Rect DestR;
   
 	iCountTaoAnimationFrame=(iCountTaoAnimationFrame)%3;                    																				    
-
   SrcR.x = 0+ iCountTaoAnimationFrame*iPilotWidth;
   SrcR.y = 0;
   SrcR.w = iPilotWidth;
@@ -281,7 +308,12 @@ void draw(SDL_Texture *texture, int x, int y)
   }
 
 	SDL_RenderClear(mySDLRenderer);
+	//added by Mike, 20211111
+	//TO-DO: -reverify: excess drawn pixel if drawGrid() is executed earlier
 	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
+
+	//added by Mike, 20211111
+	drawGrid();
 }
 
 void update() {
