@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211111
+ * @date updated: 20211112
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -246,6 +246,40 @@ SDL_Texture *loadTexture(char *filename)
 	return texture;
 }
 
+//added by Mike, 20211112
+//Reference: https://stackoverflow.com/questions/28346989/drawing-and-filling-a-circle
+//last accessed: 20211112
+//answer by: Edgar Luque, 20170127T2024
+//note: excess space; due to 1366 x 768; width x height?
+void drawShieldPrev()
+{
+  int iRowCountMax=10;
+  int iColumnCountMax=18;
+  
+  float fGridSquareWidth = (myWindowWidthAsPixel)/iColumnCountMax; //example: 136.60
+  float fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 76.80
+
+	SDL_Point center = {myWindowWidthAsPixel/2, myWindowHeightAsPixel/2};
+
+	int radius = fGridSquareHeight; //fGridSquareWidth
+	
+  //note: SDL color max 255; GIMP color max 100
+	SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 0, 0, 255); //red
+    
+	for (int w = 0; w < radius * 2; w++)
+  {
+      for (int h = 0; h < radius * 2; h++)
+      {
+          int dx = radius - w; //horizontal offset
+          int dy = radius - h; //vertical offset
+          if ((dx*dx + dy*dy) <= (radius * radius))
+          {
+//              SDL_RenderDrawPoint(mySDLRenderer, center.x + dx, center.y + dy);
+              SDL_RenderDrawPoint(mySDLRenderer, center.x + dx - w/2, center.y + dy - h/2);
+          }
+      }
+  }
+}
 
 //added by Mike, 20211111
 void drawGrid()
@@ -275,7 +309,7 @@ void drawGrid()
 
 //Reference: http://wiki.libsdl.org/SDL_RenderCopy;
 //last accessed: 20211111
-void draw(SDL_Texture *texture, int x, int y)
+void drawPrev(SDL_Texture *texture, int x, int y)
 {
 	int iPilotWidth=64;
 	int iPilotHeight=64;
@@ -314,7 +348,75 @@ void draw(SDL_Texture *texture, int x, int y)
 
 	//added by Mike, 20211111
 	drawGrid();
+	
+	//added by Mike, 20211112
+//	drawShield();
 }
+
+void draw(SDL_Texture *texture, int x, int y)
+{
+	int iPilotWidth=16;
+	int iPilotHeight=16;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+  
+//	iCountTaoAnimationFrame=(iCountTaoAnimationFrame)%3;                    																			
+	iCountTaoAnimationFrame=1;                    																				
+	    
+//  SrcR.x = 0+ iCountTaoAnimationFrame*iPilotWidth;
+  SrcR.x = 0;
+//  SrcR.y = 0;
+  SrcR.y = 0+iPilotHeight;
+
+  SrcR.w = iPilotWidth;
+  SrcR.h = iPilotHeight;
+
+/*	//edited by Mike, 20211112
+  DestR.x = x;
+  DestR.y = y;
+  
+  DestR.w = iPilotWidth;
+  DestR.h = iPilotHeight;
+*/
+  DestR.x = x;
+  DestR.y = y;
+  
+  DestR.x = x-iPilotWidth*5-5;
+//  DestR.y = y-iPilotHeight*5;
+  DestR.y = y-iPilotHeight*5+(iPilotHeight*5)/2-5;
+  
+	//increased scale output
+  DestR.w = iPilotWidth*5;
+  DestR.h = iPilotHeight*5;
+
+/*  	
+  int iCount;
+  for (iCount=0; iCount<iNumOfKeyTypes; iCount++) {
+		if (myKeysDown[iCount]==TRUE) {
+ 			iCountTaoAnimationFrame=iCountTaoAnimationFrame+1;																				
+ 			break;
+		}
+  }
+  if (iCount==iNumOfKeyTypes) {
+ 			iCountTaoAnimationFrame=0;																				
+  }
+*/
+
+	SDL_RenderClear(mySDLRenderer);
+	//added by Mike, 20211111
+	//TO-DO: -reverify: excess drawn pixel if drawGrid() is executed earlier
+	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
+
+	//added by Mike, 20211111
+	drawGrid();
+	
+	//added by Mike, 20211112
+//	drawShield();
+}
+
 
 void update() {
 		if (myKeysDown[KEY_W])
@@ -343,7 +445,7 @@ int main(int argc, char *argv[])
 	initSDL();
 	
 	//solution to problem: ISO C++ forbids converting a string constant to 'char*' [-Wwrite-strings]
-	SDL_Texture *texture = loadTexture((char*)"textures/imageSpriteExampleMikeWithoutBG.png");
+	SDL_Texture *texture = loadTexture((char*)"textures/hq.png");
 
 	iPilotX=myWindowWidthAsPixel/2;
 	iPilotY=myWindowHeightAsPixel/2;
