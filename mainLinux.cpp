@@ -62,6 +62,13 @@ int iCountTaoAnimationFrame;
 
 int myKeysDown[10]; //note: includes KEY_J, KEY_L, KEY_I, KEY_K,
 
+//added by Mike, 20211112
+int iRowCountMax;
+int iColumnCountMax;
+
+float fGridSquareWidth;
+float fGridSquareHeight;
+
 #define TRUE 1
 #define FALSE 0
 
@@ -281,14 +288,25 @@ void drawShieldPrev()
   }
 }
 
+//added by Mike, 20211112
+void init() {
+  iRowCountMax=10;
+  iColumnCountMax=18;
+  
+  fGridSquareWidth = (myWindowWidthAsPixel)/iColumnCountMax; //example: 136.60
+  fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 76.80
+}
+
 //added by Mike, 20211111
 void drawGrid()
 {
+/* //removed by Mike, 20211112
   int iRowCountMax=10;
   int iColumnCountMax=18;
   
   float fGridSquareWidth = (myWindowWidthAsPixel)/iColumnCountMax; //example: 136.60
   float fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 76.80
+*/
 
   //note: SDL color max 255; GIMP color max 100
 	SDL_SetRenderDrawColor(mySDLRenderer, 0, 255*1, 0, 255); //green
@@ -353,7 +371,7 @@ void drawPrev(SDL_Texture *texture, int x, int y)
 //	drawShield();
 }
 
-void draw(SDL_Texture *texture, int x, int y)
+void drawV20211112(SDL_Texture *texture, int x, int y)
 {
 	int iPilotWidth=16;
 	int iPilotHeight=16;
@@ -381,9 +399,10 @@ void draw(SDL_Texture *texture, int x, int y)
   DestR.w = iPilotWidth;
   DestR.h = iPilotHeight;
 */
-  DestR.x = x;
-  DestR.y = y;
-  
+  DestR.x = x-iPilotWidth;
+  DestR.y = y-iPilotHeight+(iPilotHeight/2);
+
+/* //edited by Mike, 20211112  
   DestR.x = x-iPilotWidth*5-5;
 //  DestR.y = y-iPilotHeight*5;
   DestR.y = y-iPilotHeight*5+(iPilotHeight*5)/2-5;
@@ -391,6 +410,10 @@ void draw(SDL_Texture *texture, int x, int y)
 	//increased scale output
   DestR.w = iPilotWidth*5;
   DestR.h = iPilotHeight*5;
+*/
+  DestR.w = iPilotWidth;
+  DestR.h = iPilotHeight;
+
 
 /*  	
   int iCount;
@@ -406,6 +429,7 @@ void draw(SDL_Texture *texture, int x, int y)
 */
 
 	SDL_RenderClear(mySDLRenderer);
+		
 	//added by Mike, 20211111
 	//TO-DO: -reverify: excess drawn pixel if drawGrid() is executed earlier
 	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
@@ -417,6 +441,68 @@ void draw(SDL_Texture *texture, int x, int y)
 //	drawShield();
 }
 
+void draw(int x, int y)
+{
+/* //edited by Mike, 20211112
+	int iPilotWidth=16;
+	int iPilotHeight=16;
+*/	
+	int iPilotWidth=fGridSquareWidth/2;
+	int iPilotHeight=fGridSquareHeight/2;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+  
+//	iCountTaoAnimationFrame=(iCountTaoAnimationFrame)%3;                    																			
+	iCountTaoAnimationFrame=1;                    																				
+	    
+//  SrcR.x = 0+ iCountTaoAnimationFrame*iPilotWidth;
+  SrcR.x = 0;
+//  SrcR.y = 0;
+  SrcR.y = 0+iPilotHeight;
+
+  SrcR.w = iPilotWidth;
+  SrcR.h = iPilotHeight;
+
+  DestR.x = x;
+  DestR.y = y;
+  
+  DestR.w = iPilotWidth;
+  DestR.h = iPilotHeight;
+
+/*  	
+  int iCount;
+  for (iCount=0; iCount<iNumOfKeyTypes; iCount++) {
+		if (myKeysDown[iCount]==TRUE) {
+ 			iCountTaoAnimationFrame=iCountTaoAnimationFrame+1;																				
+ 			break;
+		}
+  }
+  if (iCount==iNumOfKeyTypes) {
+ 			iCountTaoAnimationFrame=0;																				
+  }
+*/
+
+	SDL_RenderClear(mySDLRenderer);
+		
+		
+  //note: SDL color max 255; GIMP color max 100
+	SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 0, 0, 255); //red
+		
+	//added by Mike, 20211111
+	//TO-DO: -reverify: excess drawn pixel if drawGrid() is executed earlier
+//	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
+	SDL_RenderFillRect(mySDLRenderer, &DestR);
+
+
+	//added by Mike, 20211111
+	drawGrid();
+	
+	//added by Mike, 20211112
+//	drawShield();
+}
 
 void update() {
 		if (myKeysDown[KEY_W])
@@ -444,6 +530,9 @@ int main(int argc, char *argv[])
 {
 	initSDL();
 	
+	//added by Mike, 20211112
+	init();
+	
 	//solution to problem: ISO C++ forbids converting a string constant to 'char*' [-Wwrite-strings]
 	SDL_Texture *texture = loadTexture((char*)"textures/hq.png");
 
@@ -463,7 +552,9 @@ int main(int argc, char *argv[])
 		
 		update();
 				
-		draw(texture, iPilotX, iPilotY);
+		//edited by Mike, 20211112
+//		draw(texture, iPilotX, iPilotY);
+		draw(iPilotX, iPilotY);
 
 		presentScene();
 
