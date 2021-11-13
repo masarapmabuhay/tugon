@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211112
+ * @date updated: 20211113
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -297,6 +297,44 @@ void init() {
   fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 76.80
 }
 
+//added by Mike, 20211113
+void drawMovementTile(int x, int y)
+{
+	int iTileWidth=fGridSquareWidth;
+	int iTileHeight=fGridSquareHeight;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+  
+//	iCountTaoAnimationFrame=1;                    																				
+	    
+  SrcR.x = x;
+  SrcR.y = y;
+
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+  DestR.x = x;
+  DestR.y = y;
+  
+  DestR.w = iTileWidth;
+  DestR.h = iTileHeight;
+
+  //note: SDL color max 255; GIMP color max 100
+	SDL_SetRenderDrawColor(mySDLRenderer, 255*0.44, 255*0.8, 255*0.26, 255); //grass
+	SDL_RenderFillRect(mySDLRenderer, &DestR);
+}
+
+//added by Mike, 20211113
+void drawLevel()
+{
+	//note: count starts at zero
+  drawMovementTile(5*fGridSquareWidth,5*fGridSquareHeight);
+}
+
+
 //added by Mike, 20211111
 void drawGrid()
 {
@@ -486,8 +524,10 @@ void draw(int x, int y)
 */
 
 	SDL_RenderClear(mySDLRenderer);
-		
-		
+				
+	//added by Mike, 20211113
+	drawLevel();
+
   //note: SDL color max 255; GIMP color max 100
 	SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 0, 0, 255); //red
 		
@@ -495,7 +535,6 @@ void draw(int x, int y)
 	//TO-DO: -reverify: excess drawn pixel if drawGrid() is executed earlier
 //	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
 	SDL_RenderFillRect(mySDLRenderer, &DestR);
-
 
 	//added by Mike, 20211111
 	drawGrid();
