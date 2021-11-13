@@ -59,6 +59,7 @@ SDL_Renderer *mySDLRenderer = NULL;
 int iPilotX;
 int iPilotY;
 int iCountTaoAnimationFrame;
+int iCountTileAnimationFrame; //added by Mike, 20211113
 
 int myKeysDown[10]; //note: includes KEY_J, KEY_L, KEY_I, KEY_K,
 
@@ -68,6 +69,8 @@ int iColumnCountMax;
 
 float fGridSquareWidth;
 float fGridSquareHeight;
+
+SDL_Texture *texture;
 
 #define TRUE 1
 #define FALSE 0
@@ -241,7 +244,6 @@ void presentScene(void)
 	SDL_RenderPresent(mySDLRenderer);
 }
 
-
 SDL_Texture *loadTexture(char *filename)
 {
 	SDL_Texture *texture;
@@ -290,15 +292,34 @@ void drawShieldPrev()
 
 //added by Mike, 20211112
 void init() {
+/* //edited by Mike, 20211113
   iRowCountMax=10;
   iColumnCountMax=18;
   
+  //note: SDL and SDL_Image use integers, i.e. whole numbers,
+  //instead of floating-point numbers; result: incorrect size of fGridSquare
   fGridSquareWidth = (myWindowWidthAsPixel)/iColumnCountMax; //example: 136.60
-  fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 76.80
+  fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 42.66
+*/  
+  iRowCountMax=10;
+  iColumnCountMax=18;
+  
+  //note: SDL and SDL_Image use integers, i.e. whole numbers,
+  //instead of floating-point numbers; result: incorrect size of fGridSquare
+  fGridSquareWidth = 64;
+  fGridSquareHeight = 64;
+    
+  iCountTileAnimationFrame=0;
+  
+  for (int iCount=0; iCount<4; iCount++) { //directional keys only
+		myKeysDown[iCount]=FALSE;
+	}		
+	myKeysDown[KEY_D] = TRUE;  
 }
 
 //added by Mike, 20211113
-void drawMovementTile(int x, int y)
+/*
+void drawMovementTilePrev(int x, int y)
 {
 	int iTileWidth=fGridSquareWidth;
 	int iTileHeight=fGridSquareHeight;
@@ -308,7 +329,8 @@ void drawMovementTile(int x, int y)
   SDL_Rect SrcR;
   SDL_Rect DestR;
   
-//	iCountTaoAnimationFrame=1;                    																				
+//	iCountTaoAnimationFrame=1;     
+//iCountTaoAnimationFrame=iCountTaoAnimationFrame+1;		               																				
 	    
   SrcR.x = x;
   SrcR.y = y;
@@ -326,12 +348,65 @@ void drawMovementTile(int x, int y)
 	SDL_SetRenderDrawColor(mySDLRenderer, 255*0.44, 255*0.8, 255*0.26, 255); //grass
 	SDL_RenderFillRect(mySDLRenderer, &DestR);
 }
+*/
+
+//added by Mike, 20211113
+void drawMovementTile(int x, int y)
+{
+	int iTileWidth=fGridSquareWidth;
+	int iTileHeight=fGridSquareHeight;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+  
+//	iCountTaoAnimationFrame=1;     
+	iCountTileAnimationFrame=iCountTaoAnimationFrame+1;		               																				
+	    
+  SrcR.x = 0; //x;
+  SrcR.y = 0; //y;
+
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+  DestR.x = x;
+  DestR.y = y;
+  
+  DestR.w = iTileWidth;
+  DestR.h = iTileHeight;
+
+/* //edited by Mike, 20211113
+  //note: SDL color max 255; GIMP color max 100
+	SDL_SetRenderDrawColor(mySDLRenderer, 255*0.44, 255*0.8, 255*0.26, 255); //grass
+	SDL_RenderFillRect(mySDLRenderer, &DestR);
+*/	
+	
+	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
+
+}
+
 
 //added by Mike, 20211113
 void drawLevel()
 {
-	//note: count starts at zero
-  drawMovementTile(5*fGridSquareWidth,5*fGridSquareHeight);
+	//note: count starts at zero	
+	//drawMovementTile(5*fGridSquareWidth,5*fGridSquareHeight);
+	for (int iRowCount=3; iRowCount<8; iRowCount++) {
+  	drawMovementTile(5*fGridSquareWidth,iRowCount*fGridSquareHeight);
+	}
+
+	for (int iRowCount=3; iRowCount<8; iRowCount++) {
+  	drawMovementTile(12*fGridSquareWidth,iRowCount*fGridSquareHeight);
+	}
+
+	for (int iColumnCount=6; iColumnCount<12; iColumnCount++) {
+  	drawMovementTile(iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
+	}
+
+	for (int iColumnCount=6; iColumnCount<12; iColumnCount++) {
+  	drawMovementTile(iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
+	}
 }
 
 
@@ -485,8 +560,13 @@ void draw(int x, int y)
 	int iPilotWidth=16;
 	int iPilotHeight=16;
 */	
+
 	int iPilotWidth=fGridSquareWidth/2;
 	int iPilotHeight=fGridSquareHeight/2;
+
+	//added by Mike, 20211113
+	x=x+iPilotWidth/2;
+	y=y+iPilotHeight/2;
 	
   //Rectangles for drawing which will specify source (inside the texture)
   //and target (on the screen) for rendering our textures.
@@ -544,6 +624,7 @@ void draw(int x, int y)
 }
 
 void update() {
+/*	//edited by Mike, 20211113
 		if (myKeysDown[KEY_W])
 		{
 			iPilotY-=4;
@@ -563,6 +644,69 @@ void update() {
 		{
 			iPilotX+=4;
 		}
+*/	
+
+		//note: clock-wise movement
+		//rectangle top side
+		if (myKeysDown[KEY_D] == TRUE) {
+			if (iPilotY==3*fGridSquareHeight) {
+				myKeysDown[KEY_D] = TRUE;
+								
+				if (iPilotX<12*fGridSquareWidth) {
+					iPilotX+=2;
+				}	
+				else {
+					//iPilotY+=2;
+					myKeysDown[KEY_S] = TRUE;			
+					myKeysDown[KEY_D] = FALSE;
+				}
+			}
+		}
+	
+		//rectangle right side
+		if (myKeysDown[KEY_S] == TRUE) {
+			if (iPilotX==12*fGridSquareWidth) {
+				myKeysDown[KEY_S] = TRUE;
+	
+				if (iPilotY<7*fGridSquareHeight) {
+					iPilotY+=2;
+				}	
+				else {
+					myKeysDown[KEY_A] = TRUE;			
+					myKeysDown[KEY_S] = FALSE;
+				}
+			}
+		}
+				
+		//rectangle bottom side		
+		if (myKeysDown[KEY_A] == TRUE) {		
+			if (iPilotY==7*fGridSquareHeight) {
+				myKeysDown[KEY_A] = TRUE;
+
+				if (iPilotX>5*fGridSquareWidth) {
+					iPilotX-=2;
+				}	
+				else {
+					myKeysDown[KEY_W] = TRUE;			
+					myKeysDown[KEY_A] = FALSE;			
+				}
+			}
+		}
+
+		//rectangle left side		
+		if (myKeysDown[KEY_W] == TRUE) {		
+			if (iPilotX==5*fGridSquareWidth) {
+				myKeysDown[KEY_W] = TRUE;
+
+				if (iPilotY>3*fGridSquareHeight) {
+					iPilotY-=2;
+				}	
+				else {
+					myKeysDown[KEY_D] = TRUE;			
+					myKeysDown[KEY_W] = FALSE;			
+				}
+			}
+		}
 }
 
 int main(int argc, char *argv[])
@@ -573,11 +717,17 @@ int main(int argc, char *argv[])
 	init();
 	
 	//solution to problem: ISO C++ forbids converting a string constant to 'char*' [-Wwrite-strings]
-	SDL_Texture *texture = loadTexture((char*)"textures/hq.png");
+	//edited by Mike, 20211113
+//	SDL_Texture *texture = loadTexture((char*)"textures/hq.png");
+	texture = loadTexture((char*)"textures/hq.png");
 
+/*	//edited by Mike, 20211113
 	iPilotX=myWindowWidthAsPixel/2;
 	iPilotY=myWindowHeightAsPixel/2;
-	
+*/
+	iPilotX=fGridSquareWidth*5;
+	iPilotY=fGridSquareHeight*3;
+
 	printf("myWindowWidthAsPixel: %i\n",myWindowWidthAsPixel);
 	printf("myWindowHeightAsPixel: %i\n",myWindowHeightAsPixel);
 	
