@@ -11,7 +11,7 @@ https://www.libsdl.org/download-2.0.php; last accessed: 20211111<br/>
 --> <b>Objective:</b> Reuse Image Compression instructions, e.g. loading of .png image files  
 
 #### 1.1.1. Linux Download and Installation
---> verified: with LUBUNTU Operating System (version: LTS 20.04)<br/>
+--> verified: with [LUBUNTU Operating System (version: LTS 20.04)](https://lubuntu.me/)<br/>
 --> Enter to execute the following <b>COMMANDS</b> using the <b>Terminal Window</b>:<br/>
 <br/>
 <b>sudo apt-get update</b><br/>
