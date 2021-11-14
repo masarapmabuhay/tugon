@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211113
+ * @date updated: 20211114
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -69,6 +69,9 @@ int iColumnCountMax;
 
 float fGridSquareWidth;
 float fGridSquareHeight;
+
+int iOffsetWidth;
+int iOffsetHeight;
 
 SDL_Texture *texture;
 
@@ -302,12 +305,22 @@ void init() {
   fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 42.66
 */  
   iRowCountMax=10;
-  iColumnCountMax=18;
+  iColumnCountMax=iRowCountMax;//18;
   
   //note: SDL and SDL_Image use integers, i.e. whole numbers,
   //instead of floating-point numbers; result: incorrect size of fGridSquare
+/* //edited by Mike, 20211114  
   fGridSquareWidth = 64;
   fGridSquareHeight = 64;
+*/  
+  fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax;
+  fGridSquareWidth = fGridSquareHeight;
+  
+  //wide screen; portrait mode
+  iOffsetWidth=(myWindowWidthAsPixel-myWindowHeightAsPixel)/2;
+  //TO-DO: -add: this  
+  iOffsetHeight=0;
+
     
   iCountTileAnimationFrame=0;
   
@@ -353,9 +366,13 @@ void drawMovementTilePrev(int x, int y)
 //added by Mike, 20211113
 void drawMovementTile(int x, int y)
 {
+/* //edited by Mike, 20211114
 	int iTileWidth=fGridSquareWidth;
 	int iTileHeight=fGridSquareHeight;
-	
+*/
+	int iTileWidth=fGridSquareWidth;
+	int iTileHeight=fGridSquareHeight;
+
   //Rectangles for drawing which will specify source (inside the texture)
   //and target (on the screen) for rendering our textures.
   SDL_Rect SrcR;
@@ -367,10 +384,14 @@ void drawMovementTile(int x, int y)
   SrcR.x = 0; //x;
   SrcR.y = 0; //y;
 
-  SrcR.w = iTileWidth;
-  SrcR.h = iTileHeight;
+  SrcR.w = 64; //iTileWidth;
+  SrcR.h = 64; //iTileHeight;
 
+/*	//edited by Mike, 20211114
   DestR.x = x;
+  DestR.y = y;
+*/
+  DestR.x = x+iOffsetWidth;
   DestR.y = y;
   
   DestR.w = iTileWidth;
@@ -386,9 +407,9 @@ void drawMovementTile(int x, int y)
 
 }
 
-
+/*
 //added by Mike, 20211113
-void drawLevel()
+void drawLevel20211113()
 {
 	//note: count starts at zero	
 	//drawMovementTile(5*fGridSquareWidth,5*fGridSquareHeight);
@@ -408,19 +429,33 @@ void drawLevel()
   	drawMovementTile(iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
 	}
 }
-
-
-//added by Mike, 20211111
-void drawGrid()
-{
-/* //removed by Mike, 20211112
-  int iRowCountMax=10;
-  int iColumnCountMax=18;
-  
-  float fGridSquareWidth = (myWindowWidthAsPixel)/iColumnCountMax; //example: 136.60
-  float fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 76.80
 */
 
+void drawLevel()
+{
+	//note: count starts at zero	
+	//drawMovementTile(5*fGridSquareWidth,5*fGridSquareHeight);
+	for (int iRowCount=3; iRowCount<8; iRowCount++) {
+  		drawMovementTile(1*fGridSquareWidth,iRowCount*fGridSquareHeight);
+	}
+
+	for (int iRowCount=3; iRowCount<8; iRowCount++) {
+  		drawMovementTile(8*fGridSquareWidth,iRowCount*fGridSquareHeight);
+	}
+	
+	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+  		drawMovementTile(iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
+	}
+	
+	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+  		drawMovementTile(iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
+	}
+}
+
+/*
+//edited by Mike, 20211114
+void drawGrid()
+{
   //note: SDL color max 255; GIMP color max 100
 	SDL_SetRenderDrawColor(mySDLRenderer, 0, 255*1, 0, 255); //green
     
@@ -437,6 +472,28 @@ void drawGrid()
         iColumnCount*fGridSquareWidth, 0, iColumnCount*fGridSquareWidth, iRowCountMax*fGridSquareHeight);
    }
 }
+*/
+//added by Mike, 20211114
+void drawGrid()
+{
+  //note: SDL color max 255; GIMP color max 100
+	SDL_SetRenderDrawColor(mySDLRenderer, 0, 255*1, 0, 255); //green
+    
+  // Draw a Green Line
+  //rows
+  for (int iRowCount=0; iRowCount<=iRowCountMax; iRowCount++) {
+			SDL_RenderDrawLine(mySDLRenderer,
+        0+iOffsetWidth, iRowCount*fGridSquareHeight, iColumnCountMax*fGridSquareWidth+iOffsetWidth, iRowCount*fGridSquareHeight);
+   }
+
+  //columns
+  for (int iColumnCount=0; iColumnCount<=iColumnCountMax; iColumnCount++) {
+			SDL_RenderDrawLine(mySDLRenderer,
+        iColumnCount*fGridSquareWidth+iOffsetWidth, 0, iColumnCount*fGridSquareWidth+iOffsetWidth, iRowCountMax*fGridSquareHeight);
+   }
+}
+
+
 
 //Reference: http://wiki.libsdl.org/SDL_RenderCopy;
 //last accessed: 20211111
@@ -623,7 +680,7 @@ void draw(int x, int y)
 //	drawShield();
 }
 
-void update() {
+void updateV20211114() {
 /*	//edited by Mike, 20211113
 		if (myKeysDown[KEY_W])
 		{
@@ -709,6 +766,70 @@ void update() {
 		}
 }
 
+void update() {
+		//note: clock-wise movement
+		//rectangle top side
+		if (myKeysDown[KEY_D] == TRUE) {
+			if (iPilotY==3*fGridSquareHeight) {
+				myKeysDown[KEY_D] = TRUE;
+								
+				if (iPilotX<(8*fGridSquareWidth+iOffsetWidth)) {
+					iPilotX+=2;
+				}	
+				else {
+					//iPilotY+=2;
+					myKeysDown[KEY_S] = TRUE;			
+					myKeysDown[KEY_D] = FALSE;
+				}
+			}
+		}
+	
+		//rectangle right side
+		if (myKeysDown[KEY_S] == TRUE) {
+			if (iPilotX==(8*fGridSquareWidth+iOffsetWidth)) {
+				myKeysDown[KEY_S] = TRUE;
+	
+				if (iPilotY<7*fGridSquareHeight) {
+					iPilotY+=2;
+				}	
+				else {
+					myKeysDown[KEY_A] = TRUE;			
+					myKeysDown[KEY_S] = FALSE;
+				}
+			}
+		}
+				
+		//rectangle bottom side		
+		if (myKeysDown[KEY_A] == TRUE) {		
+			if (iPilotY==7*fGridSquareHeight) {
+				myKeysDown[KEY_A] = TRUE;
+
+				if (iPilotX>(1*fGridSquareWidth+iOffsetWidth)) {
+					iPilotX-=2;
+				}	
+				else {
+					myKeysDown[KEY_W] = TRUE;			
+					myKeysDown[KEY_A] = FALSE;			
+				}
+			}
+		}
+
+		//rectangle left side		
+		if (myKeysDown[KEY_W] == TRUE) {		
+			if (iPilotX==(1*fGridSquareWidth+iOffsetWidth)) {
+				myKeysDown[KEY_W] = TRUE;
+
+				if (iPilotY>3*fGridSquareHeight) {
+					iPilotY-=2;
+				}	
+				else {
+					myKeysDown[KEY_D] = TRUE;			
+					myKeysDown[KEY_W] = FALSE;			
+				}
+			}
+		}
+}
+
 int main(int argc, char *argv[])
 {
 	initSDL();
@@ -725,7 +846,11 @@ int main(int argc, char *argv[])
 	iPilotX=myWindowWidthAsPixel/2;
 	iPilotY=myWindowHeightAsPixel/2;
 */
+/*	//edited by Mike, 20211114
 	iPilotX=fGridSquareWidth*5;
+	iPilotY=fGridSquareHeight*3;
+*/
+	iPilotX=fGridSquareWidth*1+iOffsetWidth;
 	iPilotY=fGridSquareHeight*3;
 
 	printf("myWindowWidthAsPixel: %i\n",myWindowWidthAsPixel);
