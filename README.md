@@ -10,6 +10,15 @@ https://itch.io/jam/game-off-2021
 https://www.libsdl.org/download-2.0.php; last accessed: 20211111<br/>
 --> <b>Objective:</b> Reuse Image Compression instructions, e.g. loading of .png image files  
 
+#### 1.1.1. Linux Download and Installation
+--> verified: with LUBUNTU Operating System (version: LTS 20.04)<br/>
+--> Enter to execute the following <b>COMMANDS</b> using the <b>Terminal Window</b>:<br/>
+<br/>
+<b>sudo apt-get update</b><br/>
+<b>sudo apt-get install libsdl2-dev</b><br/>
+<b>sudo apt-get install libsdl2-image-dev</b><br/>
+
+
 ## 2. Open Source Software License
 Copyright 2021 SYSON, MICHAEL B.
 
