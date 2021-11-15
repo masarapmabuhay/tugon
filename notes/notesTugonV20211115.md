@@ -55,4 +55,4 @@ akichatte, hoka no mono ka koto ni suru to naru.<br/>
 <br/>
 <b>われわれ　人間、　みんな　そう　であれば、うれしいね。</b><br/>
 wareware ningen, minna sou de areba, ureshii ne.<br/>
---> Tayong tao, kapag ganoon naman tayo, maligaya 'hindi ba?<br/>
+--> Tayong tao, kapag ganoon naman tayo, maligaya, 'di ba?<br/>
