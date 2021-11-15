@@ -2,7 +2,7 @@
 GitHUB Game Off 2021: BUG Entry<br/>
 https://itch.io/jam/game-off-2021
 
-## 1. Applcation Execution
+## 1. Application Execution
 --> verified: with [LUBUNTU Operating System (version: LTS 20.04)](https://lubuntu.me/)<br/>
 --> Double-click the <b>execute.sh</b> file.<br/>
 
@@ -19,7 +19,7 @@ https://www.libsdl.org/download-2.0.php; last accessed: 20211111<br/>
 <br/>
 --> <b>Note:</b> If asked by Computer what to do with the executable script file, select: "Execute in Terminal"<br/>
 <br/>
-<img src="https://github.com/masarapmabuhay/tugon/blob/main/res/linuxMachineInstallExecutableAlert.jpg" width="40%">
+<img src="https://github.com/masarapmabuhay/tugon/blob/main/res/linuxMachineInstallExecutableAlert.jpg" width="50%">
 
 ## 3. Open Source Software License
 Copyright 2021 SYSON, MICHAEL B.
