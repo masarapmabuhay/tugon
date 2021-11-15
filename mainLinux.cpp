@@ -1,5 +1,5 @@
 /*
- * Copyright 2020~2021 SYSON, MICHAEL B.
+ * Copyright 2021 SYSON, MICHAEL B.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211114
+ * @date updated: 20211115
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -70,8 +70,19 @@ int iColumnCountMax;
 float fGridSquareWidth;
 float fGridSquareHeight;
 
-int iOffsetWidth;
-int iOffsetHeight;
+int iBaseOffsetWidth;
+int iBaseOffsetHeight;
+
+int iCurrentOffsetWidth;
+int iCurrentOffsetHeight;
+
+int iDestroyBugShakeDelayCount;
+int iDestroyBugShakeDelayMax;
+
+bool bIsExecutingDestroyBug;
+
+int iStepX;
+int iStepY;
 
 SDL_Texture *texture;
 
@@ -169,7 +180,23 @@ void keyDown(SDL_KeyboardEvent *event)
     //can be pressed simultaneously with directional button
     if (event->keysym.scancode == SDL_SCANCODE_K)
     {
+    		//edited by Mike, 20211115
+        //myKeysDown[KEY_K] = TRUE;
+
+printf(">> KEY_K!!\n");
+/*
+				if (bIsExecutingDestroyBug) {
+				  myKeysDown[KEY_K] = FALSE;
+    			bIsExecutingDestroyBug = false;
+				}
+				else {
+        	myKeysDown[KEY_K] = TRUE;
+    			bIsExecutingDestroyBug = true;	
+				}
+*/				
+				//note: already executed once, despite pressed and hold
         myKeysDown[KEY_K] = TRUE;
+    		bIsExecutingDestroyBug = true;	
     }
 	}
 }
@@ -202,6 +229,7 @@ void keyUp(SDL_KeyboardEvent *event)
     if (event->keysym.scancode == SDL_SCANCODE_K)
     {
         myKeysDown[KEY_K] = FALSE;
+        bIsExecutingDestroyBug=false;
     }        
 	}
 }
@@ -305,7 +333,7 @@ void init() {
   fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 42.66
 */  
   iRowCountMax=10;
-  iColumnCountMax=iRowCountMax;//18;
+  iColumnCountMax=iRowCountMax;//18; 
   
   //note: SDL and SDL_Image use integers, i.e. whole numbers,
   //instead of floating-point numbers; result: incorrect size of fGridSquare
@@ -317,17 +345,27 @@ void init() {
   fGridSquareWidth = fGridSquareHeight;
   
   //wide screen; portrait mode
-  iOffsetWidth=(myWindowWidthAsPixel-myWindowHeightAsPixel)/2;
+  iBaseOffsetWidth=(myWindowWidthAsPixel-myWindowHeightAsPixel)/2;
   //TO-DO: -add: this  
-  iOffsetHeight=0;
+  iBaseOffsetHeight=0;
+  
+  iCurrentOffsetWidth=iBaseOffsetWidth;
+	iCurrentOffsetHeight=iBaseOffsetHeight;
+	bIsExecutingDestroyBug=false;
 
-    
+	iDestroyBugShakeDelayCount=0;
+	iDestroyBugShakeDelayMax=5;
+
+	//added by Mike, 20211115
+	iStepX=1;
+	iStepY=1;
+	    
   iCountTileAnimationFrame=0;
   
   for (int iCount=0; iCount<4; iCount++) { //directional keys only
 		myKeysDown[iCount]=FALSE;
 	}		
-	myKeysDown[KEY_D] = TRUE;  
+	myKeysDown[KEY_D] = TRUE;  	
 }
 
 //added by Mike, 20211113
@@ -391,7 +429,7 @@ void drawMovementTile(int x, int y)
   DestR.x = x;
   DestR.y = y;
 */
-  DestR.x = x+iOffsetWidth;
+  DestR.x = x+iCurrentOffsetWidth;
   DestR.y = y;
   
   DestR.w = iTileWidth;
@@ -483,13 +521,13 @@ void drawGrid()
   //rows
   for (int iRowCount=0; iRowCount<=iRowCountMax; iRowCount++) {
 			SDL_RenderDrawLine(mySDLRenderer,
-        0+iOffsetWidth, iRowCount*fGridSquareHeight, iColumnCountMax*fGridSquareWidth+iOffsetWidth, iRowCount*fGridSquareHeight);
+        0+iCurrentOffsetWidth, iRowCount*fGridSquareHeight, iColumnCountMax*fGridSquareWidth+iCurrentOffsetWidth, iRowCount*fGridSquareHeight);
    }
 
   //columns
   for (int iColumnCount=0; iColumnCount<=iColumnCountMax; iColumnCount++) {
 			SDL_RenderDrawLine(mySDLRenderer,
-        iColumnCount*fGridSquareWidth+iOffsetWidth, 0, iColumnCount*fGridSquareWidth+iOffsetWidth, iRowCountMax*fGridSquareHeight);
+        iColumnCount*fGridSquareWidth+iCurrentOffsetWidth, 0, iColumnCount*fGridSquareWidth+iCurrentOffsetWidth, iRowCountMax*fGridSquareHeight);
    }
 }
 
@@ -680,101 +718,19 @@ void draw(int x, int y)
 //	drawShield();
 }
 
-void updateV20211114() {
-/*	//edited by Mike, 20211113
-		if (myKeysDown[KEY_W])
-		{
-			iPilotY-=4;
-		}
-
-		if (myKeysDown[KEY_S])
-		{
-			iPilotY+=4;
-		}
-
-		if (myKeysDown[KEY_A])
-		{
-			iPilotX-=4;
-		}
-
-		if (myKeysDown[KEY_D])
-		{
-			iPilotX+=4;
-		}
-*/	
-
-		//note: clock-wise movement
-		//rectangle top side
-		if (myKeysDown[KEY_D] == TRUE) {
-			if (iPilotY==3*fGridSquareHeight) {
-				myKeysDown[KEY_D] = TRUE;
-								
-				if (iPilotX<12*fGridSquareWidth) {
-					iPilotX+=2;
-				}	
-				else {
-					//iPilotY+=2;
-					myKeysDown[KEY_S] = TRUE;			
-					myKeysDown[KEY_D] = FALSE;
-				}
-			}
-		}
-	
-		//rectangle right side
-		if (myKeysDown[KEY_S] == TRUE) {
-			if (iPilotX==12*fGridSquareWidth) {
-				myKeysDown[KEY_S] = TRUE;
-	
-				if (iPilotY<7*fGridSquareHeight) {
-					iPilotY+=2;
-				}	
-				else {
-					myKeysDown[KEY_A] = TRUE;			
-					myKeysDown[KEY_S] = FALSE;
-				}
-			}
-		}
-				
-		//rectangle bottom side		
-		if (myKeysDown[KEY_A] == TRUE) {		
-			if (iPilotY==7*fGridSquareHeight) {
-				myKeysDown[KEY_A] = TRUE;
-
-				if (iPilotX>5*fGridSquareWidth) {
-					iPilotX-=2;
-				}	
-				else {
-					myKeysDown[KEY_W] = TRUE;			
-					myKeysDown[KEY_A] = FALSE;			
-				}
-			}
-		}
-
-		//rectangle left side		
-		if (myKeysDown[KEY_W] == TRUE) {		
-			if (iPilotX==5*fGridSquareWidth) {
-				myKeysDown[KEY_W] = TRUE;
-
-				if (iPilotY>3*fGridSquareHeight) {
-					iPilotY-=2;
-				}	
-				else {
-					myKeysDown[KEY_D] = TRUE;			
-					myKeysDown[KEY_W] = FALSE;			
-				}
-			}
-		}
-}
-
 void update() {
 		//note: clock-wise movement
 		//rectangle top side
 		if (myKeysDown[KEY_D] == TRUE) {
-			if (iPilotY==3*fGridSquareHeight) {
+			//edited by Mike, 20211115
+//			if (iPilotY==3*fGridSquareHeight) {
+			if (iPilotY==(3*fGridSquareHeight+iCurrentOffsetHeight)) {
 				myKeysDown[KEY_D] = TRUE;
 								
-				if (iPilotX<(8*fGridSquareWidth+iOffsetWidth)) {
-					iPilotX+=2;
+				if (iPilotX<(8*fGridSquareWidth+iCurrentOffsetWidth)) {
+						//edited by Mike, 20211115
+//					iPilotX+=2;
+					iPilotX+=iStepX;
 				}	
 				else {
 					//iPilotY+=2;
@@ -786,11 +742,13 @@ void update() {
 	
 		//rectangle right side
 		if (myKeysDown[KEY_S] == TRUE) {
-			if (iPilotX==(8*fGridSquareWidth+iOffsetWidth)) {
+			if (iPilotX==(8*fGridSquareWidth+iCurrentOffsetWidth)) {
 				myKeysDown[KEY_S] = TRUE;
 	
 				if (iPilotY<7*fGridSquareHeight) {
-					iPilotY+=2;
+					//edited by Mike, 20211115
+//					iPilotY+=2;
+					iPilotY+=iStepY;
 				}	
 				else {
 					myKeysDown[KEY_A] = TRUE;			
@@ -801,11 +759,16 @@ void update() {
 				
 		//rectangle bottom side		
 		if (myKeysDown[KEY_A] == TRUE) {		
-			if (iPilotY==7*fGridSquareHeight) {
+			//edited by Mike, 20211115
+//			if (iPilotY==7*fGridSquareHeight) {
+			if (iPilotY==7*(fGridSquareHeight+iCurrentOffsetHeight)) {
+
 				myKeysDown[KEY_A] = TRUE;
 
-				if (iPilotX>(1*fGridSquareWidth+iOffsetWidth)) {
-					iPilotX-=2;
+				if (iPilotX>(1*fGridSquareWidth+iCurrentOffsetWidth)) {
+					//edited by Mike, 20211115
+//					iPilotX-=2;
+					iPilotX-=iStepX;
 				}	
 				else {
 					myKeysDown[KEY_W] = TRUE;			
@@ -816,11 +779,13 @@ void update() {
 
 		//rectangle left side		
 		if (myKeysDown[KEY_W] == TRUE) {		
-			if (iPilotX==(1*fGridSquareWidth+iOffsetWidth)) {
+			if (iPilotX==(1*fGridSquareWidth+iCurrentOffsetWidth)) {
 				myKeysDown[KEY_W] = TRUE;
 
 				if (iPilotY>3*fGridSquareHeight) {
-					iPilotY-=2;
+					//edited by Mike, 20211115
+//					iPilotY-=2;
+					iPilotY-=iStepY;
 				}	
 				else {
 					myKeysDown[KEY_D] = TRUE;			
@@ -828,6 +793,24 @@ void update() {
 				}
 			}
 		}
+		
+			if (bIsExecutingDestroyBug) {
+  				iCurrentOffsetWidth+=2;
+					iCurrentOffsetHeight-=2;			
+
+					if (iDestroyBugShakeDelayCount==iDestroyBugShakeDelayMax) {
+				  	myKeysDown[KEY_K] = FALSE;
+    				bIsExecutingDestroyBug = false;					
+    				iDestroyBugShakeDelayCount=0;
+    			}
+    			else {
+						iDestroyBugShakeDelayCount+=1;					
+    			}
+			}		
+			else {
+  			iCurrentOffsetWidth=iBaseOffsetWidth;
+				iCurrentOffsetHeight=iBaseOffsetHeight;				
+			}
 }
 
 int main(int argc, char *argv[])
@@ -850,7 +833,7 @@ int main(int argc, char *argv[])
 	iPilotX=fGridSquareWidth*5;
 	iPilotY=fGridSquareHeight*3;
 */
-	iPilotX=fGridSquareWidth*1+iOffsetWidth;
+	iPilotX=fGridSquareWidth*1+iCurrentOffsetWidth;
 	iPilotY=fGridSquareHeight*3;
 
 	printf("myWindowWidthAsPixel: %i\n",myWindowWidthAsPixel);
