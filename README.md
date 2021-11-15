@@ -12,12 +12,11 @@ https://www.libsdl.org/download-2.0.php; last accessed: 20211111<br/>
 
 #### 1.1.1. Linux Download and Installation
 --> verified: with [LUBUNTU Operating System (version: LTS 20.04)](https://lubuntu.me/)<br/>
---> Enter to execute the following <b>COMMANDS</b> using the <b>Terminal Window</b>:<br/>
+--> Double-click to execute <b>install.sh</b> file.<br/>
 <br/>
-<b>sudo apt-get update</b><br/>
-<b>sudo apt-get install libsdl2-dev</b><br/>
-<b>sudo apt-get install libsdl2-image-dev</b><br/>
-
+--> <b>Note:</b> If asked by Computer what to do with the executable script file, select: "Execute in Terminal"<br/>
+<br/>
+<img src="https://github.com/masarapmabuhay/tugon/blob/main/res/linuxMachineInstallExecutableAlert.jpg" width="40%">
 
 ## 2. Open Source Software License
 Copyright 2021 SYSON, MICHAEL B.
