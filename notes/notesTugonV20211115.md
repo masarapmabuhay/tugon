@@ -30,7 +30,7 @@ ureshiikoto mo ureshikunai koto mo nakattara,<br/>
 --> Kapag ang ligaya pati ang hindi ligaya rin wala<br/>
 <b>やってみたら、飽きちゃうと　わかった。</b><br/>
 yatte mitara, akichau to wakatta.<br/>
---> Subukang gawin, magsasawa, ito mauunawaan.<br/>
+--> Subukang gawin, magsasawa, ito naunawaan ko.<br/>
 <br/>
 <b>コンビにの　ハンバーグ入り弁当　だけを</b><br/>
 kombini no hamba-gu iri bentou dake wo <br/>
