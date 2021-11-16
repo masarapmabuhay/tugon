@@ -108,7 +108,7 @@ public:
     int currentMovingState;
     int currentFacingState;
 
-    MyDynamicObject(int xPos=0, int yPos=0, int zPos=0, int windowWidth=0, int windowHeight=0 ): iMyXPosAsPixel(xPos), iMyYPosAsPixel(yPos), iMyZPosAsPixel(zPos), fMyWindowWidth(windowWidth), fMyWindowHeight(windowHeight)
+    MyDynamicObject(int xPos=0, int yPos=0, int zPos=0, int windowWidth=0, int windowHeight=0): iMyXPosAsPixel(xPos), iMyYPosAsPixel(yPos), iMyZPosAsPixel(zPos), fMyWindowWidth(windowWidth), fMyWindowHeight(windowHeight)
     {
         currentState=ACTIVE_STATE;
         iCountTotalFrames=1;

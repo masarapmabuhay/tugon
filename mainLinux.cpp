@@ -49,9 +49,12 @@
 #include <unistd.h>
 #include <iostream>
 
+#include "Ipis.h"
+
+#define MAX_IPIS 6
+
 static int myWindowWidthAsPixel=640;
 static int myWindowHeightAsPixel=640;
-
 
 SDL_Window *mySDLWindow = NULL;
 SDL_Renderer *mySDLRenderer = NULL;
@@ -83,6 +86,9 @@ bool bIsExecutingDestroyBug;
 
 int iStepX;
 int iStepY;
+
+//added by Mike, 20211116
+Ipis *myIpis[MAX_IPIS];
 
 SDL_Texture *texture;
 
@@ -360,12 +366,17 @@ void init() {
 	iStepX=1;
 	iStepY=1;
 	    
-  iCountTileAnimationFrame=0;
+  	iCountTileAnimationFrame=0;
   
-  for (int iCount=0; iCount<4; iCount++) { //directional keys only
+  	for (int iCount=0; iCount<4; iCount++) { //directional keys only
 		myKeysDown[iCount]=FALSE;
 	}		
 	myKeysDown[KEY_D] = TRUE;  	
+	
+	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
+		//TO-DO: -reverify: this
+//		myIpis[iCount] = new Ipis(0,0,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
+	}
 }
 
 //added by Mike, 20211113
