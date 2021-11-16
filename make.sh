@@ -9,7 +9,7 @@
 # @company: USBONG
 # @author: SYSON, MICHAEL B.
 # @date created: 20211111
-# @last updated: 20211111
+# @last updated: 20211116
 # @website address: http://www.usbong.ph
 #
 # Reference:
@@ -19,5 +19,6 @@
 #note: sequence
 
 g++ -c mainLinux.cpp
+g++ -c MyDynamicObject.cpp
 
-g++ -o ./output/UsbongTugonLinux mainLinux.o -lSDL2 -lSDL2_image
+g++ -o ./output/UsbongTugonLinux mainLinux.o MyDynamicObject.o -lSDL2 -lSDL2_image

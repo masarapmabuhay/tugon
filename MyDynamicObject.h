@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211112
- * @date updated: 20211112
+ * @date updated: 20211116
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -104,10 +104,11 @@ public:
     //TO-DO: -add: this
 //    UsbongUtils *myUsbongUtils;
     
+    int currentState;
     int currentMovingState;
     int currentFacingState;
 
-    MyDynamicObject(int xPos=0, int yPos=0, int zPos=0, int windowWidth=0, int windowHeight=0 ): iMyXPosAsPixel(xPos), iMyYPosAsPixel(yPos), iMyXZosAsPixel(zPos), fMyWindowWidth(windowWidth), fMyWindowHeight(windowHeight)
+    MyDynamicObject(int xPos=0, int yPos=0, int zPos=0, int windowWidth=0, int windowHeight=0 ): iMyXPosAsPixel(xPos), iMyYPosAsPixel(yPos), iMyZPosAsPixel(zPos), fMyWindowWidth(windowWidth), fMyWindowHeight(windowHeight)
     {
         currentState=ACTIVE_STATE;
         iCountTotalFrames=1;
@@ -123,8 +124,9 @@ public:
         	return false;
         }
     }
-    
-    void setUsbongUtils(UsbongUtils* c);
+  	
+  	//TO-DO: -add: this  
+//    void setUsbongUtils(UsbongUtils* c);
     
     virtual void hitBy(MyDynamicObject* mdo);
     
@@ -172,38 +174,35 @@ public:
     virtual void draw();
     
     virtual void setXPos(int iX) {
-        iMyXPos=iX;
+        iMyXPosAsPixel=iX;
     }
 
     virtual void setZPos(float iZ) {
-        iMyZPos=iZ;
+        iMyZPosAsPixel=iZ;
     }
     virtual void setYPos(float iY) {
-        iMyYPos=iY;
+        iMyYPosAsPixel=iY;
     }
     
     
     virtual void setXPosAsPixel(int iX) {
-        myXPosAsPixel=iX;
+        iMyXPosAsPixel=iX;
     }
 
     virtual void setZPosAsPixel(int iZ) {
-        myZPosAsPixel=iZ;
+        iMyZPosAsPixel=iZ;
     }
 
     virtual void setYPosAsPixel(int iY) {
-        myYPosAsPixel=iY;
+        iMyYPosAsPixel=iY;
     }
     
     bool checkCollision(MyDynamicObject* mdo1, MyDynamicObject* mdo2);
     void collideWith(MyDynamicObject* mdo);   
-    virtual bool isIntersectingRect(MyDynamicObject* mdo1, MyDynamicObject* mdo2);
-        
+    virtual bool isIntersectingRect(MyDynamicObject* mdo1, MyDynamicObject* mdo2);        
     virtual void setCurrentMovingState(int iMovingState) {
         currentMovingState = iMovingState;
     }
         
     virtual void destroy();
 };
-
-#endif
