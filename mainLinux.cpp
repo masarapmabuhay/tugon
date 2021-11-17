@@ -378,7 +378,7 @@ void init() {
 	
 	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
 		//TO-DO: -reverify: this
-		myIpis[iCount] = new Ipis(0,0,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
+		myIpis[iCount] = new Ipis(mySDLRenderer,0,0,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
 	}
 }
 
@@ -721,12 +721,15 @@ void draw(int x, int y)
 	SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 0, 0, 255); //red
 		
 	//added by Mike, 20211111
-	//TO-DO: -reverify: excess drawn pixel if drawGrid() is executed earlier
 //	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
 	SDL_RenderFillRect(mySDLRenderer, &DestR);
 
 	//added by Mike, 20211111
-	drawGrid();
+	//note: excess drawn pixel due to drawGrid()...
+//	drawGrid();
+	
+	//added by Mike, 20211117
+	myIpis[0]->draw();
 	
 	//added by Mike, 20211112
 //	drawShield();

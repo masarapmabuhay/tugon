@@ -59,6 +59,18 @@ void MyDynamicObject::setUsbongUtils(UsbongUtils* u)
 }
 */
 
+//added by Mike, 2021117
+SDL_Texture* MyDynamicObject::loadTexture(char *filename)
+{
+	SDL_Texture *texture;
+
+	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
+
+	texture = IMG_LoadTexture(mySDLRenderer, filename);
+
+	return texture;
+}
+
 void MyDynamicObject::draw() {
 }
 

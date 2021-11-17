@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211116
+ * @date updated: 20211117
  * @website address: http://www.usbong.ph
  *
  */
@@ -38,7 +38,7 @@ private:
 	void drawExplosion();
 
 public:
-    Ipis(int xPos, int yPos, int zPos,int windowWidth,int windowHeight);
+    Ipis(SDL_Renderer* mySDLRenderer, int xPos, int yPos, int zPos,int windowWidth,int windowHeight);
 	~Ipis();
 
     virtual void draw();

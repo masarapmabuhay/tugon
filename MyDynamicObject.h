@@ -100,6 +100,7 @@ public:
 		SDL_Texture *texture;
 		
 		int iCountTotalFrames;
+		int iCountAnimationFrame; //added by Mike, 20211117
     
     //TO-DO: -add: this
 //    UsbongUtils *myUsbongUtils;
@@ -170,6 +171,8 @@ public:
     {
         return iStepZAsPixel;
     }
+
+		SDL_Texture *loadTexture(char *filename);
 
     virtual void draw();
     

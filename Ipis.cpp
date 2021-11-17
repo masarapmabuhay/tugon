@@ -34,7 +34,7 @@
 	#include <windows.h> //Windows Machine
 #endif
 		
-Ipis::Ipis(int xPos, int yPos, int zPos, int windowWidth, int windowHeight): MyDynamicObject(xPos,yPos,zPos, windowWidth, windowHeight)
+Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int windowWidth, int windowHeight): MyDynamicObject(xPos,yPos,zPos, windowWidth, windowHeight)
 { 
   currentState=MOVING_STATE;
 
@@ -56,6 +56,13 @@ Ipis::Ipis(int xPos, int yPos, int zPos, int windowWidth, int windowHeight): MyD
 	iMyStartYPos=iMyYPosAsPixel;
     
   iMyScoreValue=200;
+    
+  //added by Mike, 20211117
+  iCountAnimationFrame=0;
+
+  mySDLRenderer = mySDLRendererInput;
+  
+  texture = loadTexture((char*)"textures/ipis.png");
 }
 
 Ipis::~Ipis()
@@ -64,6 +71,34 @@ Ipis::~Ipis()
 
 
 void Ipis::drawIpis() {	
+  	//Rectangles for drawing which will specify source (inside the texture)
+  	//and target (on the screen) for rendering our textures.
+  	SDL_Rect SrcR;
+  	SDL_Rect DestR;
+  	
+		iCountAnimationFrame=iCountAnimationFrame+1;		               																				
+
+		if (iCountAnimationFrame>=2) { //2 frames of animation only
+			iCountAnimationFrame=0;
+		}
+	    	
+  	SrcR.x = 0+iCountAnimationFrame*iMyWidthAsPixel;
+  	SrcR.y = 0;
+	
+  	SrcR.w = iMyWidthAsPixel; 
+  	SrcR.h = iMyHeightAsPixel; 
+	
+  	DestR.x = getXPos();
+  	DestR.y = getYPos();
+  	
+  	DestR.w = iMyWidthAsPixel;
+  	DestR.h = iMyHeightAsPixel;
+	
+	
+  	//note: SDL color max 255; GIMP color max 100
+//		SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 255*1, 255*1, 255); //white
+		
+		SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
 }
 
 void Ipis::drawExplosion() {
