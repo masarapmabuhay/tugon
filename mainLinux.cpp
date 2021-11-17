@@ -50,11 +50,14 @@
 #include <iostream>
 
 #include "Ipis.h"
+#include "Unit.h"
 
 #define MAX_IPIS 6
 
+
 //added by Mike, 20211117
 class Ipis; 
+class Unit; 
 
 static int myWindowWidthAsPixel=640;
 static int myWindowHeightAsPixel=640;
@@ -92,6 +95,9 @@ int iStepY;
 
 //added by Mike, 20211116
 Ipis *myIpis[MAX_IPIS];
+
+//added by Mike, 20211117
+Unit *myUnit;
 
 SDL_Texture *texture;
 
@@ -369,17 +375,19 @@ void init() {
 	iStepX=1;
 	iStepY=1;
 	    
-  	iCountTileAnimationFrame=0;
+  iCountTileAnimationFrame=0;
   
-  	for (int iCount=0; iCount<4; iCount++) { //directional keys only
+  for (int iCount=0; iCount<4; iCount++) { //directional keys only
 		myKeysDown[iCount]=FALSE;
 	}		
 	myKeysDown[KEY_D] = TRUE;  	
 	
 	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
-		//TO-DO: -reverify: this
 		myIpis[iCount] = new Ipis(mySDLRenderer,0,0,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
 	}
+
+	myUnit = new Unit(mySDLRenderer,fGridSquareWidth*5,fGridSquareHeight*3,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
+
 }
 
 //added by Mike, 20211113
@@ -699,19 +707,6 @@ void draw(int x, int y)
   DestR.w = iPilotWidth;
   DestR.h = iPilotHeight;
 
-/*  	
-  int iCount;
-  for (iCount=0; iCount<iNumOfKeyTypes; iCount++) {
-		if (myKeysDown[iCount]==TRUE) {
- 			iCountTaoAnimationFrame=iCountTaoAnimationFrame+1;																				
- 			break;
-		}
-  }
-  if (iCount==iNumOfKeyTypes) {
- 			iCountTaoAnimationFrame=0;																				
-  }
-*/
-
 	SDL_RenderClear(mySDLRenderer);
 				
 	//added by Mike, 20211113
@@ -727,7 +722,10 @@ void draw(int x, int y)
 	//added by Mike, 20211111
 	//note: excess drawn pixel due to drawGrid()...
 //	drawGrid();
-	
+
+	//added by Mike, 20211117
+	myUnit->draw();
+
 	//added by Mike, 20211117
 	myIpis[0]->draw();
 	

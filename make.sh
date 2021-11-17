@@ -21,5 +21,6 @@
 g++ -c mainLinux.cpp
 g++ -c MyDynamicObject.cpp
 g++ -c Ipis.cpp
+g++ -c Unit.cpp
 
-g++ -o ./output/UsbongTugonLinux mainLinux.o MyDynamicObject.o Ipis.o -lSDL2 -lSDL2_image
+g++ -o ./output/UsbongTugonLinux mainLinux.o MyDynamicObject.o Ipis.o Unit.o -lSDL2 -lSDL2_image

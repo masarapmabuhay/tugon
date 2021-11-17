@@ -29,6 +29,10 @@
  *
  */
 
+//added by Mike, 20211117; prevents redefinition of header file
+#ifndef _MYDYNAMICOBJECT_H
+#define _MYDYNAMICOBJECT_H
+
 #include <math.h>
 
 //Reference: https://stackoverflow.com/questions/34152424/autodetection-of-os-in-c-c;
@@ -55,6 +59,7 @@
 #define WALKING_MOVING_STATE 1
 #define ATTACKING_MOVING_STATE 2
 
+/*	//edited by Mike, 20211117
 const int INITIALIZING_STATE = 0;
 const int MOVING_STATE = 1;
 const int IN_TITLE_STATE = 2;
@@ -62,13 +67,22 @@ const int DYING_STATE = 3;
 
 const int HIDDEN_STATE = 4,
 					ACTIVE_STATE = 5;
+*/
+#define INITIALIZING_STATE 0
+#define MOVING_STATE 1
+#define IN_TITLE_STATE 2
+#define DYING_STATE 3
+
+#define HIDDEN_STATE 4
+#define ACTIVE_STATE 5
 
 #define FACING_UP 0
 #define FACING_DOWN 1
 #define FACING_LEFT 2
 #define FACING_RIGHT 3
 
-class UsbongUtils;
+//TO-DO: -add: this
+//class UsbongUtils;
 
 class MyDynamicObject
 {               
@@ -209,3 +223,6 @@ public:
         
     virtual void destroy();
 };
+
+//added by Mike, 20211117
+#endif
