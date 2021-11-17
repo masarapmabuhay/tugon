@@ -9,7 +9,7 @@
 # @company: USBONG
 # @author: SYSON, MICHAEL B.
 # @date created: 20211111
-# @last updated: 20211116
+# @last updated: 20211117
 # @website address: http://www.usbong.ph
 #
 # Reference:
@@ -20,5 +20,6 @@
 
 g++ -c mainLinux.cpp
 g++ -c MyDynamicObject.cpp
+g++ -c Ipis.cpp
 
-g++ -o ./output/UsbongTugonLinux mainLinux.o MyDynamicObject.o -lSDL2 -lSDL2_image
+g++ -o ./output/UsbongTugonLinux mainLinux.o MyDynamicObject.o Ipis.o -lSDL2 -lSDL2_image

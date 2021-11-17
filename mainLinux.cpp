@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211116
+ * @date updated: 20211117
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -52,6 +52,9 @@
 #include "Ipis.h"
 
 #define MAX_IPIS 6
+
+//added by Mike, 20211117
+class Ipis; 
 
 static int myWindowWidthAsPixel=640;
 static int myWindowHeightAsPixel=640;
@@ -375,7 +378,7 @@ void init() {
 	
 	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
 		//TO-DO: -reverify: this
-//		myIpis[iCount] = new Ipis(0,0,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
+		myIpis[iCount] = new Ipis(0,0,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
 	}
 }
 

@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211116
+ * @date updated: 20211117
  * @website address: http://www.usbong.ph
  *
  */
@@ -36,29 +36,26 @@
 		
 Ipis::Ipis(int xPos, int yPos, int zPos, int windowWidth, int windowHeight): MyDynamicObject(xPos,yPos,zPos, windowWidth, windowHeight)
 { 
-    invincibleCounter=0;
-
-    currentState=MOVING_STATE;
-    currentStatus=status;
+  currentState=MOVING_STATE;
 
 	iMyWidthAsPixel=64; 
-    iMyHeightAsPixel=64; 
+  iMyHeightAsPixel=64; 
     
-    iMyXPosAsPixel=xPos;
-    iMyYPosAsPixel=yPos;
-    iMyZPosAsPixel=zPos;
+  iMyXPosAsPixel=xPos;
+  iMyYPosAsPixel=yPos;
+  iMyZPosAsPixel=zPos;
 
-	iStepX=1;
-	iStepY=1;
-	iStepZ=1;
+	iStepXAsPixel=1;
+	iStepYAsPixel=1;
+	iStepZAsPixel=1;
 
 	fMyWindowWidth=windowWidth;
 	fMyWindowHeight=windowHeight;
 			
-    iMyStartXPos=iMyXPosAsPixel;
+  iMyStartXPos=iMyXPosAsPixel;
 	iMyStartYPos=iMyYPosAsPixel;
     
-    iMyScoreValue=200;
+  iMyScoreValue=200;
 }
 
 Ipis::~Ipis()
@@ -78,10 +75,10 @@ void Ipis::draw()
     {
         case INITIALIZING_STATE:
         case MOVING_STATE:
-            drawIpis();
-            break;
-        case DEATH_STATE:
-			drawExplosion();
+          drawIpis();
+          break;
+      	case DYING_STATE:
+					drawExplosion();
         	break;
 	}    
 }
@@ -93,16 +90,11 @@ void Ipis::update(float dt)
            case INITIALIZING_STATE:                
            case MOVING_STATE:      
 			  break;
-           case DEATH_STATE:
+           case DYING_STATE:
 			  break;
             default: //STANDING STATE
               break;//do nothing    
     }
-}
-
-void Ipis::changeStatus(int s)
-{
-  currentStatus=s;                  
 }
 
 void Ipis::changeState(int s)
@@ -110,17 +102,16 @@ void Ipis::changeState(int s)
   currentState=s;                  
 }
 
-int Ipis:getState()
+int Ipis::getState()
 {
     return currentState;
 }
 
 
-void Ipis::reset(float xPos, float yPos, float zPos)
+void Ipis::reset(int iXPosInput, int iYPosInput)
 {
-    iMyXPos=xPos;
-    iMyYPos=yPos;  
-    iMyZPos=zPos;  
+    iMyXPosAsPixel=iXPosInput;
+    iMyYPosAsPixel=iYPosInput;  
 
     changeState(INITIALIZING_STATE);
     setCollidable(false);
@@ -132,7 +123,7 @@ void Ipis::hitBy(MyDynamicObject* mdo)
 {
     setCollidable(false);	
     //TO-DO: -add: score
-    changeState(DEATH_STATE);
+    changeState(DYING_STATE);
 }
 
 void Ipis::destroy()
