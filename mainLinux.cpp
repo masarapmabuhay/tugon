@@ -619,7 +619,7 @@ void update() {
 		
 		for (int iCount=0; iCount<4; iCount++) { //directional keys only
 			if (myKeysDown[iCount]==TRUE) {
-				myUnit->move(myKeysDown[iCount]);
+				myUnit->move(iCount);
 				break;
 			}
 		}		

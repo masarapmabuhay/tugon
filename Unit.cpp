@@ -59,6 +59,7 @@ Unit::Unit(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
     
   //added by Mike, 20211117
   iCountAnimationFrame=0;
+  iCurrentKeyInput=2; //start: face RIGHT
 
   mySDLRenderer = mySDLRendererInput;
   
@@ -84,18 +85,15 @@ void Unit::drawUnit() {
   	SrcR.x = 0+iCountAnimationFrame*iMyWidthAsPixel;
   	//edited by Mike, 2021117
 //  	SrcR.y = 0;
-  	SrcR.y = 0;
-
+	//note: based on image file's correct sequence vertically
 /*
-		//TO-DO: -update: image file to be in correct sequence vertically
-		if (iCurrentKeyInput==KEY_W) {
-		} 
-
 	KEY_W = 0,
 	KEY_S,
 	KEY_D,
 	KEY_A,
 */
+  	SrcR.y = 0+iCurrentKeyInput*iMyHeightAsPixel;
+
 	
   	SrcR.w = iMyWidthAsPixel; 
   	SrcR.h = iMyHeightAsPixel; 
@@ -134,6 +132,7 @@ void Unit::draw()
 void Unit::move(int iKeyInput) 
 {
 	iCurrentKeyInput = iKeyInput;
+	printf("iCurrentKeyInput: %i\n",iCurrentKeyInput);
 }
 
 void Unit::update(float dt)
