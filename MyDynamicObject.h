@@ -100,7 +100,10 @@ public:
     int iStepZAsPixel;
     
     int iOffsetXPosAsPixel;
-    int iOffsetYPosAsPixel;    
+    int iOffsetYPosAsPixel;   
+    
+    //added by Mike, 20211117 
+		int iCurrentKeyInput;
 								
     bool isCollidable;
         
@@ -200,8 +203,7 @@ public:
     virtual void setYPos(float iY) {
         iMyYPosAsPixel=iY;
     }
-    
-    
+        
     virtual void setXPosAsPixel(int iX) {
         iMyXPosAsPixel=iX;
     }
@@ -213,13 +215,15 @@ public:
     virtual void setYPosAsPixel(int iY) {
         iMyYPosAsPixel=iY;
     }
+
+    void move(int iKeyInput);
     
     bool checkCollision(MyDynamicObject* mdo1, MyDynamicObject* mdo2);
     void collideWith(MyDynamicObject* mdo);   
     virtual bool isIntersectingRect(MyDynamicObject* mdo1, MyDynamicObject* mdo2);        
     virtual void setCurrentMovingState(int iMovingState) {
         currentMovingState = iMovingState;
-    }
+    }        
         
     virtual void destroy();
 };

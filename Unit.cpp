@@ -82,7 +82,20 @@ void Unit::drawUnit() {
 		}
 	    	
   	SrcR.x = 0+iCountAnimationFrame*iMyWidthAsPixel;
+  	//edited by Mike, 2021117
+//  	SrcR.y = 0;
   	SrcR.y = 0;
+
+/*
+		//TO-DO: -update: image file to be in correct sequence vertically
+		if (iCurrentKeyInput==KEY_W) {
+		} 
+
+	KEY_W = 0,
+	KEY_S,
+	KEY_D,
+	KEY_A,
+*/
 	
   	SrcR.w = iMyWidthAsPixel; 
   	SrcR.h = iMyHeightAsPixel; 
@@ -117,18 +130,24 @@ void Unit::draw()
 	}    
 }
 
+
+void Unit::move(int iKeyInput) 
+{
+	iCurrentKeyInput = iKeyInput;
+}
+
 void Unit::update(float dt)
 {
     switch (currentState)
     {
-           case INITIALIZING_STATE:                
-           case MOVING_STATE:      
-			  break;
-           case DYING_STATE:
-			  break;
-            default: //STANDING STATE
-              break;//do nothing    
-    }
+        case INITIALIZING_STATE:                
+        case MOVING_STATE:      
+			  	break;
+        case DYING_STATE:
+			  	break;
+        default: //STANDING STATE
+          break;//do nothing    
+		}
 }
 
 void Unit::changeState(int s)
@@ -140,7 +159,6 @@ int Unit::getState()
 {
     return currentState;
 }
-
 
 void Unit::reset(int iXPosInput, int iYPosInput)
 {

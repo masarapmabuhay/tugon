@@ -391,39 +391,6 @@ void init() {
 }
 
 //added by Mike, 20211113
-/*
-void drawMovementTilePrev(int x, int y)
-{
-	int iTileWidth=fGridSquareWidth;
-	int iTileHeight=fGridSquareHeight;
-	
-  //Rectangles for drawing which will specify source (inside the texture)
-  //and target (on the screen) for rendering our textures.
-  SDL_Rect SrcR;
-  SDL_Rect DestR;
-  
-//	iCountTaoAnimationFrame=1;     
-//iCountTaoAnimationFrame=iCountTaoAnimationFrame+1;		               																				
-	    
-  SrcR.x = x;
-  SrcR.y = y;
-
-  SrcR.w = iTileWidth;
-  SrcR.h = iTileHeight;
-
-  DestR.x = x;
-  DestR.y = y;
-  
-  DestR.w = iTileWidth;
-  DestR.h = iTileHeight;
-
-  //note: SDL color max 255; GIMP color max 100
-	SDL_SetRenderDrawColor(mySDLRenderer, 255*0.44, 255*0.8, 255*0.26, 255); //grass
-	SDL_RenderFillRect(mySDLRenderer, &DestR);
-}
-*/
-
-//added by Mike, 20211113
 void drawMovementTile(int x, int y)
 {
 /* //edited by Mike, 20211114
@@ -467,30 +434,6 @@ void drawMovementTile(int x, int y)
 
 }
 
-/*
-//added by Mike, 20211113
-void drawLevel20211113()
-{
-	//note: count starts at zero	
-	//drawMovementTile(5*fGridSquareWidth,5*fGridSquareHeight);
-	for (int iRowCount=3; iRowCount<8; iRowCount++) {
-  	drawMovementTile(5*fGridSquareWidth,iRowCount*fGridSquareHeight);
-	}
-
-	for (int iRowCount=3; iRowCount<8; iRowCount++) {
-  	drawMovementTile(12*fGridSquareWidth,iRowCount*fGridSquareHeight);
-	}
-
-	for (int iColumnCount=6; iColumnCount<12; iColumnCount++) {
-  	drawMovementTile(iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
-	}
-
-	for (int iColumnCount=6; iColumnCount<12; iColumnCount++) {
-  	drawMovementTile(iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
-	}
-}
-*/
-
 void drawLevel()
 {
 	//note: count starts at zero	
@@ -512,27 +455,6 @@ void drawLevel()
 	}
 }
 
-/*
-//edited by Mike, 20211114
-void drawGrid()
-{
-  //note: SDL color max 255; GIMP color max 100
-	SDL_SetRenderDrawColor(mySDLRenderer, 0, 255*1, 0, 255); //green
-    
-  // Draw a Green Line
-  //rows
-  for (int iRowCount=0; iRowCount<=iRowCountMax; iRowCount++) {
-			SDL_RenderDrawLine(mySDLRenderer,
-        0, iRowCount*fGridSquareHeight, iColumnCountMax*fGridSquareWidth, iRowCount*fGridSquareHeight);
-   }
-
-  //columns
-  for (int iColumnCount=0; iColumnCount<=iColumnCountMax; iColumnCount++) {
-			SDL_RenderDrawLine(mySDLRenderer,
-        iColumnCount*fGridSquareWidth, 0, iColumnCount*fGridSquareWidth, iRowCountMax*fGridSquareHeight);
-   }
-}
-*/
 //added by Mike, 20211114
 void drawGrid()
 {
@@ -551,124 +473,6 @@ void drawGrid()
 			SDL_RenderDrawLine(mySDLRenderer,
         iColumnCount*fGridSquareWidth+iCurrentOffsetWidth, 0, iColumnCount*fGridSquareWidth+iCurrentOffsetWidth, iRowCountMax*fGridSquareHeight);
    }
-}
-
-
-
-//Reference: http://wiki.libsdl.org/SDL_RenderCopy;
-//last accessed: 20211111
-void drawPrev(SDL_Texture *texture, int x, int y)
-{
-	int iPilotWidth=64;
-	int iPilotHeight=64;
-	
-  //Rectangles for drawing which will specify source (inside the texture)
-  //and target (on the screen) for rendering our textures.
-  SDL_Rect SrcR;
-  SDL_Rect DestR;
-  
-	iCountTaoAnimationFrame=(iCountTaoAnimationFrame)%3;                    																				    
-  SrcR.x = 0+ iCountTaoAnimationFrame*iPilotWidth;
-  SrcR.y = 0;
-  SrcR.w = iPilotWidth;
-  SrcR.h = iPilotHeight;
-
-  DestR.x = x;
-  DestR.y = y;
-  DestR.w = iPilotWidth;
-  DestR.h = iPilotHeight;
-  	
-  int iCount;
-  for (iCount=0; iCount<iNumOfKeyTypes; iCount++) {
-		if (myKeysDown[iCount]==TRUE) {
- 			iCountTaoAnimationFrame=iCountTaoAnimationFrame+1;																				
- 			break;
-		}
-  }
-  if (iCount==iNumOfKeyTypes) {
- 			iCountTaoAnimationFrame=0;																				
-  }
-
-	SDL_RenderClear(mySDLRenderer);
-	//added by Mike, 20211111
-	//TO-DO: -reverify: excess drawn pixel if drawGrid() is executed earlier
-	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
-
-	//added by Mike, 20211111
-	drawGrid();
-	
-	//added by Mike, 20211112
-//	drawShield();
-}
-
-void drawV20211112(SDL_Texture *texture, int x, int y)
-{
-	int iPilotWidth=16;
-	int iPilotHeight=16;
-	
-  //Rectangles for drawing which will specify source (inside the texture)
-  //and target (on the screen) for rendering our textures.
-  SDL_Rect SrcR;
-  SDL_Rect DestR;
-  
-//	iCountTaoAnimationFrame=(iCountTaoAnimationFrame)%3;                    																			
-	iCountTaoAnimationFrame=1;                    																				
-	    
-//  SrcR.x = 0+ iCountTaoAnimationFrame*iPilotWidth;
-  SrcR.x = 0;
-//  SrcR.y = 0;
-  SrcR.y = 0+iPilotHeight;
-
-  SrcR.w = iPilotWidth;
-  SrcR.h = iPilotHeight;
-
-/*	//edited by Mike, 20211112
-  DestR.x = x;
-  DestR.y = y;
-  
-  DestR.w = iPilotWidth;
-  DestR.h = iPilotHeight;
-*/
-  DestR.x = x-iPilotWidth;
-  DestR.y = y-iPilotHeight+(iPilotHeight/2);
-
-/* //edited by Mike, 20211112  
-  DestR.x = x-iPilotWidth*5-5;
-//  DestR.y = y-iPilotHeight*5;
-  DestR.y = y-iPilotHeight*5+(iPilotHeight*5)/2-5;
-  
-	//increased scale output
-  DestR.w = iPilotWidth*5;
-  DestR.h = iPilotHeight*5;
-*/
-  DestR.w = iPilotWidth;
-  DestR.h = iPilotHeight;
-
-
-/*  	
-  int iCount;
-  for (iCount=0; iCount<iNumOfKeyTypes; iCount++) {
-		if (myKeysDown[iCount]==TRUE) {
- 			iCountTaoAnimationFrame=iCountTaoAnimationFrame+1;																				
- 			break;
-		}
-  }
-  if (iCount==iNumOfKeyTypes) {
- 			iCountTaoAnimationFrame=0;																				
-  }
-*/
-
-	SDL_RenderClear(mySDLRenderer);
-		
-	//added by Mike, 20211111
-	//TO-DO: -reverify: excess drawn pixel if drawGrid() is executed earlier
-	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
-
-	//added by Mike, 20211111
-	drawGrid();
-	
-	//added by Mike, 20211112
-//	drawShield();
 }
 
 void draw(int x, int y)
@@ -808,6 +612,18 @@ void update() {
 				}
 			}
 		}
+		
+		//added by Mike, 2021117
+		myUnit->setXPosAsPixel(iPilotX);
+		myUnit->setYPosAsPixel(iPilotY);
+		
+		for (int iCount=0; iCount<4; iCount++) { //directional keys only
+			if (myKeysDown[iCount]==TRUE) {
+				myUnit->move(myKeysDown[iCount]);
+				break;
+			}
+		}		
+
 		
 			if (bIsExecutingDestroyBug) {
   				iCurrentOffsetWidth+=2;
