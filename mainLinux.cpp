@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211118
+ * @date updated: 20211119
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -56,6 +56,7 @@
 //added by Mike, 20211118
 #define GRASS_TILE 1
 #define WATER_TILE 2
+#define TREE_TILE 3
 
 //added by Mike, 20211117
 class Ipis; 
@@ -282,7 +283,10 @@ void prepareScene(void)
 	//note: SDL color max 255; GIMP color max 100
 	//edited by Mike, 20211111
 //	SDL_SetRenderDrawColor(mySDLRenderer, 0, 255*0.667, 255*0.494, 255); //blue green
-	SDL_SetRenderDrawColor(mySDLRenderer, 0, 0, 0, 255); //black
+	//edited by Mike, 20211119
+//	SDL_SetRenderDrawColor(mySDLRenderer, 0, 0, 0, 255); //black
+//	SDL_SetRenderDrawColor(mySDLRenderer, 193, 246, 253, 255); //sky blue
+	SDL_SetRenderDrawColor(mySDLRenderer, 233, 214, 146, 255); //sand
 	
 	SDL_RenderClear(mySDLRenderer);
 }
@@ -458,7 +462,7 @@ void drawBackgroundTile(int iTileId, int x, int y)
 	    
   printf(">>iCountTileAnimationFrame: %i\n",iCountTileAnimationFrame);
 
-	if (iTileId>=2) {
+	if (iTileId==2) { //water
 	  iCountTileAnimationFrame=iCountTileAnimationFrame+1;		               																				
 	  if (iCountTileAnimationFrame>=2) { //2 frames of animation only
 			iCountTileAnimationFrame=0;
@@ -467,6 +471,11 @@ void drawBackgroundTile(int iTileId, int x, int y)
   	  SrcR.x = 0+iTileWidth*iCountTileAnimationFrame; //x;
   	  SrcR.y = 0+iTileHeight*(iTileId); //y;
    }
+   else if (iTileId==3) { //tree
+  	  SrcR.x = 0+iTileWidth*1; //x;
+  	  SrcR.y = 0+iTileHeight*(1); //y;
+   }
+
    else {
   	  SrcR.x = 0+iTileWidth*0; //x;
   	  SrcR.y = 0+iTileHeight*(iTileId); //y;
@@ -508,16 +517,34 @@ void drawLevel()
   		drawMovementTile(iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
 	}
 	
-	//added by Mike, 20211118
+	//added by Mike, 20211118; edited by Mike, 20211119
 	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
+//	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,7*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,9*fGridSquareHeight);
 
+	//note: water tile count, if NOT correct, no animation sequence
 	drawBackgroundTile(WATER_TILE,0*fGridSquareWidth,9*fGridSquareHeight);
 	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth,9*fGridSquareHeight);
 	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,5*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,6*fGridSquareWidth,9*fGridSquareHeight);
+
+	drawBackgroundTile(TREE_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,4*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,5*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,7*fGridSquareWidth,9*fGridSquareHeight);
 
 }
 
