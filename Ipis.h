@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211117
+ * @date updated: 20211118
  * @website address: http://www.usbong.ph
  *
  */
@@ -43,7 +43,7 @@ public:
 
     virtual void draw();
     
-	void update(float dt);
+	void update();
 	
 	void changeState(int s); //moving or dead
 	int getState();

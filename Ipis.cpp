@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211117
+ * @date updated: 20211118
  * @website address: http://www.usbong.ph
  *
  */
@@ -57,18 +57,31 @@ Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
     
   iMyScoreValue=200;
     
+  //edited by Mike, 20211118
+  reset(iMyXPosAsPixel, iMyYPosAsPixel);
+/*    
   //added by Mike, 20211117
   iCountAnimationFrame=0;
+  //added by Mike, 20211118
+  iDeathCountMaxDelayBeforeHidden=60; //TO-DO: add: sound
+  iDeathCountDelayBeforeHidden=0;
+  
+  iRegenerateCountMaxDelayBeforeActive=60; 
+	iRegenerateCountDelayBeforeActive=0; 
+*/
+
 
   mySDLRenderer = mySDLRendererInput;
   
   texture = loadTexture((char*)"textures/ipis.png");
+  
+	//added by Mike, 20211118  
+  isCollidable=true;  
 }
 
 Ipis::~Ipis()
 {
 }
-
 
 void Ipis::drawIpis() {	
   	//Rectangles for drawing which will specify source (inside the texture)
@@ -94,14 +107,41 @@ void Ipis::drawIpis() {
   	DestR.w = iMyWidthAsPixel;
   	DestR.h = iMyHeightAsPixel;
 	
-	
   	//note: SDL color max 255; GIMP color max 100
 //		SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 255*1, 255*1, 255); //white
 		
 		SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
 }
 
+//edited by Mike, 20211118
 void Ipis::drawExplosion() {
+		//Rectangles for drawing which will specify source (inside the texture)
+  	//and target (on the screen) for rendering our textures.
+  	SDL_Rect SrcR;
+  	SDL_Rect DestR;
+
+  	SrcR.x = 0+iMyWidthAsPixel*2 + iCountAnimationFrame*iMyWidthAsPixel;
+  	SrcR.y = 0;
+	
+  	SrcR.w = iMyWidthAsPixel; 
+  	SrcR.h = iMyHeightAsPixel; 
+	
+  	DestR.x = getXPos();
+  	DestR.y = getYPos();
+  	
+  	DestR.w = iMyWidthAsPixel;
+  	DestR.h = iMyHeightAsPixel;
+	
+  	//note: SDL color max 255; GIMP color max 100
+//		SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 255*1, 255*1, 255); //white
+		
+		SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
+
+		if (iCountAnimationFrame>=2) { //2 frames of animation only
+			iCountAnimationFrame=0;			
+		}
+  	
+		iCountAnimationFrame=iCountAnimationFrame+1;		
 }
 
 void Ipis::draw()
@@ -115,21 +155,44 @@ void Ipis::draw()
       	case DYING_STATE:
 					drawExplosion();
         	break;
+      	case HIDDEN_STATE:
+        	break;
 	}    
 }
 
-void Ipis::update(float dt)
+void Ipis::update()
 {
     switch (currentState)
     {
-           case INITIALIZING_STATE:                
-           case MOVING_STATE:      
-			  break;
-           case DYING_STATE:
-			  break;
-            default: //STANDING STATE
-              break;//do nothing    
-    }
+        case INITIALIZING_STATE:                
+        case MOVING_STATE:      
+						break;
+        case DYING_STATE:
+        		if (iDeathCountDelayBeforeHidden>=iDeathCountMaxDelayBeforeHidden) {
+							iDeathCountDelayBeforeHidden=0;
+							changeState(HIDDEN_STATE);
+        		}
+        		else {
+        			iDeathCountDelayBeforeHidden++;
+        		}        		
+			  		break;
+      	case HIDDEN_STATE:
+        		if (iRegenerateCountDelayBeforeActive>=iRegenerateCountDelayBeforeActive) {
+							iRegenerateCountDelayBeforeActive=0;
+							
+/*							//TO-DO: -add: auto-identify regenerate location
+							int iCount=0;
+							reset(fGridSquareWidth*5+fGridSquareWidth*iCount, fGridSquareHeight*3);
+*/
+							reset(getXPos(), getYPos());							
+						}
+						else {
+							iRegenerateCountDelayBeforeActive++;
+						}
+        		break;			  		
+        default: //STANDING STATE
+          	break;//do nothing    
+		}
 }
 
 void Ipis::changeState(int s)
@@ -149,13 +212,22 @@ void Ipis::reset(int iXPosInput, int iYPosInput)
     iMyYPosAsPixel=iYPosInput;  
 
     changeState(INITIALIZING_STATE);
-    setCollidable(false);
+    setCollidable(true);
     iDeathAnimationCounter=0;
+    
+  	iCountAnimationFrame=0;
+  	iDeathCountMaxDelayBeforeHidden=60;
+  	iDeathCountDelayBeforeHidden=0;
+  
+  	iRegenerateCountMaxDelayBeforeActive=60; 
+		iRegenerateCountDelayBeforeActive=0;     
 }
 
 
 void Ipis::hitBy(MyDynamicObject* mdo)
 {
+		iDeathCountDelayBeforeHidden=0;
+		iCountAnimationFrame=0;
     setCollidable(false);	
     //TO-DO: -add: score
     changeState(DYING_STATE);

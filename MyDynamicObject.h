@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211112
- * @date updated: 20211117
+ * @date updated: 20211118
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -118,6 +118,14 @@ public:
 		
 		int iCountTotalFrames;
 		int iCountAnimationFrame; //added by Mike, 20211117
+		
+		//added by Mike, 20211118
+		int iDeathCountMaxDelayBeforeHidden; 
+		int iDeathCountDelayBeforeHidden; 
+
+		//added by Mike, 20211118
+		int iRegenerateCountMaxDelayBeforeActive; 
+		int iRegenerateCountDelayBeforeActive; 
     
     //TO-DO: -add: this
 //    UsbongUtils *myUsbongUtils;
@@ -215,6 +223,11 @@ public:
     virtual void setYPosAsPixel(int iY) {
         iMyYPosAsPixel=iY;
     }
+
+		virtual void setGridTileWidthHeight(float fGridSquareWidthInput, float fGridSquareHeightInput) {
+			fGridSquareWidth=fGridSquareWidthInput;
+			fGridSquareHeight=fGridSquareHeightInput;
+		}
 
     void move(int iKeyInput);
     

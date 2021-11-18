@@ -92,7 +92,7 @@ bool MyDynamicObject::isIntersectingRect(MyDynamicObject* mdo1, MyDynamicObject*
         mdo2->getXPos()+mdo2->getWidth() < mdo1->getXPos()  || //is the right of mdo2 to the left of mdo1?
         mdo2->getXPos() > mdo1->getXPos()+mdo1->getWidth()) { //is the left of mdo2 to the right of mdo1?
         return false;
-	}
+		}
 	
     return true;
 }

@@ -64,6 +64,9 @@ Unit::Unit(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
   mySDLRenderer = mySDLRendererInput;
   
   texture = loadTexture((char*)"textures/unit.png");
+	
+	//added by Mike, 20211118  
+  isCollidable=true;
 }
 
 Unit::~Unit()
@@ -125,6 +128,8 @@ void Unit::draw()
       	case DYING_STATE:
 					drawExplosion();
         	break;
+      	case HIDDEN_STATE:
+        	break;        	
 	}    
 }
 
@@ -135,17 +140,19 @@ void Unit::move(int iKeyInput)
 	printf("iCurrentKeyInput: %i\n",iCurrentKeyInput);
 }
 
-void Unit::update(float dt)
+void Unit::update()
 {
     switch (currentState)
     {
         case INITIALIZING_STATE:                
         case MOVING_STATE:      
-			  	break;
+			  		break;
         case DYING_STATE:
-			  	break;
+			  		break;
+      	case HIDDEN_STATE:
+        		break;			  		
         default: //STANDING STATE
-          break;//do nothing    
+          	break;//do nothing    
 		}
 }
 
@@ -172,9 +179,11 @@ void Unit::reset(int iXPosInput, int iYPosInput)
 
 void Unit::hitBy(MyDynamicObject* mdo)
 {
+/*	//removed by Mike, 20211118
     setCollidable(false);	
     //TO-DO: -add: score
     changeState(DYING_STATE);
+*/    
 }
 
 void Unit::destroy()

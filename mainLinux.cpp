@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211117
+ * @date updated: 20211118
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -383,7 +383,9 @@ void init() {
 	myKeysDown[KEY_D] = TRUE;  	
 	
 	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
-		myIpis[iCount] = new Ipis(mySDLRenderer,0,0,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
+//		myIpis[iCount] = new Ipis(mySDLRenderer,0,0,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
+		myIpis[iCount] = new Ipis(mySDLRenderer,fGridSquareWidth*5+fGridSquareWidth*iCount,fGridSquareHeight*3,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
+		myIpis[iCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);
 	}
 
 	myUnit = new Unit(mySDLRenderer,fGridSquareWidth*5,fGridSquareHeight*3,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
@@ -475,7 +477,7 @@ void drawGrid()
    }
 }
 
-void draw(int x, int y)
+void drawPrev(int x, int y)
 {
 /* //edited by Mike, 20211112
 	int iPilotWidth=16;
@@ -523,15 +525,45 @@ void draw(int x, int y)
 //	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
 	SDL_RenderFillRect(mySDLRenderer, &DestR);
 
+
 	//added by Mike, 20211111
 	//note: excess drawn pixel due to drawGrid()...
 //	drawGrid();
 
-	//added by Mike, 20211117
-	myUnit->draw();
+	//added by Mike, 20211117; edited by Mike, 20211118
+//	myIpis[0]->draw();
+	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
+		myIpis[iCount]->draw();
+	}
 
 	//added by Mike, 20211117
-	myIpis[0]->draw();
+	myUnit->draw();
+	
+	//added by Mike, 20211112
+//	drawShield();
+}
+
+//edited by Mike, 20211118
+void draw(int x, int y)
+{
+
+	SDL_RenderClear(mySDLRenderer);
+				
+	//added by Mike, 20211113
+	drawLevel();
+
+	//added by Mike, 20211111
+	//note: excess drawn pixel due to drawGrid()...
+//	drawGrid();
+
+	//added by Mike, 20211117; edited by Mike, 20211118
+//	myIpis[0]->draw();
+	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
+		myIpis[iCount]->draw();
+	}
+
+	//added by Mike, 20211117
+	myUnit->draw();
 	
 	//added by Mike, 20211112
 //	drawShield();
@@ -629,6 +661,11 @@ void update() {
   				iCurrentOffsetWidth+=2;
 					iCurrentOffsetHeight-=2;			
 
+    			//added by Mike, 20211118
+    			for (int iCount=0; iCount<MAX_IPIS; iCount++) {
+						myUnit->collideWith(myIpis[iCount]);
+					}
+
 					if (iDestroyBugShakeDelayCount==iDestroyBugShakeDelayMax) {
 				  	myKeysDown[KEY_K] = FALSE;
     				bIsExecutingDestroyBug = false;					
@@ -636,12 +673,17 @@ void update() {
     			}
     			else {
 						iDestroyBugShakeDelayCount+=1;					
-    			}
+    			}    			
 			}		
 			else {
   			iCurrentOffsetWidth=iBaseOffsetWidth;
 				iCurrentOffsetHeight=iBaseOffsetHeight;				
 			}
+			
+			//added by Mike, 20211118
+    	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
+    		myIpis[iCount]->update();
+			}			
 }
 
 int main(int argc, char *argv[])
