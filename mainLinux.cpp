@@ -52,8 +52,10 @@
 #include "Ipis.h"
 #include "Unit.h"
 
-#define MAX_IPIS 6
-
+#define MAX_IPIS 6 //TO-DO: -update: to be 22 MAX
+//added by Mike, 20211118
+#define GRASS_TILE 1
+#define WATER_TILE 2
 
 //added by Mike, 20211117
 class Ipis; 
@@ -408,7 +410,7 @@ void drawMovementTile(int x, int y)
   SDL_Rect DestR;
   
 //	iCountTaoAnimationFrame=1;     
-	iCountTileAnimationFrame=iCountTaoAnimationFrame+1;		               																				
+//	iCountTileAnimationFrame=iCountTaoAnimationFrame+1;		               																				
 	    
   SrcR.x = 0; //x;
   SrcR.y = 0; //y;
@@ -436,6 +438,56 @@ void drawMovementTile(int x, int y)
 
 }
 
+//added by Mike, 20211118
+void drawBackgroundTile(int iTileId, int x, int y)
+{
+/*
+
+	int iTileWidth=fGridSquareWidth;
+	int iTileHeight=fGridSquareHeight;
+*/
+	int iTileWidth=64;
+	int iTileHeight=64;
+
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+  
+  //note: iTileId=2 //river
+	    
+  printf(">>iCountTileAnimationFrame: %i\n",iCountTileAnimationFrame);
+
+	if (iTileId>=2) {
+	  iCountTileAnimationFrame=iCountTileAnimationFrame+1;		               																				
+	  if (iCountTileAnimationFrame>=2) { //2 frames of animation only
+			iCountTileAnimationFrame=0;
+	  }
+	    
+  	  SrcR.x = 0+iTileWidth*iCountTileAnimationFrame; //x;
+  	  SrcR.y = 0+iTileHeight*(iTileId); //y;
+   }
+   else {
+  	  SrcR.x = 0+iTileWidth*0; //x;
+  	  SrcR.y = 0+iTileHeight*(iTileId); //y;
+   }
+
+
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+  DestR.x = x+iCurrentOffsetWidth;
+  DestR.y = y;
+  
+  
+  DestR.w = fGridSquareWidth;
+  DestR.h = fGridSquareHeight;
+
+
+  SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
+
+}
+
 void drawLevel()
 {
 	//note: count starts at zero	
@@ -455,6 +507,18 @@ void drawLevel()
 	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
   		drawMovementTile(iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
 	}
+	
+	//added by Mike, 20211118
+	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,9*fGridSquareHeight);
+
+	drawBackgroundTile(WATER_TILE,0*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth,9*fGridSquareHeight);
+
 }
 
 //added by Mike, 20211114
@@ -477,71 +541,6 @@ void drawGrid()
    }
 }
 
-void drawPrev(int x, int y)
-{
-/* //edited by Mike, 20211112
-	int iPilotWidth=16;
-	int iPilotHeight=16;
-*/	
-
-	int iPilotWidth=fGridSquareWidth/2;
-	int iPilotHeight=fGridSquareHeight/2;
-
-	//added by Mike, 20211113
-	x=x+iPilotWidth/2;
-	y=y+iPilotHeight/2;
-	
-  //Rectangles for drawing which will specify source (inside the texture)
-  //and target (on the screen) for rendering our textures.
-  SDL_Rect SrcR;
-  SDL_Rect DestR;
-  
-//	iCountTaoAnimationFrame=(iCountTaoAnimationFrame)%3;                    																			
-	iCountTaoAnimationFrame=1;                    																				
-	    
-//  SrcR.x = 0+ iCountTaoAnimationFrame*iPilotWidth;
-  SrcR.x = 0;
-//  SrcR.y = 0;
-  SrcR.y = 0+iPilotHeight;
-
-  SrcR.w = iPilotWidth;
-  SrcR.h = iPilotHeight;
-
-  DestR.x = x;
-  DestR.y = y;
-  
-  DestR.w = iPilotWidth;
-  DestR.h = iPilotHeight;
-
-	SDL_RenderClear(mySDLRenderer);
-				
-	//added by Mike, 20211113
-	drawLevel();
-
-  //note: SDL color max 255; GIMP color max 100
-	SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 0, 0, 255); //red
-		
-	//added by Mike, 20211111
-//	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
-	SDL_RenderFillRect(mySDLRenderer, &DestR);
-
-
-	//added by Mike, 20211111
-	//note: excess drawn pixel due to drawGrid()...
-//	drawGrid();
-
-	//added by Mike, 20211117; edited by Mike, 20211118
-//	myIpis[0]->draw();
-	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
-		myIpis[iCount]->draw();
-	}
-
-	//added by Mike, 20211117
-	myUnit->draw();
-	
-	//added by Mike, 20211112
-//	drawShield();
-}
 
 //edited by Mike, 20211118
 void draw(int x, int y)
