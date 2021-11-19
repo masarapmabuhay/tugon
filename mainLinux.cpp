@@ -113,6 +113,13 @@ Ipis *myIpis[MAX_IPIS];
 //added by Mike, 20211117
 Unit *myUnit;
 
+/* //removed by Mike, 20211119
+//added by Mike, 20211119
+int myLevelWeakBeat[MAX_IPIS];
+int myLevelMediumBeat[MAX_IPIS];
+int myLevelStrongBeat[MAX_IPIS];
+*/
+
 SDL_Texture *texture;
 
 #define TRUE 1
@@ -387,7 +394,9 @@ void init() {
 
 	iDestroyBugShakeDelayCount=0;
 	iDestroyBugShakeDelayMax=5;
-
+	
+	//added by Mike, 20211119
+	//TO-DO: -update: this based on Level
 	//added by Mike, 20211115
 	iStepX=1;
 	iStepY=1;
@@ -406,43 +415,60 @@ void init() {
 		myIpis[iCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);
 	}
 */
+		//added by Mike, 20211119
+		//TO-DO: -add: in a reusable function		
+		int myLevelWeakBeat[MAX_IPIS] = {0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1};
+
+		printf(">>myLevelWeakBeat[21]: %i\n",myLevelWeakBeat[21]); //max
+		
+		//TO-DO: -update: this
+
 		int iIpisCount=0;
 		//ROAD_UP_TILE
 		for (int iRowCount=3; iRowCount<8; iRowCount++) {
-			myIpis[iIpisCount] = new Ipis(mySDLRenderer,1*fGridSquareWidth+iCurrentOffsetWidth,
-																									iRowCount*fGridSquareHeight,0,
-																		myWindowWidthAsPixel,myWindowHeightAsPixel);																		
-			myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+//			if (myLevelWeakBeat[iIpisCount]!=0) {
+				myIpis[iIpisCount] = new Ipis(mySDLRenderer,1*fGridSquareWidth+iCurrentOffsetWidth,
+																										iRowCount*fGridSquareHeight,0,
+																			myWindowWidthAsPixel,myWindowHeightAsPixel);																		
+				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+//			}
 			iIpisCount++;
 		}
 
 		//ROAD_DOWN_TILE
 		for (int iRowCount=3; iRowCount<8; iRowCount++) {
-			myIpis[iIpisCount] = new Ipis(mySDLRenderer,8*fGridSquareWidth+iCurrentOffsetWidth,
-																									iRowCount*fGridSquareHeight,0,
-																		myWindowWidthAsPixel,myWindowHeightAsPixel);
-			myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+//			if (myLevelWeakBeat[iIpisCount]!=0) {
+				myIpis[iIpisCount] = new Ipis(mySDLRenderer,8*fGridSquareWidth+iCurrentOffsetWidth,
+																										iRowCount*fGridSquareHeight,0,
+																			myWindowWidthAsPixel,myWindowHeightAsPixel);
+				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+//			}
 			iIpisCount++;
 		}
 		
 		//ROAD_RIGHT_TILE
 		for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
-			myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
+//			if (myLevelWeakBeat[iIpisCount]!=0) {
+				myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
 																									3*fGridSquareHeight,0,
 																		myWindowWidthAsPixel,myWindowHeightAsPixel);
-			myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+//			}
 			iIpisCount++;
 		}
 		
 		//ROAD_LEFT_TILE
 		for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
-			myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
+//			if (myLevelWeakBeat[iIpisCount]!=0) {
+				myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
 																									7*fGridSquareHeight,0,
 																		myWindowWidthAsPixel,myWindowHeightAsPixel);
-			myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+//			}
 			iIpisCount++;
 		}
-
+		
+		printf(">>iIpisCount: %i\n",iIpisCount);
 
 	myUnit = new Unit(mySDLRenderer,fGridSquareWidth*5,fGridSquareHeight*3,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
 
@@ -554,7 +580,7 @@ void drawBackgroundTile(int iTileId, int x, int y)
   
   //note: iTileId=2 //river
 	    
-  printf(">>iCountTileAnimationFrame: %i\n",iCountTileAnimationFrame);
+//  printf(">>iCountTileAnimationFrame: %i\n",iCountTileAnimationFrame);
 
 	if (iTileId==2) { //water
 	  iCountTileAnimationFrame=iCountTileAnimationFrame+1;		               																				

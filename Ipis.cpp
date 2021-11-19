@@ -180,12 +180,8 @@ void Ipis::update()
         		if (iRegenerateCountDelayBeforeActive>=iRegenerateCountDelayBeforeActive) {
 							iRegenerateCountDelayBeforeActive=0;
 							
-/*							//TO-DO: -add: auto-identify regenerate location
-							int iCount=0;
-							reset(fGridSquareWidth*5+fGridSquareWidth*iCount, fGridSquareHeight*3);
-*/
-
-							reset(getXPos(), getYPos());							
+							//removed by Mike, 20211119
+							//reset(getXPos(), getYPos());							
 						}
 						else {
 							iRegenerateCountDelayBeforeActive++;
