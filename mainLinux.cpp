@@ -52,7 +52,7 @@
 #include "Ipis.h"
 #include "Unit.h"
 
-#define MAX_IPIS 6 //TO-DO: -update: to be 22 MAX
+#define MAX_IPIS 22 //6
 //added by Mike, 20211118
 #define GRASS_TILE 1
 #define WATER_TILE 2
@@ -398,12 +398,51 @@ void init() {
 		myKeysDown[iCount]=FALSE;
 	}		
 	myKeysDown[KEY_D] = TRUE;  	
-	
+
+/*
+	//edited by Mike, 20211119	
 	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
-//		myIpis[iCount] = new Ipis(mySDLRenderer,0,0,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
 		myIpis[iCount] = new Ipis(mySDLRenderer,fGridSquareWidth*5+fGridSquareWidth*iCount,fGridSquareHeight*3,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
 		myIpis[iCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);
 	}
+*/
+		int iIpisCount=0;
+		//ROAD_UP_TILE
+		for (int iRowCount=3; iRowCount<8; iRowCount++) {
+			myIpis[iIpisCount] = new Ipis(mySDLRenderer,1*fGridSquareWidth+iCurrentOffsetWidth,
+																									iRowCount*fGridSquareHeight,0,
+																		myWindowWidthAsPixel,myWindowHeightAsPixel);																		
+			myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+			iIpisCount++;
+		}
+
+		//ROAD_DOWN_TILE
+		for (int iRowCount=3; iRowCount<8; iRowCount++) {
+			myIpis[iIpisCount] = new Ipis(mySDLRenderer,8*fGridSquareWidth+iCurrentOffsetWidth,
+																									iRowCount*fGridSquareHeight,0,
+																		myWindowWidthAsPixel,myWindowHeightAsPixel);
+			myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+			iIpisCount++;
+		}
+		
+		//ROAD_RIGHT_TILE
+		for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+			myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
+																									3*fGridSquareHeight,0,
+																		myWindowWidthAsPixel,myWindowHeightAsPixel);
+			myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+			iIpisCount++;
+		}
+		
+		//ROAD_LEFT_TILE
+		for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+			myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
+																									7*fGridSquareHeight,0,
+																		myWindowWidthAsPixel,myWindowHeightAsPixel);
+			myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+			iIpisCount++;
+		}
+
 
 	myUnit = new Unit(mySDLRenderer,fGridSquareWidth*5,fGridSquareHeight*3,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
 

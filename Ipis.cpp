@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211118
+ * @date updated: 20211119
  * @website address: http://www.usbong.ph
  *
  */
@@ -184,6 +184,7 @@ void Ipis::update()
 							int iCount=0;
 							reset(fGridSquareWidth*5+fGridSquareWidth*iCount, fGridSquareHeight*3);
 */
+
 							reset(getXPos(), getYPos());							
 						}
 						else {
