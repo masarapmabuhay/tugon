@@ -113,12 +113,10 @@ Ipis *myIpis[MAX_IPIS];
 //added by Mike, 20211117
 Unit *myUnit;
 
-/* //removed by Mike, 20211119
 //added by Mike, 20211119
 int myLevelWeakBeat[MAX_IPIS];
 int myLevelMediumBeat[MAX_IPIS];
 int myLevelStrongBeat[MAX_IPIS];
-*/
 
 SDL_Texture *texture;
 
@@ -418,21 +416,38 @@ void init() {
 		//added by Mike, 20211119
 		//TO-DO: -add: in a reusable function		
 		int myLevelWeakBeat[MAX_IPIS] = {0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1};
-
-		printf(">>myLevelWeakBeat[21]: %i\n",myLevelWeakBeat[21]); //max
+/*
+		for (int iCount=0; iCount<MAX_IPIS; iCount++) {
+			if (iCount%2==0) {
+				myLevelWeakBeat[iCount]=0;
+			}
+			else {
+				myLevelWeakBeat[iCount]=1;
+			}
+		}
+*/
+//		printf(">>myLevelWeakBeat[21]: %i\n",myLevelWeakBeat[21]); //max
+		printf(">>myLevelWeakBeat[1]: %i\n",myLevelWeakBeat[1]);		
 		
 		//TO-DO: -update: this
 
 		int iIpisCount=0;
 		//ROAD_UP_TILE
 		for (int iRowCount=3; iRowCount<8; iRowCount++) {
-//			if (myLevelWeakBeat[iIpisCount]!=0) {
-				myIpis[iIpisCount] = new Ipis(mySDLRenderer,1*fGridSquareWidth+iCurrentOffsetWidth,
-																										iRowCount*fGridSquareHeight,0,
-																			myWindowWidthAsPixel,myWindowHeightAsPixel);																		
-				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
-//			}
-			iIpisCount++;
+			myIpis[iIpisCount] = new Ipis(mySDLRenderer,1*fGridSquareWidth+iCurrentOffsetWidth,
+														iRowCount*fGridSquareHeight,0,
+														myWindowWidthAsPixel,myWindowHeightAsPixel);																		
+			myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+
+/*
+			printf(">>iIpisCount: %i\n",iIpisCount);
+			printf(">>myLevelWeakBeat[iIpisCount]: %i\n",myLevelWeakBeat[iIpisCount]);
+			
+			if (myLevelWeakBeat[iIpisCount]==0) {
+				myIpis[iIpisCount]->changeState(HIDDEN_STATE);
+			}
+*/
+			iIpisCount++;			
 		}
 
 		//ROAD_DOWN_TILE
@@ -469,6 +484,15 @@ void init() {
 		}
 		
 		printf(">>iIpisCount: %i\n",iIpisCount);
+
+		//TO-DO: -update: this
+
+		//added by Mike, 20211119
+		for (int iCount=0; iCount<MAX_IPIS; iCount++) {
+			if (myLevelWeakBeat[iCount]==0) {
+				myIpis[iCount]->changeState(HIDDEN_STATE);
+			}			
+		}
 
 	myUnit = new Unit(mySDLRenderer,fGridSquareWidth*5,fGridSquareHeight*3,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
 
@@ -671,6 +695,7 @@ void drawLevel()
 	drawBackgroundTile(TREE_TILE,7*fGridSquareWidth,9*fGridSquareHeight);
 }
 */
+
 void drawLevel()
 {
 	//note: count starts at zero	
