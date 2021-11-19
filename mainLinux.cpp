@@ -58,6 +58,17 @@
 #define WATER_TILE 2
 #define TREE_TILE 3
 
+//added by Mike, 20211119
+#define ROAD_RIGHT_TILE 4
+#define ROAD_LEFT_TILE 5
+#define ROAD_UP_TILE 6
+#define ROAD_DOWN_TILE 7
+#define ROAD_RIGHT_DOWN_TILE 8
+#define ROAD_DOWN_LEFT_TILE 9
+#define ROAD_LEFT_UP_TILE 10
+#define ROAD_UP_RIGHT_TILE 11
+
+
 //added by Mike, 20211117
 class Ipis; 
 class Unit; 
@@ -398,13 +409,10 @@ void init() {
 
 }
 
+/* //edited by Mike, 20211119
 //added by Mike, 20211113
 void drawMovementTile(int x, int y)
 {
-/* //edited by Mike, 20211114
-	int iTileWidth=fGridSquareWidth;
-	int iTileHeight=fGridSquareHeight;
-*/
 	int iTileWidth=fGridSquareWidth;
 	int iTileHeight=fGridSquareHeight;
 
@@ -412,34 +420,81 @@ void drawMovementTile(int x, int y)
   //and target (on the screen) for rendering our textures.
   SDL_Rect SrcR;
   SDL_Rect DestR;
-  
-//	iCountTaoAnimationFrame=1;     
-//	iCountTileAnimationFrame=iCountTaoAnimationFrame+1;		               																				
-	    
+  	    
   SrcR.x = 0; //x;
   SrcR.y = 0; //y;
 
   SrcR.w = 64; //iTileWidth;
   SrcR.h = 64; //iTileHeight;
 
-/*	//edited by Mike, 20211114
-  DestR.x = x;
-  DestR.y = y;
-*/
   DestR.x = x+iCurrentOffsetWidth;
   DestR.y = y;
   
   DestR.w = iTileWidth;
   DestR.h = iTileHeight;
 
-/* //edited by Mike, 20211113
-  //note: SDL color max 255; GIMP color max 100
-	SDL_SetRenderDrawColor(mySDLRenderer, 255*0.44, 255*0.8, 255*0.26, 255); //grass
-	SDL_RenderFillRect(mySDLRenderer, &DestR);
-*/	
-	
 	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
+}
+*/
 
+//added by Mike, 20211119
+void drawMovementTile(int iDirection, int x, int y)
+{
+/*
+	int iTileWidth=fGridSquareWidth;
+	int iTileHeight=fGridSquareHeight;
+*/
+	int iTileWidth=64;
+	int iTileHeight=64;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+
+/*  	    
+  SrcR.x = 0; //x;
+  SrcR.y = 0; //y;
+*/
+	
+	if ((iDirection==ROAD_RIGHT_TILE)||(iDirection==ROAD_LEFT_TILE)) {
+  	SrcR.x = 0; //x;
+  	SrcR.y = 0; //y;	
+	}
+	else if ((iDirection==ROAD_UP_TILE)||(iDirection==ROAD_DOWN_TILE)) {
+  	SrcR.x = 0+iTileWidth; //x;
+  	SrcR.y = 0; //y;  	
+	}
+	//corner
+	else {
+			if (iDirection==ROAD_RIGHT_DOWN_TILE) {
+  			SrcR.x = 0+iTileWidth*3;
+  			SrcR.y = 0;
+			}
+			else if (iDirection==ROAD_DOWN_LEFT_TILE) {
+  			SrcR.x = 0+iTileWidth*3; 
+  			SrcR.y = 0+iTileHeight; 			
+			}
+			else if (iDirection==ROAD_LEFT_UP_TILE) {
+  			SrcR.x = 0+iTileWidth*2; 
+  			SrcR.y = 0+iTileHeight;  			
+			}
+			else if (iDirection==ROAD_UP_RIGHT_TILE) {
+  			SrcR.x = 0+iTileWidth*2;
+  			SrcR.y = 0;
+			}
+	}	
+
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+  DestR.x = x+iCurrentOffsetWidth;
+  DestR.y = y;
+  
+  DestR.w = fGridSquareWidth;
+  DestR.h = fGridSquareHeight;
+
+	SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
 }
 
 //added by Mike, 20211118
@@ -487,8 +542,7 @@ void drawBackgroundTile(int iTileId, int x, int y)
 
   DestR.x = x+iCurrentOffsetWidth;
   DestR.y = y;
-  
-  
+    
   DestR.w = fGridSquareWidth;
   DestR.h = fGridSquareHeight;
 
@@ -497,24 +551,82 @@ void drawBackgroundTile(int iTileId, int x, int y)
 
 }
 
+/*	//edited by Mike, 20211119
 void drawLevel()
 {
 	//note: count starts at zero	
 	//drawMovementTile(5*fGridSquareWidth,5*fGridSquareHeight);
 	for (int iRowCount=3; iRowCount<8; iRowCount++) {
-  		drawMovementTile(1*fGridSquareWidth,iRowCount*fGridSquareHeight);
+//  		drawMovementTile(1*fGridSquareWidth,iRowCount*fGridSquareHeight);
+  		drawMovementTile(ROAD_UP_TILE, 1*fGridSquareWidth,iRowCount*fGridSquareHeight);
 	}
 
 	for (int iRowCount=3; iRowCount<8; iRowCount++) {
-  		drawMovementTile(8*fGridSquareWidth,iRowCount*fGridSquareHeight);
+//  		drawMovementTile(8*fGridSquareWidth,iRowCount*fGridSquareHeight);
+  		drawMovementTile(ROAD_DOWN_TILE, 8*fGridSquareWidth,iRowCount*fGridSquareHeight);
 	}
 	
 	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
-  		drawMovementTile(iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
+//  		drawMovementTile(iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
+  		drawMovementTile(ROAD_RIGHT_TILE, iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
 	}
 	
 	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
-  		drawMovementTile(iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
+//  		drawMovementTile(iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
+  		drawMovementTile(ROAD_LEFT_TILE, iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
+	}
+	
+	//added by Mike, 20211118; edited by Mike, 20211119
+	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,8*fGridSquareHeight);
+//	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,7*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,9*fGridSquareHeight);
+
+	//note: water tile count, if NOT correct, no animation sequence
+	drawBackgroundTile(WATER_TILE,0*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,5*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,6*fGridSquareWidth,9*fGridSquareHeight);
+
+	drawBackgroundTile(TREE_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,4*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,5*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,7*fGridSquareWidth,9*fGridSquareHeight);
+}
+*/
+void drawLevel()
+{
+	//note: count starts at zero	
+  drawMovementTile(ROAD_UP_RIGHT_TILE, 1*fGridSquareWidth,3*fGridSquareHeight);
+	for (int iRowCount=4; iRowCount<7; iRowCount++) {
+  		drawMovementTile(ROAD_UP_TILE, 1*fGridSquareWidth,iRowCount*fGridSquareHeight);
+	}
+  drawMovementTile(ROAD_LEFT_UP_TILE, 1*fGridSquareWidth,7*fGridSquareHeight);
+
+  drawMovementTile(ROAD_RIGHT_DOWN_TILE, 8*fGridSquareWidth,3*fGridSquareHeight);
+	for (int iRowCount=4; iRowCount<8; iRowCount++) {
+  		drawMovementTile(ROAD_DOWN_TILE, 8*fGridSquareWidth,iRowCount*fGridSquareHeight);
+	}
+  drawMovementTile(ROAD_DOWN_LEFT_TILE, 8*fGridSquareWidth,7*fGridSquareHeight);
+
+	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+  		drawMovementTile(ROAD_RIGHT_TILE, iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
+	}
+	
+	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+  		drawMovementTile(ROAD_LEFT_TILE, iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
 	}
 	
 	//added by Mike, 20211118; edited by Mike, 20211119
@@ -547,6 +659,7 @@ void drawLevel()
 	drawBackgroundTile(TREE_TILE,7*fGridSquareWidth,9*fGridSquareHeight);
 
 }
+
 
 //added by Mike, 20211114
 void drawGrid()
