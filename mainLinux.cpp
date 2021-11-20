@@ -919,7 +919,10 @@ void update() {
 					iCurrentOffsetHeight-=2;			
 
 					//added by Mike, 20211120
-					//TO-DO: -add: ipis with multiple hits to destroy
+					//TO-DO: -add: miss count; excess destroy ipis action
+					//TO-DO: -add: hit ipis, but NOT yet destroyed notification
+					//TO-DO: -add: sound beat
+					
 
     			//added by Mike, 20211118
     			for (int iCount=0; iCount<MAX_IPIS; iCount++) {

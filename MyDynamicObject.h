@@ -123,7 +123,11 @@ public:
 		//added by Mike, 20211120		
 		int iCountAnimationFrameDelay;
 		int iCountAnimationFrameMaxDelay;
-
+			
+		//added by Mike, 20211120
+		int iCurrentLife;
+		int iInvincibleCount;
+		int iInvincibleCountMax;
 		
 		//added by Mike, 20211118
 		int iDeathCountMaxDelayBeforeHidden; 

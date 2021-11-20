@@ -58,6 +58,9 @@ Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
   iMyScoreValue=200;
   iIpisLevel=0;
   iIpisLevelMax=2;
+  iCurrentLife=iIpisLevel+1;
+	iInvincibleCountMax=2;
+  iInvincibleCount=iInvincibleCountMax;
     
   //edited by Mike, 20211118
   reset(iMyXPosAsPixel, iMyYPosAsPixel);
@@ -219,6 +222,9 @@ void Ipis::executeRegenerate() {
 		else {
 			iIpisLevel=0;
 		}
+		
+		iCurrentLife=iIpisLevel+1;
+		iInvincibleCount=iInvincibleCountMax;
 	}
 	else {
 		iRegenerateCountDelayBeforeActive++;
@@ -258,18 +264,35 @@ void Ipis::reset(int iXPosInput, int iYPosInput)
   
   	//edited by Mike, 20211120
 //  	iRegenerateCountMaxDelayBeforeActive=60; 
-		iRegenerateCountDelayBeforeActive=0;     
+		iRegenerateCountDelayBeforeActive=0;   
+		
+		//added by Mike, 20211120
+		iInvincibleCount=iInvincibleCountMax;  
 }
 
 
 void Ipis::hitBy(MyDynamicObject* mdo)
 {
-		if (currentState!=INACTIVE_STATE) {
-			iDeathCountDelayBeforeHidden=0;
-			iCountAnimationFrame=0;
-    	setCollidable(false);	
-    	//TO-DO: -add: score
-    	changeState(DYING_STATE);
+		//added by Mike, 20211120
+		if (iInvincibleCount>=iInvincibleCountMax) {
+			if (iCurrentLife<=0) {
+				if (currentState!=INACTIVE_STATE) {
+					iDeathCountDelayBeforeHidden=0;
+					iCountAnimationFrame=0;
+    			setCollidable(false);	
+    			//TO-DO: -add: score
+    			changeState(DYING_STATE);
+    			
+    			iInvincibleCount=iInvincibleCountMax;
+    		}
+    	}
+    	else {
+    		iCurrentLife--;
+    		iInvincibleCount=0;
+    	}
+    }
+    else {
+    	iInvincibleCount++;
     }
 }
 
