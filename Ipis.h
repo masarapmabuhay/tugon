@@ -30,6 +30,10 @@ private:
         
 	int iMyStartXPos;
 	int iMyStartYPos;
+	
+	//added by Mike, 20211120	
+	int iIpisLevel;
+	int iIpisLevelMax;
 
 	int iDeathAnimationCounter;
 

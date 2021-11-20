@@ -56,6 +56,8 @@ Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
 	iMyStartYPos=iMyYPosAsPixel;
     
   iMyScoreValue=200;
+  iIpisLevel=0;
+  iIpisLevelMax=2;
     
   //edited by Mike, 20211118
   reset(iMyXPosAsPixel, iMyYPosAsPixel);
@@ -73,6 +75,10 @@ Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
   iRegenerateCountMaxDelayBeforeActive=360;//60; 
 	iRegenerateCountDelayBeforeActive=iRegenerateCountMaxDelayBeforeActive; 
 
+	//added by Mike, 20211120	
+	iCountAnimationFrameMaxDelay=10;
+	iCountAnimationFrameDelay=0;
+	
   mySDLRenderer = mySDLRendererInput;
   
   texture = loadTexture((char*)"textures/ipis.png");
@@ -91,14 +97,25 @@ void Ipis::drawIpis() {
   	SDL_Rect SrcR;
   	SDL_Rect DestR;
   	
-		iCountAnimationFrame=iCountAnimationFrame+1;		               																				
+  	//edited by Mike, 20211120
+  	if (iCountAnimationFrameDelay==iCountAnimationFrameMaxDelay) {
+			iCountAnimationFrame=iCountAnimationFrame+1;		               																				
+			iCountAnimationFrameDelay=0;
+  	}
+  	else {
+  		iCountAnimationFrameDelay++;
+  	}
+  	
 
 		if (iCountAnimationFrame>=2) { //2 frames of animation only
 			iCountAnimationFrame=0;
 		}
 	    	
   	SrcR.x = 0+iCountAnimationFrame*iMyWidthAsPixel;
-  	SrcR.y = 0;
+  	//edited by Mike, 20211120
+//  	SrcR.y = 0;
+  	SrcR.y = 0+iIpisLevel*iMyHeightAsPixel;
+	
 	
   	SrcR.w = iMyWidthAsPixel; 
   	SrcR.h = iMyHeightAsPixel; 
@@ -123,7 +140,10 @@ void Ipis::drawExplosion() {
   	SDL_Rect DestR;
 
   	SrcR.x = 0+iMyWidthAsPixel*2 + iCountAnimationFrame*iMyWidthAsPixel;
-  	SrcR.y = 0;
+  	//edited by Mike, 20211120
+//  	SrcR.y = 0;
+  	SrcR.y = 0+iIpisLevel*iMyHeightAsPixel;
+
 	
   	SrcR.w = iMyWidthAsPixel; 
   	SrcR.h = iMyHeightAsPixel; 
@@ -188,17 +208,17 @@ void Ipis::update()
 		}
 }
 
-void Ipis::executeRegenerate() {
-
-printf(">>iRegenerateCountDelayBeforeActive: %i\n",iRegenerateCountDelayBeforeActive);
-	
+void Ipis::executeRegenerate() {	
 	if (iRegenerateCountDelayBeforeActive>=iRegenerateCountMaxDelayBeforeActive) {
-	//iRegenerateCountDelayBeforeActive=0;
+		reset(getXPos(), getYPos());
 		
-		printf(">>>>>>> DITO\n");
-		
-		//removed by Mike, 20211119
-		reset(getXPos(), getYPos());							
+		//added by Mike, 20211120
+		if (iIpisLevel<iIpisLevelMax) {
+			iIpisLevel++;
+		}
+		else {
+			iIpisLevel=0;
+		}
 	}
 	else {
 		iRegenerateCountDelayBeforeActive++;

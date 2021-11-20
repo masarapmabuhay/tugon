@@ -426,11 +426,12 @@ void init() {
 		//TO-DO: -add: in a reusable function		
 //		int myLevelWeakBeat[MAX_IPIS] = {0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1};
 		//start from tile immediately after left corner; clockwise
-/*
-		int myLevelWeakBeat[MAX_IPIS] = {1,1,0,1,1,0, //RIGHT
+
+/*	//edited by Mike, 20211120
+		int myLevelWeakBeat[MAX_IPIS] = {1,0,1,0,1,0, //RIGHT
 																		 1,1,0,1,1, //DOWN; corner included
-																		 0,1,0,1,1,0, //LEFT
-																		 1,0,0,0,1}; //UP; corner included
+																		 0,1,1,0,1,1, //LEFT
+																		 0,1,1,1,0}; //UP; corner included
 */
 		int myLevelWeakBeat[MAX_IPIS] = {1,0,1,0,1,0, //RIGHT
 																		 1,1,0,1,1, //DOWN; corner included
@@ -916,6 +917,9 @@ void update() {
 			if (bIsExecutingDestroyBug) {
   				iCurrentOffsetWidth+=2;
 					iCurrentOffsetHeight-=2;			
+
+					//added by Mike, 20211120
+					//TO-DO: -add: ipis with multiple hits to destroy
 
     			//added by Mike, 20211118
     			for (int iCount=0; iCount<MAX_IPIS; iCount++) {

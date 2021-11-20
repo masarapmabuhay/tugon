@@ -119,6 +119,11 @@ public:
 		
 		int iCountTotalFrames;
 		int iCountAnimationFrame; //added by Mike, 20211117
+
+		//added by Mike, 20211120		
+		int iCountAnimationFrameDelay;
+		int iCountAnimationFrameMaxDelay;
+
 		
 		//added by Mike, 20211118
 		int iDeathCountMaxDelayBeforeHidden; 
