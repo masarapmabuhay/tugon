@@ -9,8 +9,8 @@ https://itch.io/jam/game-off-2021
 ## 2. Library Requirements
 <b>Library:</b> set of reusable instructions
 
-### 2.1. Simple Directmedia Layer (SDL): SDL version 2.0 & SDL Image
-https://www.libsdl.org/download-2.0.php; last accessed: 20211111<br/>
+### 2.1. Simple Directmedia Layer (SDL): SDL version 2.0, SDL Image, & SDL Mixer (Audio)
+https://www.libsdl.org/download-2.0.php; last accessed: 20211120<br/>
 --> <b>Objective:</b> Reuse Image Compression instructions, e.g. loading of .png image files  
 
 #### 2.1.1. Linux Download and Installation
