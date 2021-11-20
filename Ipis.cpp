@@ -57,7 +57,7 @@ Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
     
   iMyScoreValue=200;
   iIpisLevel=0;
-  iIpisLevelMax=2;
+  iIpisLevelMax=2; //3; //TO-DO: -reverify: cause of no ipis level 3, destroyed after only 2 hits, instead of 3
   iCurrentLife=iIpisLevel+1;
 	iInvincibleCountMax=2;
   iInvincibleCount=iInvincibleCountMax;
@@ -214,7 +214,7 @@ void Ipis::update()
 void Ipis::executeRegenerate() {	
 	if (iRegenerateCountDelayBeforeActive>=iRegenerateCountMaxDelayBeforeActive) {
 		reset(getXPos(), getYPos());
-		
+	
 		//added by Mike, 20211120
 		if (iIpisLevel<iIpisLevelMax) {
 			iIpisLevel++;

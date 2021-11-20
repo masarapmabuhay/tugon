@@ -52,6 +52,9 @@
 #include "Ipis.h"
 #include "Unit.h"
 
+//added by Mike, 20211120
+#include "Sdlwav.h"
+
 #define MAX_IPIS 22 //6
 //added by Mike, 20211118
 #define GRASS_TILE 1
@@ -119,6 +122,9 @@ int myLevelWeakBeat[MAX_IPIS];
 int myLevelMediumBeat[MAX_IPIS];
 int myLevelStrongBeat[MAX_IPIS];
 */
+
+//added by Mike, 20211120
+char **myArrayOfInputStringsBeatSound;
 
 SDL_Texture *texture;
 
@@ -223,6 +229,9 @@ void keyDown(SDL_KeyboardEvent *event)
         //myKeysDown[KEY_K] = TRUE;
 
 printf(">> KEY_K!!\n");
+
+	executeSDLWaveSound(2,myArrayOfInputStringsBeatSound);
+
 /*
 				if (bIsExecutingDestroyBug) {
 				  myKeysDown[KEY_K] = FALSE;
@@ -524,6 +533,11 @@ void init() {
 
 	myUnit = new Unit(mySDLRenderer,fGridSquareWidth*5,fGridSquareHeight*3,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
 
+	//added by Mike, 20211120
+	myArrayOfInputStringsBeatSound = (char **)malloc(2 * sizeof(char *)); //for only 1 item
+ 	myArrayOfInputStringsBeatSound [0] = (char *)"./sdlwav"; //add this, albeit NOT used; arg count 1 as filename used
+ 	myArrayOfInputStringsBeatSound [1] = (char *)"sounds/tugonBeat1.mp3"; //OK
+	
 }
 
 /* //edited by Mike, 20211119
