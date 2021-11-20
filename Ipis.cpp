@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211119
+ * @date updated: 20211120
  * @website address: http://www.usbong.ph
  *
  */
@@ -69,7 +69,9 @@ Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
   iRegenerateCountMaxDelayBeforeActive=60; 
 	iRegenerateCountDelayBeforeActive=0; 
 */
-
+	//added by Mike, 20211120
+  iRegenerateCountMaxDelayBeforeActive=360;//60; 
+	iRegenerateCountDelayBeforeActive=iRegenerateCountMaxDelayBeforeActive; 
 
   mySDLRenderer = mySDLRendererInput;
   
@@ -170,6 +172,9 @@ void Ipis::update()
         case DYING_STATE:
         		if (iDeathCountDelayBeforeHidden>=iDeathCountMaxDelayBeforeHidden) {
 							iDeathCountDelayBeforeHidden=0;
+
+							iRegenerateCountDelayBeforeActive=0;
+
 							changeState(HIDDEN_STATE);
         		}
         		else {
@@ -177,24 +182,39 @@ void Ipis::update()
         		}        		
 			  		break;
       	case HIDDEN_STATE:
-        		if (iRegenerateCountDelayBeforeActive>=iRegenerateCountDelayBeforeActive) {
-							iRegenerateCountDelayBeforeActive=0;
-							
-							//removed by Mike, 20211119
-							//reset(getXPos(), getYPos());							
-						}
-						else {
-							iRegenerateCountDelayBeforeActive++;
-						}
         		break;			  		
         default: //STANDING STATE
           	break;//do nothing    
 		}
 }
 
+void Ipis::executeRegenerate() {
+
+printf(">>iRegenerateCountDelayBeforeActive: %i\n",iRegenerateCountDelayBeforeActive);
+	
+	if (iRegenerateCountDelayBeforeActive>=iRegenerateCountMaxDelayBeforeActive) {
+	//iRegenerateCountDelayBeforeActive=0;
+		
+		printf(">>>>>>> DITO\n");
+		
+		//removed by Mike, 20211119
+		reset(getXPos(), getYPos());							
+	}
+	else {
+		iRegenerateCountDelayBeforeActive++;
+	}
+		
+}
+
 void Ipis::changeState(int s)
 {
   currentState=s;                  
+  
+  if (currentState==HIDDEN_STATE) {
+		iDeathCountDelayBeforeHidden=0;
+		iCountAnimationFrame=0;
+    setCollidable(false);	
+  }
 }
 
 int Ipis::getState()
@@ -216,18 +236,21 @@ void Ipis::reset(int iXPosInput, int iYPosInput)
   	iDeathCountMaxDelayBeforeHidden=60;
   	iDeathCountDelayBeforeHidden=0;
   
-  	iRegenerateCountMaxDelayBeforeActive=60; 
+  	//edited by Mike, 20211120
+//  	iRegenerateCountMaxDelayBeforeActive=60; 
 		iRegenerateCountDelayBeforeActive=0;     
 }
 
 
 void Ipis::hitBy(MyDynamicObject* mdo)
 {
-		iDeathCountDelayBeforeHidden=0;
-		iCountAnimationFrame=0;
-    setCollidable(false);	
-    //TO-DO: -add: score
-    changeState(DYING_STATE);
+		if (currentState!=INACTIVE_STATE) {
+			iDeathCountDelayBeforeHidden=0;
+			iCountAnimationFrame=0;
+    	setCollidable(false);	
+    	//TO-DO: -add: score
+    	changeState(DYING_STATE);
+    }
 }
 
 void Ipis::destroy()

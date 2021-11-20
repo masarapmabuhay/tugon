@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211112
- * @date updated: 20211118
+ * @date updated: 20211120
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -75,6 +75,7 @@ const int HIDDEN_STATE = 4,
 
 #define HIDDEN_STATE 4
 #define ACTIVE_STATE 5
+#define INACTIVE_STATE 6
 
 #define FACING_UP 0
 #define FACING_DOWN 1
@@ -144,6 +145,16 @@ public:
     
     bool isActive(){
         if (currentState==ACTIVE_STATE) {
+            return true;
+        }
+        else {
+        	return false;
+        }
+    }
+    
+    //added by Mike, 20211120
+    bool isHiddenState(){
+        if (currentState==HIDDEN_STATE) {
             return true;
         }
         else {

@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211119
+ * @date updated: 20211120
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -113,10 +113,12 @@ Ipis *myIpis[MAX_IPIS];
 //added by Mike, 20211117
 Unit *myUnit;
 
+/*
 //added by Mike, 20211119
 int myLevelWeakBeat[MAX_IPIS];
 int myLevelMediumBeat[MAX_IPIS];
 int myLevelStrongBeat[MAX_IPIS];
+*/
 
 SDL_Texture *texture;
 
@@ -191,6 +193,7 @@ void keyDown(SDL_KeyboardEvent *event)
 {
 	if (event->repeat == 0)
 	{
+/* //removed by Mike, 20211120	
 		if (event->keysym.scancode == SDL_SCANCODE_W)
 		{
 			myKeysDown[KEY_W] = TRUE;		
@@ -210,6 +213,8 @@ void keyDown(SDL_KeyboardEvent *event)
 		{
 			myKeysDown[KEY_D] = TRUE;					
 		}
+*/		
+    //note: one button press only; beat, cadence; skipping stone?
     
     //can be pressed simultaneously with directional button
     if (event->keysym.scancode == SDL_SCANCODE_K)
@@ -239,6 +244,7 @@ void keyUp(SDL_KeyboardEvent *event)
 {
 	if (event->repeat == 0)
 	{
+/*	//removed by Mike, 20211120
 		if (event->keysym.scancode == SDL_SCANCODE_W)
 		{
 			myKeysDown[KEY_W] = FALSE;		
@@ -258,6 +264,9 @@ void keyUp(SDL_KeyboardEvent *event)
 		{
 			myKeysDown[KEY_D] = FALSE;					
 		}
+*/
+
+    //note: one button press only; beat, cadence; skipping stone?
         
     //added by Mike, 20210905
     if (event->keysym.scancode == SDL_SCANCODE_K)
@@ -396,8 +405,8 @@ void init() {
 	//added by Mike, 20211119
 	//TO-DO: -update: this based on Level
 	//added by Mike, 20211115
-	iStepX=1;
-	iStepY=1;
+	iStepX=1; //2;//1;
+	iStepY=1; //2;//1;
 	    
   iCountTileAnimationFrame=0;
   
@@ -406,7 +415,7 @@ void init() {
 	}		
 	myKeysDown[KEY_D] = TRUE;  	
 
-/*
+/*myLevelWeakBeat
 	//edited by Mike, 20211119	
 	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
 		myIpis[iCount] = new Ipis(mySDLRenderer,fGridSquareWidth*5+fGridSquareWidth*iCount,fGridSquareHeight*3,0,myWindowWidthAsPixel,myWindowHeightAsPixel);
@@ -415,7 +424,19 @@ void init() {
 */
 		//added by Mike, 20211119
 		//TO-DO: -add: in a reusable function		
-		int myLevelWeakBeat[MAX_IPIS] = {0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1};
+//		int myLevelWeakBeat[MAX_IPIS] = {0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1};
+		//start from tile immediately after left corner; clockwise
+/*
+		int myLevelWeakBeat[MAX_IPIS] = {1,1,0,1,1,0, //RIGHT
+																		 1,1,0,1,1, //DOWN; corner included
+																		 0,1,0,1,1,0, //LEFT
+																		 1,0,0,0,1}; //UP; corner included
+*/
+		int myLevelWeakBeat[MAX_IPIS] = {1,0,1,0,1,0, //RIGHT
+																		 1,1,0,1,1, //DOWN; corner included
+																		 0,1,1,0,1,1, //LEFT
+																		 0,1,1,1,0}; //UP; corner included
+
 /*
 		for (int iCount=0; iCount<MAX_IPIS; iCount++) {
 			if (iCount%2==0) {
@@ -432,8 +453,47 @@ void init() {
 		//TO-DO: -update: this
 
 		int iIpisCount=0;
-		//ROAD_UP_TILE
+		
+		//ROAD_RIGHT_TILE
+		for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+//			if (myLevelWeakBeat[iIpisCount]!=0) {
+				myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
+																									3*fGridSquareHeight,0,
+																		myWindowWidthAsPixel,myWindowHeightAsPixel);
+				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+//			}
+			iIpisCount++;
+		}
+		
+			//ROAD_DOWN_TILE
 		for (int iRowCount=3; iRowCount<8; iRowCount++) {
+//			if (myLevelWeakBeat[iIpisCount]!=0) {
+				myIpis[iIpisCount] = new Ipis(mySDLRenderer,8*fGridSquareWidth+iCurrentOffsetWidth,
+																										iRowCount*fGridSquareHeight,0,
+																			myWindowWidthAsPixel,myWindowHeightAsPixel);
+				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+//			}
+			iIpisCount++;
+		}
+				
+		//ROAD_LEFT_TILE
+		//edited by Mike, 20211120
+//		for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+		for (int iColumnCount=7; iColumnCount>=2; iColumnCount--) {
+
+//			if (myLevelWeakBeat[iIpisCount]!=0) {
+				myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
+																									7*fGridSquareHeight,0,
+																		myWindowWidthAsPixel,myWindowHeightAsPixel);
+				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
+//			}
+			iIpisCount++;
+		}
+		
+		//ROAD_UP_TILE
+		//edited by Mike, 20211120
+//		for (int iRowCount=3; iRowCount<8; iRowCount++) {
+		for (int iRowCount=7; iRowCount>=3; iRowCount--) {
 			myIpis[iIpisCount] = new Ipis(mySDLRenderer,1*fGridSquareWidth+iCurrentOffsetWidth,
 														iRowCount*fGridSquareHeight,0,
 														myWindowWidthAsPixel,myWindowHeightAsPixel);																		
@@ -449,39 +509,6 @@ void init() {
 */
 			iIpisCount++;			
 		}
-
-		//ROAD_DOWN_TILE
-		for (int iRowCount=3; iRowCount<8; iRowCount++) {
-//			if (myLevelWeakBeat[iIpisCount]!=0) {
-				myIpis[iIpisCount] = new Ipis(mySDLRenderer,8*fGridSquareWidth+iCurrentOffsetWidth,
-																										iRowCount*fGridSquareHeight,0,
-																			myWindowWidthAsPixel,myWindowHeightAsPixel);
-				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
-//			}
-			iIpisCount++;
-		}
-		
-		//ROAD_RIGHT_TILE
-		for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
-//			if (myLevelWeakBeat[iIpisCount]!=0) {
-				myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
-																									3*fGridSquareHeight,0,
-																		myWindowWidthAsPixel,myWindowHeightAsPixel);
-				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
-//			}
-			iIpisCount++;
-		}
-		
-		//ROAD_LEFT_TILE
-		for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
-//			if (myLevelWeakBeat[iIpisCount]!=0) {
-				myIpis[iIpisCount] = new Ipis(mySDLRenderer,iColumnCount*fGridSquareWidth+iCurrentOffsetWidth,
-																									7*fGridSquareHeight,0,
-																		myWindowWidthAsPixel,myWindowHeightAsPixel);
-				myIpis[iIpisCount]->setGridTileWidthHeight(fGridSquareWidth,fGridSquareHeight);	
-//			}
-			iIpisCount++;
-		}
 		
 		printf(">>iIpisCount: %i\n",iIpisCount);
 
@@ -490,7 +517,7 @@ void init() {
 		//added by Mike, 20211119
 		for (int iCount=0; iCount<MAX_IPIS; iCount++) {
 			if (myLevelWeakBeat[iCount]==0) {
-				myIpis[iCount]->changeState(HIDDEN_STATE);
+				myIpis[iCount]->changeState(INACTIVE_STATE);
 			}			
 		}
 
@@ -912,7 +939,13 @@ void update() {
 			//added by Mike, 20211118
     	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
     		myIpis[iCount]->update();
-			}			
+    		    		
+    		//added by Mike, 20211120
+    		if (myIpis[iCount]->isHiddenState()) {
+//    				myIpis[iCount]->reset(myIpis[iCount]->getXPos(),myIpis[iCount]->getYPos());
+						myIpis[iCount]->executeRegenerate();
+    		}
+			}						
 }
 
 int main(int argc, char *argv[])
