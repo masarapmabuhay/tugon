@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211120
+ * @date updated: 20211121
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -71,6 +71,8 @@
 #define ROAD_LEFT_UP_TILE 10
 #define ROAD_UP_RIGHT_TILE 11
 
+//added by Mike, 20211121
+#define IPIS_START_INDEX 0
 
 //added by Mike, 20211117
 class Ipis; 
@@ -109,6 +111,9 @@ bool bIsExecutingDestroyBug;
 
 int iStepX;
 int iStepY;
+
+//added by Mike, 20211121
+int iCountIpisDestroyed;
 
 //added by Mike, 20211116
 Ipis *myIpis[MAX_IPIS];
@@ -416,6 +421,8 @@ void init() {
 	//added by Mike, 20211115
 	iStepX=1; //2;//1;
 	iStepY=1; //2;//1;
+
+	iCountIpisDestroyed=0;
 	    
   iCountTileAnimationFrame=0;
   
@@ -527,7 +534,7 @@ void init() {
 		//added by Mike, 20211119
 		for (int iCount=0; iCount<MAX_IPIS; iCount++) {
 			if (myLevelWeakBeat[iCount]==0) {
-				myIpis[iCount]->changeState(INACTIVE_STATE);
+				myIpis[iCount]->setToInactiveState();
 			}			
 		}
 
@@ -841,6 +848,29 @@ void draw(int x, int y)
 }
 
 void update() {
+			//added by Mike, 20211118
+    	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
+    		myIpis[iCount]->update();
+    		    		
+    		//added by Mike, 20211120
+    		if (myIpis[iCount]->isHiddenState()) {
+//    				myIpis[iCount]->reset(myIpis[iCount]->getXPos(),myIpis[iCount]->getYPos());
+				myIpis[iCount]->executeRegenerate();
+
+				//TO-DO: -reverify: this
+				//iCountIpisDestroyed++;
+				
+				//after 1 loop based on destroyed ipis start index, increase speed
+				//TO-DO: -fix: Unit stuck at right-down corner when with shake, et cetera
+				if (iCount==IPIS_START_INDEX) {
+//				if (iCountIpisDestroyed>=14) {
+					iStepX=2;
+					iStepY=2;
+				}
+    		}
+		}						
+
+
 		//note: clock-wise movement
 		//rectangle top side
 		if (myKeysDown[KEY_D] == TRUE) {
@@ -956,7 +986,8 @@ void update() {
   			iCurrentOffsetWidth=iBaseOffsetWidth;
 				iCurrentOffsetHeight=iBaseOffsetHeight;				
 			}
-			
+
+/* //removed by Mike, 20211121			
 			//added by Mike, 20211118
     	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
     		myIpis[iCount]->update();
@@ -964,9 +995,16 @@ void update() {
     		//added by Mike, 20211120
     		if (myIpis[iCount]->isHiddenState()) {
 //    				myIpis[iCount]->reset(myIpis[iCount]->getXPos(),myIpis[iCount]->getYPos());
-						myIpis[iCount]->executeRegenerate();
+				myIpis[iCount]->executeRegenerate();
+						
+				//after 1 loop based on destroyed ipis start index, increase speed
+				if (iCount==IPIS_START_INDEX) {
+					iStepX=2;
+					iStepY=2;
+				}
     		}
-			}						
+		}						
+*/		
 }
 
 int main(int argc, char *argv[])

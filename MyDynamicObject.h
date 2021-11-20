@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211112
- * @date updated: 20211120
+ * @date updated: 20211121
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -171,6 +171,12 @@ public:
         }
     }
   	
+    //added by Mike, 20211120
+    void setToInactiveState(){
+        currentState=INACTIVE_STATE;
+    }
+
+
   	//TO-DO: -add: this  
 //    void setUsbongUtils(UsbongUtils* c);
     

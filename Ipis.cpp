@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211120
+ * @date updated: 20211121
  * @website address: http://www.usbong.ph
  *
  */
@@ -56,14 +56,29 @@ Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
 	iMyStartYPos=iMyYPosAsPixel;
     
   iMyScoreValue=200;
+
   iIpisLevel=0;
-  iIpisLevelMax=2; //3; //TO-DO: -reverify: cause of no ipis level 3, destroyed after only 2 hits, instead of 3
+  
+  //note: level starts at 0
+  iIpisLevelMax=2; //3; 
+  
   iCurrentLife=iIpisLevel+1;
-	iInvincibleCountMax=2;
+  
+  iInvincibleCountMax=5; //2;
   iInvincibleCount=iInvincibleCountMax;
+
+	//added by Mike, 20211120
+  	iRegenerateCountMaxDelayBeforeActive=360;//60; 
+	iRegenerateCountDelayBeforeActive=iRegenerateCountMaxDelayBeforeActive; 
+
+	//added by Mike, 20211120	
+	iCountAnimationFrameMaxDelay=10;
+	iCountAnimationFrameDelay=0;
+
     
   //edited by Mike, 20211118
   reset(iMyXPosAsPixel, iMyYPosAsPixel);
+
 /*    
   //added by Mike, 20211117
   iCountAnimationFrame=0;
@@ -74,13 +89,6 @@ Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
   iRegenerateCountMaxDelayBeforeActive=60; 
 	iRegenerateCountDelayBeforeActive=0; 
 */
-	//added by Mike, 20211120
-  iRegenerateCountMaxDelayBeforeActive=360;//60; 
-	iRegenerateCountDelayBeforeActive=iRegenerateCountMaxDelayBeforeActive; 
-
-	//added by Mike, 20211120	
-	iCountAnimationFrameMaxDelay=10;
-	iCountAnimationFrameDelay=0;
 	
   mySDLRenderer = mySDLRendererInput;
   
@@ -211,7 +219,7 @@ void Ipis::update()
 		}
 }
 
-void Ipis::executeRegenerate() {	
+void Ipis::executeRegenerate() {
 	if (iRegenerateCountDelayBeforeActive>=iRegenerateCountMaxDelayBeforeActive) {
 		reset(getXPos(), getYPos());
 	
@@ -224,6 +232,9 @@ void Ipis::executeRegenerate() {
 		}
 		
 		iCurrentLife=iIpisLevel+1;
+		
+//		printf(">>iCurrentLife: %i\n",iCurrentLife);
+		
 		iInvincibleCount=iInvincibleCountMax;
 	}
 	else {
@@ -239,7 +250,7 @@ void Ipis::changeState(int s)
   if (currentState==HIDDEN_STATE) {
 		iDeathCountDelayBeforeHidden=0;
 		iCountAnimationFrame=0;
-    setCollidable(false);	
+    	setCollidable(false);	
   }
 }
 
@@ -264,7 +275,9 @@ void Ipis::reset(int iXPosInput, int iYPosInput)
   
   	//edited by Mike, 20211120
 //  	iRegenerateCountMaxDelayBeforeActive=60; 
-		iRegenerateCountDelayBeforeActive=0;   
+
+		//edited by Mike, 20211121
+		iRegenerateCountDelayBeforeActive=iRegenerateCountMaxDelayBeforeActive; //0;   
 		
 		//added by Mike, 20211120
 		iInvincibleCount=iInvincibleCountMax;  
@@ -273,12 +286,14 @@ void Ipis::reset(int iXPosInput, int iYPosInput)
 
 void Ipis::hitBy(MyDynamicObject* mdo)
 {
-		//added by Mike, 20211120
-		if (iInvincibleCount>=iInvincibleCountMax) {
-			if (iCurrentLife<=0) {
-				if (currentState!=INACTIVE_STATE) {
-					iDeathCountDelayBeforeHidden=0;
-					iCountAnimationFrame=0;
+	//added by Mike, 20211120
+	if (iInvincibleCount>=iInvincibleCountMax) {
+    	iCurrentLife--;
+
+		if (iCurrentLife<=0) {
+			if (currentState!=INACTIVE_STATE) {
+				iDeathCountDelayBeforeHidden=0;
+				iCountAnimationFrame=0;
     			setCollidable(false);	
     			//TO-DO: -add: score
     			changeState(DYING_STATE);
@@ -287,7 +302,8 @@ void Ipis::hitBy(MyDynamicObject* mdo)
     		}
     	}
     	else {
-    		iCurrentLife--;
+    		//removed by Mike, 20211121
+//    		iCurrentLife--;
     		iInvincibleCount=0;
     	}
     }
