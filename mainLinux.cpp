@@ -235,6 +235,8 @@ void keyDown(SDL_KeyboardEvent *event)
 
 printf(">> KEY_K!!\n");
 
+	//TO-DO: -reverify: sound disappears
+	//TO-DO: -add: you have destroyed Ipix x360; Please rest. Thank you...	
 	executeSDLWaveSound(2,myArrayOfInputStringsBeatSound);
 
 /*
@@ -876,10 +878,18 @@ void update() {
 		if (myKeysDown[KEY_D] == TRUE) {
 			//edited by Mike, 20211115
 //			if (iPilotY==3*fGridSquareHeight) {
+			//edited by Mike, 20211121
 			if (iPilotY==(3*fGridSquareHeight+iCurrentOffsetHeight)) {
+/*
+			if ((iPilotY>=(3*fGridSquareHeight+iCurrentOffsetHeight-iStepY)) &&
+				(iPilotY<=(3*fGridSquareHeight+iCurrentOffsetHeight+iStepY))) {
+*/
 				myKeysDown[KEY_D] = TRUE;
-								
+
+				//edited by Mike, 20211121								
 				if (iPilotX<(8*fGridSquareWidth+iCurrentOffsetWidth)) {
+//				if (iPilotX<=(8*fGridSquareWidth)) {//+iCurrentOffsetWidth+iStepX)) {
+
 						//edited by Mike, 20211115
 //					iPilotX+=2;
 					iPilotX+=iStepX;
@@ -894,10 +904,17 @@ void update() {
 	
 		//rectangle right side
 		if (myKeysDown[KEY_S] == TRUE) {
+			//edited by Mike, 20211121
 			if (iPilotX==(8*fGridSquareWidth+iCurrentOffsetWidth)) {
+/*
+			if ((iPilotX>=(8*fGridSquareWidth+iCurrentOffsetWidth-iStepX)) &&
+				(iPilotX<=(8*fGridSquareWidth+iCurrentOffsetWidth+iStepX))) {
+*/
 				myKeysDown[KEY_S] = TRUE;
 	
-				if (iPilotY<7*fGridSquareHeight) {
+				//edited by Mike, 20211121
+//				if (iPilotY<7*fGridSquareHeight) {
+				if (iPilotY<7*fGridSquareHeight+iCurrentOffsetHeight) {//+iStepY) {
 					//edited by Mike, 20211115
 //					iPilotY+=2;
 					iPilotY+=iStepY;
@@ -913,11 +930,17 @@ void update() {
 		if (myKeysDown[KEY_A] == TRUE) {		
 			//edited by Mike, 20211115
 //			if (iPilotY==7*fGridSquareHeight) {
+			//edited by Mike, 20211121
 			if (iPilotY==7*(fGridSquareHeight+iCurrentOffsetHeight)) {
-
+/*	
+			if ((iPilotY>=7*(fGridSquareHeight+iCurrentOffsetHeight-iStepY)) &&
+				(iPilotY<=7*(fGridSquareHeight+iCurrentOffsetHeight+iStepY))) {
+*/
 				myKeysDown[KEY_A] = TRUE;
 
+				//edited by Mike, 20211121
 				if (iPilotX>(1*fGridSquareWidth+iCurrentOffsetWidth)) {
+//				if (iPilotX>=(1*fGridSquareWidth+iCurrentOffsetWidth-iStepX)) {
 					//edited by Mike, 20211115
 //					iPilotX-=2;
 					iPilotX-=iStepX;
@@ -931,10 +954,18 @@ void update() {
 
 		//rectangle left side		
 		if (myKeysDown[KEY_W] == TRUE) {		
+			//edited by Mike, 20211121
 			if (iPilotX==(1*fGridSquareWidth+iCurrentOffsetWidth)) {
+/*
+			if ((iPilotX>=(1*fGridSquareWidth+iCurrentOffsetWidth-iStepX)) &&
+				(iPilotX<=(1*fGridSquareWidth+iCurrentOffsetWidth+iStepX))) {
+*/
 				myKeysDown[KEY_W] = TRUE;
 
-				if (iPilotY>3*fGridSquareHeight) {
+				//edited by Mike, 20211121
+//				if (iPilotY>3*fGridSquareHeight) {
+//				if (iPilotY>=3*fGridSquareHeight+iCurrentOffsetHeight-iStepY) {
+				if (iPilotY>3*fGridSquareHeight+iCurrentOffsetHeight) {
 					//edited by Mike, 20211115
 //					iPilotY-=2;
 					iPilotY-=iStepY;
