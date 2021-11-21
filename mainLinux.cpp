@@ -233,7 +233,7 @@ void keyDown(SDL_KeyboardEvent *event)
     		//edited by Mike, 20211115
         //myKeysDown[KEY_K] = TRUE;
 
-printf(">> KEY_K!!\n");
+//printf(">> KEY_K!!\n");
 
 	//TO-DO: -reverify: sound disappears
 	//TO-DO: -add: you have destroyed Ipix x360; Please rest. Thank you...	
@@ -467,7 +467,8 @@ void init() {
 		}
 */
 //		printf(">>myLevelWeakBeat[21]: %i\n",myLevelWeakBeat[21]); //max
-		printf(">>myLevelWeakBeat[1]: %i\n",myLevelWeakBeat[1]);		
+
+//		printf(">>myLevelWeakBeat[1]: %i\n",myLevelWeakBeat[1]);		
 		
 		//TO-DO: -update: this
 
@@ -529,7 +530,7 @@ void init() {
 			iIpisCount++;			
 		}
 		
-		printf(">>iIpisCount: %i\n",iIpisCount);
+//		printf(">>iIpisCount: %i\n",iIpisCount);
 
 		//TO-DO: -update: this
 
@@ -856,11 +857,13 @@ void update() {
     		    		
     		//added by Mike, 20211120
     		if (myIpis[iCount]->isHiddenState()) {
-//    				myIpis[iCount]->reset(myIpis[iCount]->getXPos(),myIpis[iCount]->getYPos());
-				myIpis[iCount]->executeRegenerate();
-
-				//TO-DO: -reverify: this
-				//iCountIpisDestroyed++;
+				//note returned output set to 1 if regeneration finished
+				int iCountOutput = myIpis[iCount]->executeRegenerate();
+				
+				if (iCountOutput!=0) {
+					iCountIpisDestroyed++;
+					printf(">>iCountIpisDestroyed: %i\n",iCountIpisDestroyed);
+				}
 				
 				//after 1 loop based on destroyed ipis start index, increase speed
 				//TO-DO: -fix: Unit stuck at right-down corner when with shake, et cetera

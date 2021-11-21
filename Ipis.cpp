@@ -219,7 +219,9 @@ void Ipis::update()
 		}
 }
 
-void Ipis::executeRegenerate() {
+//edited by Mike, 20211121
+//void Ipis::executeRegenerate() {
+int Ipis::executeRegenerate() {
 	if (iRegenerateCountDelayBeforeActive>=iRegenerateCountMaxDelayBeforeActive) {
 		reset(getXPos(), getYPos());
 	
@@ -236,11 +238,19 @@ void Ipis::executeRegenerate() {
 //		printf(">>iCurrentLife: %i\n",iCurrentLife);
 		
 		iInvincibleCount=iInvincibleCountMax;
+
+		return 0;
 	}
-	else {
+	else {	
+	
 		iRegenerateCountDelayBeforeActive++;
-	}
-		
+
+		if ((iRegenerateCountDelayBeforeActive-1)==0) {
+			return 1;
+		}		
+	}		
+	
+	return 0;
 }
 
 void Ipis::changeState(int s)

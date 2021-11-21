@@ -137,7 +137,7 @@ void Unit::draw()
 void Unit::move(int iKeyInput) 
 {
 	iCurrentKeyInput = iKeyInput;
-	printf("iCurrentKeyInput: %i\n",iCurrentKeyInput);
+//	printf("iCurrentKeyInput: %i\n",iCurrentKeyInput);
 }
 
 void Unit::update()

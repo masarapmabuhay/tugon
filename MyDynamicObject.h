@@ -263,7 +263,7 @@ public:
     virtual void setCurrentMovingState(int iMovingState) {
         currentMovingState = iMovingState;
     }        
-        
+                
     virtual void destroy();
 };
 
