@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211121
+ * @date updated: 20211122
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -54,6 +54,9 @@
 
 //added by Mike, 20211120
 #include "Sdlwav.h"
+
+//added by Mike, 20211122
+#include <thread>
 
 #define MAX_IPIS 22 //6
 //added by Mike, 20211118
@@ -132,6 +135,7 @@ int myLevelStrongBeat[MAX_IPIS];
 char **myArrayOfInputStringsBeatSound;
 
 SDL_Texture *texture;
+SDL_Texture *textureFont; //added by Mike, 20211121
 
 #define TRUE 1
 #define FALSE 0
@@ -381,6 +385,23 @@ void drawShieldPrev()
           }
       }
   }
+}
+
+//added by Mike, 20211122
+//TO-DO: -add: HH:MM:SS
+void executeTimerCount() {
+	int counter = 60;
+	usleep(1000); //TO-DO: -reverify: with Windows machine
+
+	while (counter>=1) {
+		printf("Time count: %i\n",counter);
+		usleep(1000);
+		counter--;
+		
+		if (counter==0) {
+			counter=60;
+		}
+	}
 }
 
 //added by Mike, 20211112
@@ -692,6 +713,56 @@ void drawBackgroundTile(int iTileId, int x, int y)
 
 }
 
+//note: max 3 digits; start from zero
+//void drawDestroyedIpisCount(bool isSetAsZeroDigit,int iDigitFromLeft, int x, int y)
+void drawDestroyedIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
+{
+	int iTileWidth=64;
+	int iTileHeight=64;
+
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+ 
+  
+/*
+  SrcR.x = 0;
+  SrcR.y = 0;
+*/
+
+//printf(">>>>>>>>>> iCountIpisDestroyed: %i\n",iCountIpisDestroyed);
+
+  if (iDigitValue==0) {
+  	SrcR.x = 0+iTileWidth*(1); 
+  	SrcR.y = 0+iTileHeight*(2); 
+  }
+  else {
+  	SrcR.x = 0+iTileWidth*((iDigitValue-1)%4); 
+  	SrcR.y = 0+iTileHeight*((iDigitValue-1)/4); 
+  }
+
+	
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+/*
+  DestR.x = x+iCurrentOffsetWidth;
+  DestR.y = y;
+*/
+
+  DestR.x = x+iCurrentOffsetWidth+iTileWidth*iDigitFromLeft;
+  DestR.y = y;
+
+    
+  DestR.w = fGridSquareWidth;
+  DestR.h = fGridSquareHeight;
+
+
+  SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR);
+}
+
+
 /*	//edited by Mike, 20211119
 void drawLevel()
 {
@@ -848,6 +919,32 @@ void draw(int x, int y)
 	
 	//added by Mike, 20211112
 //	drawShield();
+
+	//added by Mike, 20211121
+	//drawDestroyedIpisCount(3*fGridSquareWidth,0*fGridSquareHeight);
+
+  	//note: 3 digits
+  	if (iCountIpisDestroyed==0) {
+		drawDestroyedIpisCount(0,0,4*fGridSquareWidth,0*fGridSquareHeight);
+		drawDestroyedIpisCount(0,1,4*fGridSquareWidth,0*fGridSquareHeight);
+		drawDestroyedIpisCount(0,2,4*fGridSquareWidth,0*fGridSquareHeight);
+  	}
+  	else if (iCountIpisDestroyed<10) {
+		drawDestroyedIpisCount(0,0,4*fGridSquareWidth,0*fGridSquareHeight);
+		drawDestroyedIpisCount(0,1,4*fGridSquareWidth,0*fGridSquareHeight);
+		drawDestroyedIpisCount(iCountIpisDestroyed,2,4*fGridSquareWidth,0*fGridSquareHeight);
+  	}
+  	else if (iCountIpisDestroyed<100) {
+		drawDestroyedIpisCount(0,0,4*fGridSquareWidth,0*fGridSquareHeight);
+		drawDestroyedIpisCount(iCountIpisDestroyed/10,1,4*fGridSquareWidth,0*fGridSquareHeight);
+		drawDestroyedIpisCount(iCountIpisDestroyed%10,2,4*fGridSquareWidth,0*fGridSquareHeight);
+  	}
+  	else {
+ 		drawDestroyedIpisCount(iCountIpisDestroyed/100,0,4*fGridSquareWidth,0*fGridSquareHeight);
+		drawDestroyedIpisCount((iCountIpisDestroyed/10)%10,1,4*fGridSquareWidth,0*fGridSquareHeight);
+		drawDestroyedIpisCount(iCountIpisDestroyed%10,2,4*fGridSquareWidth,0*fGridSquareHeight);
+  	}
+
 }
 
 void update() {
@@ -867,14 +964,20 @@ void update() {
 				
 				//after 1 loop based on destroyed ipis start index, increase speed
 				//TO-DO: -fix: Unit stuck at right-down corner when with shake, et cetera
+/*
 				if (iCount==IPIS_START_INDEX) {
 //				if (iCountIpisDestroyed>=14) {
 					iStepX=2;
 					iStepY=2;
 				}
+*/				
+
     		}
 		}						
 
+
+					iStepX=2;
+					iStepY=2;
 
 		//note: clock-wise movement
 		//rectangle top side
@@ -1052,6 +1155,7 @@ int main(int argc, char *argv[])
 	//edited by Mike, 20211113
 //	SDL_Texture *texture = loadTexture((char*)"textures/hq.png");
 	texture = loadTexture((char*)"textures/hq.png");
+	textureFont = loadTexture((char*)"textures/count.png"); //added by Mike, 20211121
 
 /*	//edited by Mike, 20211113
 	iPilotX=myWindowWidthAsPixel/2;
@@ -1069,6 +1173,10 @@ int main(int argc, char *argv[])
 	
 	iCountTaoAnimationFrame=0;
 
+	//added by Mike, 20211122
+	std::thread t1(executeTimerCount);
+//	t1.join(); //create a new thread
+
 	while (1)
 	{
 		prepareScene();
@@ -1076,7 +1184,7 @@ int main(int argc, char *argv[])
 		doInput();
 		
 		update();
-				
+								
 		//edited by Mike, 20211112
 //		draw(texture, iPilotX, iPilotY);
 		draw(iPilotX, iPilotY);
