@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211121
+ * @date updated: 20211122
  * @website address: http://www.usbong.ph
  *
  */
@@ -138,7 +138,19 @@ void Ipis::drawIpis() {
   	DestR.h = iMyHeightAsPixel;
 	
   	//note: SDL color max 255; GIMP color max 100
-//		SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 255*1, 255*1, 255); //white
+		//SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 255*1, 255*1, 255); //white
+		//added by Mike, 20211122
+//			if (iInvincibleCount>=iInvincibleCountMax) {
+		//TO-DO: -reverify: cause of only sometimes correct output with Ipis Level 2
+		if (iInvincibleCount<iInvincibleCountMax) {
+			if (iInvincibleCount%2==0) {
+				SDL_SetTextureColorMod(texture, 255, 255, 0);
+			}
+		}
+		else {
+			SDL_SetTextureColorMod(texture, 255, 255, 255);
+		}
+		
 		
 		SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
 }
@@ -183,7 +195,19 @@ void Ipis::draw()
     {
         case INITIALIZING_STATE:
         case MOVING_STATE:
+        	//edited by Mike, 20211122
           drawIpis();
+/*          
+					if (iInvincibleCount<iInvincibleCountMax) {
+						if (iInvincibleCount%2==0) {
+          		drawIpis();
+						}
+					}
+					else {
+          	drawIpis();
+					}
+*/            
+          
           break;
       	case DYING_STATE:
 					drawExplosion();
