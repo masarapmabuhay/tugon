@@ -717,6 +717,203 @@ void drawBackgroundTile(int iTileId, int x, int y)
   DestR.y = y;
     
   DestR.w = fGridSquareWidth;
+/*
+int main(int argc, char **argv)
+{
+	int audio_rate,audio_channels;
+	Uint16 audio_format;
+	Uint32 t;
+	Mix_Music *music;
+	int volume=SDL_MIX_MAXVOLUME;
+
+	// initialize SDL for audio and video
+	if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)<0)
+		cleanExit("SDL_Init");
+	atexit(SDL_Quit);
+
+	int initted=Mix_Init(0);
+	printf("Before Mix_Init SDL_mixer supported: ");
+	print_init_flags(initted);
+	initted=Mix_Init(~0);
+	printf("After  Mix_Init SDL_mixer supported: ");
+	print_init_flags(initted);
+	Mix_Quit();
+
+	if(argc<2 || argc>4)
+	{
+		fprintf(stderr,"Usage: %s filename [depth] [any 3rd argument...]\n"
+				"    filename is any music file supported by your SDL_mixer library\n"
+				"    depth is screen depth, default is 8bits\n"
+				"    if there is a third argument given, we go fullscreen for maximum fun!\n",
+				*argv);
+		return 1;
+	}
+
+
+	// open a screen for the wav output
+	if(!(s=SDL_SetVideoMode(W,H,(argc>2?atoi(argv[2]):8),(argc>3?SDL_FULLSCREEN:0)|SDL_HWSURFACE|SDL_DOUBLEBUF)))
+		cleanExit("SDL_SetVideoMode");
+	SDL_WM_SetCaption("sdlwav - SDL_mixer demo","sdlwav");
+	
+	// hide the annoying mouse pointer
+	SDL_ShowCursor(SDL_DISABLE);
+	// get the colors we use
+	white=SDL_MapRGB(s->format,0xff,0xff,0xff);
+	black=SDL_MapRGB(s->format,0,0,0);
+	
+	// initialize sdl mixer, open up the audio device
+	if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,BUFFER)<0)
+		cleanExit("Mix_OpenAudio");
+
+	// we play no samples, so deallocate the default 8 channels...
+	Mix_AllocateChannels(0);
+	
+	// print out some info on the formats this run of SDL_mixer supports
+	{
+		int i,n=Mix_GetNumChunkDecoders();
+		printf("There are %d available chunk(sample) decoders:\n",n);
+		for(i=0; i<n; ++i)
+			printf("	%s\n", Mix_GetChunkDecoder(i));
+		n = Mix_GetNumMusicDecoders();
+		printf("There are %d available music decoders:\n",n);
+		for(i=0; i<n; ++i)
+			printf("	%s\n", Mix_GetMusicDecoder(i));
+	}
+
+	// print out some info on the audio device and stream
+	Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
+	bits=audio_format&0xFF;
+	sample_size=bits/8+audio_channels;
+	rate=audio_rate;
+	printf("Opened audio at %d Hz %d bit %s, %d bytes audio buffer\n", audio_rate,
+			bits, audio_channels>1?"stereo":"mono", BUFFER );
+
+	// calculate some parameters for the wav display
+	dy=s->h/2.0/(float)(0x1<<bits);
+	
+	// load the song
+	if(!(music=Mix_LoadMUS(argv[1])))
+		cleanExit("Mix_LoadMUS(\"%s\")",argv[1]);
+
+	{
+		Mix_MusicType type=Mix_GetMusicType(music);
+		printf("Music type: %s\n",
+				type==MUS_NONE?"MUS_NONE":
+				type==MUS_CMD?"MUS_CMD":
+				type==MUS_WAV?"MUS_WAV":
+				//type==MUS_MOD_MODPLUG?"MUS_MOD_MODPLUG":
+				type==MUS_MOD?"MUS_MOD":
+				type==MUS_MID?"MUS_MID":
+				type==MUS_OGG?"MUS_OGG":
+				type==MUS_MP3?"MUS_MP3":
+//				type==MUS_MP3_MAD?"MUS_MP3_MAD":
+				type==MUS_FLAC?"MUS_FLAC":
+				"Unknown");
+	}
+	// set the post mix processor up
+	Mix_SetPostMix(postmix,argv[1]);
+	
+	SDL_FillRect(s,NULL,black);
+	SDL_Flip(s);
+	SDL_FillRect(s,NULL,black);
+	SDL_Flip(s);
+	// start playing and displaying the wav
+	// wait for escape key of the quit event to finish
+	t=SDL_GetTicks();
+	if(Mix_PlayMusic(music, 1)==-1)
+		cleanExit("Mix_PlayMusic(0x%p,1)",music);
+	Mix_VolumeMusic(volume);
+
+	while((Mix_PlayingMusic() || Mix_PausedMusic()) && !done)
+	{
+		SDL_Event e;
+		while(SDL_PollEvent(&e))
+		{
+			switch(e.type)
+			{
+				case SDL_KEYDOWN:
+					switch(e.key.keysym.sym)
+					{
+						case SDLK_ESCAPE:
+							done=1;
+							break;
+						case SDLK_LEFT:
+							if(e.key.keysym.mod&KMOD_SHIFT)
+							{
+								Mix_RewindMusic();
+								position=0;
+							}
+							else
+							{
+								int pos=position/audio_rate-1;
+								if(pos<0)
+									pos=0;
+								Mix_SetMusicPosition(pos);
+								position=pos*audio_rate;
+							}
+							break;
+						case SDLK_RIGHT:
+							switch(Mix_GetMusicType(NULL))
+							{
+								case MUS_MP3:
+									Mix_SetMusicPosition(+5);
+									position+=5*audio_rate;
+									break;
+								case MUS_OGG:
+								case MUS_FLAC:
+//								case MUS_MP3_MAD:
+								//case MUS_MOD_MODPLUG:
+									Mix_SetMusicPosition(position/audio_rate+1);
+									position+=audio_rate;
+									break;
+								default:
+									printf("cannot fast-forward this type of music\n");
+									break;
+							}
+							break;
+						case SDLK_UP:
+							volume=(volume+1)<<1;
+							if(volume>SDL_MIX_MAXVOLUME)
+								volume=SDL_MIX_MAXVOLUME;
+							Mix_VolumeMusic(volume);
+							break;
+						case SDLK_DOWN:
+							volume>>=1;
+							Mix_VolumeMusic(volume);
+							break;
+						case SDLK_SPACE:
+							if(Mix_PausedMusic())
+								Mix_ResumeMusic();
+							else
+								Mix_PauseMusic();
+							break;
+						default:
+							break;
+					}
+					break;
+				case SDL_QUIT:
+					done=1;
+					break;
+				default:
+					break;
+			}
+		}
+		// the postmix processor tells us when there's new data to draw
+		if(need_refresh)
+			refresh();
+		SDL_Delay(0);
+	}
+	t=SDL_GetTicks()-t;
+	
+	// free & close
+	Mix_FreeMusic(music);
+	Mix_CloseAudio();
+	SDL_Quit();
+	// show a silly statistic
+	printf("fps=%.2f\n",((float)flips)/(t/1000.0));
+	return(0);
+}
+*/
   DestR.h = fGridSquareHeight;
 
 
@@ -772,63 +969,6 @@ void drawDestroyedIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
 
   SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR);
 }
-
-
-/*	//edited by Mike, 20211119
-void drawLevel()
-{
-	//note: count starts at zero	
-	//drawMovementTile(5*fGridSquareWidth,5*fGridSquareHeight);
-	for (int iRowCount=3; iRowCount<8; iRowCount++) {
-//  		drawMovementTile(1*fGridSquareWidth,iRowCount*fGridSquareHeight);
-  		drawMovementTile(ROAD_UP_TILE, 1*fGridSquareWidth,iRowCount*fGridSquareHeight);
-	}
-
-	for (int iRowCount=3; iRowCount<8; iRowCount++) {
-//  		drawMovementTile(8*fGridSquareWidth,iRowCount*fGridSquareHeight);
-  		drawMovementTile(ROAD_DOWN_TILE, 8*fGridSquareWidth,iRowCount*fGridSquareHeight);
-	}
-	
-	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
-//  		drawMovementTile(iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
-  		drawMovementTile(ROAD_RIGHT_TILE, iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
-	}
-	
-	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
-//  		drawMovementTile(iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
-  		drawMovementTile(ROAD_LEFT_TILE, iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
-	}
-	
-	//added by Mike, 20211118; edited by Mike, 20211119
-	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,8*fGridSquareHeight);
-//	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,7*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,9*fGridSquareHeight);
-
-	//note: water tile count, if NOT correct, no animation sequence
-	drawBackgroundTile(WATER_TILE,0*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,5*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,6*fGridSquareWidth,9*fGridSquareHeight);
-
-	drawBackgroundTile(TREE_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,4*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,5*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,7*fGridSquareWidth,9*fGridSquareHeight);
-}
-*/
 
 void drawLevel()
 {
@@ -975,28 +1115,34 @@ void update() {
 				
 				//after 1 loop based on destroyed ipis start index, increase speed
 				//TO-DO: -fix: Unit stuck at right-down corner when with shake, et cetera
-/*
-				if (iCount==IPIS_START_INDEX) {
-//				if (iCountIpisDestroyed>=14) {
-					iStepX=2;
-					iStepY=2;
+
+//				if (iCount==IPIS_START_INDEX) {
+				if (iCountIpisDestroyed>=14) {
+					if ((myKeysDown[KEY_D]) || (myKeysDown[KEY_A])) {
+						iStepX=2;
+						iStepY=2;	
+					}
 				}
-*/				
+				
 
     		}
 		}						
 
-
+/*
 					iStepX=2;
 					iStepY=2;
+*/
 
 		//note: clock-wise movement
 		//rectangle top side
 		if (myKeysDown[KEY_D] == TRUE) {
 			//edited by Mike, 20211115
 //			if (iPilotY==3*fGridSquareHeight) {
-			//edited by Mike, 20211121
-			if (iPilotY==(3*fGridSquareHeight+iCurrentOffsetHeight)) {
+			//edited by Mike, 20211122
+//			if (iPilotY==(3*fGridSquareHeight+iBaseOffsetHeight)) {
+			if (iPilotY<=(3*fGridSquareHeight+iBaseOffsetHeight)) {
+			iPilotY=3*fGridSquareHeight+iBaseOffsetHeight;
+
 /*
 			if ((iPilotY>=(3*fGridSquareHeight+iCurrentOffsetHeight-iStepY)) &&
 				(iPilotY<=(3*fGridSquareHeight+iCurrentOffsetHeight+iStepY))) {
@@ -1004,7 +1150,7 @@ void update() {
 				myKeysDown[KEY_D] = TRUE;
 
 				//edited by Mike, 20211121								
-				if (iPilotX<(8*fGridSquareWidth+iCurrentOffsetWidth)) {
+				if (iPilotX<(8*fGridSquareWidth+iBaseOffsetWidth)) {
 //				if (iPilotX<=(8*fGridSquareWidth)) {//+iCurrentOffsetWidth+iStepX)) {
 
 						//edited by Mike, 20211115
@@ -1021,8 +1167,11 @@ void update() {
 	
 		//rectangle right side
 		if (myKeysDown[KEY_S] == TRUE) {
-			//edited by Mike, 20211121
-			if (iPilotX==(8*fGridSquareWidth+iCurrentOffsetWidth)) {
+			//edited by Mike, 20211122
+//			if (iPilotX==(8*fGridSquareWidth+iBaseOffsetWidth)) {
+			if (iPilotX>=(8*fGridSquareWidth+iBaseOffsetWidth)) {
+			iPilotX=8*fGridSquareWidth+iBaseOffsetWidth;
+
 /*
 			if ((iPilotX>=(8*fGridSquareWidth+iCurrentOffsetWidth-iStepX)) &&
 				(iPilotX<=(8*fGridSquareWidth+iCurrentOffsetWidth+iStepX))) {
@@ -1031,7 +1180,7 @@ void update() {
 	
 				//edited by Mike, 20211121
 //				if (iPilotY<7*fGridSquareHeight) {
-				if (iPilotY<7*fGridSquareHeight+iCurrentOffsetHeight) {//+iStepY) {
+				if (iPilotY<7*fGridSquareHeight+iBaseOffsetHeight) {//+iStepY) {
 					//edited by Mike, 20211115
 //					iPilotY+=2;
 					iPilotY+=iStepY;
@@ -1047,8 +1196,10 @@ void update() {
 		if (myKeysDown[KEY_A] == TRUE) {		
 			//edited by Mike, 20211115
 //			if (iPilotY==7*fGridSquareHeight) {
-			//edited by Mike, 20211121
-			if (iPilotY==7*(fGridSquareHeight+iCurrentOffsetHeight)) {
+			//edited by Mike, 20211122
+//			if (iPilotY==7*(fGridSquareHeight+iBaseOffsetHeight)) {
+			if (iPilotY>=7*(fGridSquareHeight+iBaseOffsetHeight)) {
+				iPilotY=7*fGridSquareHeight+iBaseOffsetHeight;
 /*	
 			if ((iPilotY>=7*(fGridSquareHeight+iCurrentOffsetHeight-iStepY)) &&
 				(iPilotY<=7*(fGridSquareHeight+iCurrentOffsetHeight+iStepY))) {
@@ -1056,7 +1207,9 @@ void update() {
 				myKeysDown[KEY_A] = TRUE;
 
 				//edited by Mike, 20211121
-				if (iPilotX>(1*fGridSquareWidth+iCurrentOffsetWidth)) {
+				if (iPilotX>(1*fGridSquareWidth+iBaseOffsetWidth)) {
+//				if (iPilotX>(1*fGridSquareWidth+iBaseOffsetWidth-iStepX)) {
+
 //				if (iPilotX>=(1*fGridSquareWidth+iCurrentOffsetWidth-iStepX)) {
 					//edited by Mike, 20211115
 //					iPilotX-=2;
@@ -1071,8 +1224,11 @@ void update() {
 
 		//rectangle left side		
 		if (myKeysDown[KEY_W] == TRUE) {		
-			//edited by Mike, 20211121
-			if (iPilotX==(1*fGridSquareWidth+iCurrentOffsetWidth)) {
+			//edited by Mike, 20211122
+//			if (iPilotX==(1*fGridSquareWidth+iBaseOffsetWidth)) {
+			if (iPilotX<=(1*fGridSquareWidth+iBaseOffsetWidth)) {
+				iPilotX=1*fGridSquareWidth+iBaseOffsetWidth;
+
 /*
 			if ((iPilotX>=(1*fGridSquareWidth+iCurrentOffsetWidth-iStepX)) &&
 				(iPilotX<=(1*fGridSquareWidth+iCurrentOffsetWidth+iStepX))) {
@@ -1082,7 +1238,7 @@ void update() {
 				//edited by Mike, 20211121
 //				if (iPilotY>3*fGridSquareHeight) {
 //				if (iPilotY>=3*fGridSquareHeight+iCurrentOffsetHeight-iStepY) {
-				if (iPilotY>3*fGridSquareHeight+iCurrentOffsetHeight) {
+				if (iPilotY>3*fGridSquareHeight+iBaseOffsetHeight) {
 					//edited by Mike, 20211115
 //					iPilotY-=2;
 					iPilotY-=iStepY;
@@ -1197,7 +1353,7 @@ int main(int argc, char *argv[])
 //		doInput();
 //		update();
 
-		if (iCountIpisDestroyed>=10) { //update to be 360
+		if (iCountIpisDestroyed>=360) { //10) { //update to be 360
 			bIsMissionComplete=true;
 		}
 			
