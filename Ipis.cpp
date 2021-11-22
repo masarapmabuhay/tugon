@@ -94,8 +94,9 @@ Ipis::Ipis(SDL_Renderer* mySDLRendererInput, int xPos, int yPos, int zPos, int w
   
   texture = loadTexture((char*)"textures/ipis.png");
   
-	//added by Mike, 20211118  
-  isCollidable=true;  
+	//added by Mike, 20211118; 
+	//removed by Mike, 20211122, already set in reset(...(
+  //isCollidable=true;    
 }
 
 Ipis::~Ipis()
@@ -142,10 +143,23 @@ void Ipis::drawIpis() {
 		//added by Mike, 20211122
 //			if (iInvincibleCount>=iInvincibleCountMax) {
 		//TO-DO: -reverify: cause of only sometimes correct output with Ipis Level 2
-		if (iInvincibleCount<iInvincibleCountMax) {
+/*		if (iInvincibleCount<iInvincibleCountMax) {
 			if (iInvincibleCount%2==0) {
-				SDL_SetTextureColorMod(texture, 255, 255, 0);
-			}
+*/
+		if (bIsHit) {
+//				SDL_SetTextureColorMod(texture, 255, 255, 0);
+				if (iIpisLevel>=2) {					
+					if (bIsHitAgain) {					
+						SDL_SetTextureColorMod(texture, 128, 128, 0);
+					}
+					else {
+//						SDL_SetTextureColorMod(texture, 255, 128, 0);
+						SDL_SetTextureColorMod(texture, 255, 200, 0);
+					}
+				}
+				else {
+					SDL_SetTextureColorMod(texture, 255, 255, 0);
+				}
 		}
 		else {
 			SDL_SetTextureColorMod(texture, 255, 255, 255);
@@ -179,6 +193,10 @@ void Ipis::drawExplosion() {
 	
   	//note: SDL color max 255; GIMP color max 100
 //		SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 255*1, 255*1, 255); //white
+		
+		if (iIpisLevel>=2) {					
+			SDL_SetTextureColorMod(texture, 255, 255, 255);
+		}
 		
 		SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
 
@@ -315,6 +333,10 @@ void Ipis::reset(int iXPosInput, int iYPosInput)
 		
 		//added by Mike, 20211120
 		iInvincibleCount=iInvincibleCountMax;  
+		
+		//added by Mike, 20211122
+  	bIsHit=false;
+  	bIsHitAgain=false;
 }
 
 
@@ -323,6 +345,12 @@ void Ipis::hitBy(MyDynamicObject* mdo)
 	//added by Mike, 20211120
 	if (iInvincibleCount>=iInvincibleCountMax) {
     	iCurrentLife--;
+    	
+    	//added by Mike, 20211122
+    	if (bIsHit) {
+    		bIsHitAgain=true;
+    	}    	
+    	bIsHit=true;
 
 		if (iCurrentLife<=0) {
 			if (currentState!=INACTIVE_STATE) {

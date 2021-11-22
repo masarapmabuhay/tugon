@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211121
+ * @date updated: 20211122
  * @website address: http://www.usbong.ph
  *
  */
@@ -35,9 +35,13 @@ private:
 	int iIpisLevel;
 	int iIpisLevelMax;
 
+	//added by Mike, 20211122
+	bool bIsHit;
+	bool bIsHitAgain;
+
 	int iDeathAnimationCounter;
 
-    void setup();
+  void setup();
 	void drawIpis();
 	void drawExplosion();
 
