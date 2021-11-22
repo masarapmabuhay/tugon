@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B. 
  * @date created: 20211107
- * @date updated: 20211120
+ * @date updated: 20211122
  * @website address: http://www.usbong.ph
  *
  * Reference:
@@ -191,204 +191,6 @@ void print_init_flags(int flags)
 
 /******************************************************************************/
 
-/*
-int main(int argc, char **argv)
-{
-	int audio_rate,audio_channels;
-	Uint16 audio_format;
-	Uint32 t;
-	Mix_Music *music;
-	int volume=SDL_MIX_MAXVOLUME;
-
-	// initialize SDL for audio and video
-	if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)<0)
-		cleanExit("SDL_Init");
-	atexit(SDL_Quit);
-
-	int initted=Mix_Init(0);
-	printf("Before Mix_Init SDL_mixer supported: ");
-	print_init_flags(initted);
-	initted=Mix_Init(~0);
-	printf("After  Mix_Init SDL_mixer supported: ");
-	print_init_flags(initted);
-	Mix_Quit();
-
-	if(argc<2 || argc>4)
-	{
-		fprintf(stderr,"Usage: %s filename [depth] [any 3rd argument...]\n"
-				"    filename is any music file supported by your SDL_mixer library\n"
-				"    depth is screen depth, default is 8bits\n"
-				"    if there is a third argument given, we go fullscreen for maximum fun!\n",
-				*argv);
-		return 1;
-	}
-
-
-	// open a screen for the wav output
-	if(!(s=SDL_SetVideoMode(W,H,(argc>2?atoi(argv[2]):8),(argc>3?SDL_FULLSCREEN:0)|SDL_HWSURFACE|SDL_DOUBLEBUF)))
-		cleanExit("SDL_SetVideoMode");
-	SDL_WM_SetCaption("sdlwav - SDL_mixer demo","sdlwav");
-	
-	// hide the annoying mouse pointer
-	SDL_ShowCursor(SDL_DISABLE);
-	// get the colors we use
-	white=SDL_MapRGB(s->format,0xff,0xff,0xff);
-	black=SDL_MapRGB(s->format,0,0,0);
-	
-	// initialize sdl mixer, open up the audio device
-	if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,BUFFER)<0)
-		cleanExit("Mix_OpenAudio");
-
-	// we play no samples, so deallocate the default 8 channels...
-	Mix_AllocateChannels(0);
-	
-	// print out some info on the formats this run of SDL_mixer supports
-	{
-		int i,n=Mix_GetNumChunkDecoders();
-		printf("There are %d available chunk(sample) decoders:\n",n);
-		for(i=0; i<n; ++i)
-			printf("	%s\n", Mix_GetChunkDecoder(i));
-		n = Mix_GetNumMusicDecoders();
-		printf("There are %d available music decoders:\n",n);
-		for(i=0; i<n; ++i)
-			printf("	%s\n", Mix_GetMusicDecoder(i));
-	}
-
-	// print out some info on the audio device and stream
-	Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
-	bits=audio_format&0xFF;
-	sample_size=bits/8+audio_channels;
-	rate=audio_rate;
-	printf("Opened audio at %d Hz %d bit %s, %d bytes audio buffer\n", audio_rate,
-			bits, audio_channels>1?"stereo":"mono", BUFFER );
-
-	// calculate some parameters for the wav display
-	dy=s->h/2.0/(float)(0x1<<bits);
-	
-	// load the song
-	if(!(music=Mix_LoadMUS(argv[1])))
-		cleanExit("Mix_LoadMUS(\"%s\")",argv[1]);
-
-	{
-		Mix_MusicType type=Mix_GetMusicType(music);
-		printf("Music type: %s\n",
-				type==MUS_NONE?"MUS_NONE":
-				type==MUS_CMD?"MUS_CMD":
-				type==MUS_WAV?"MUS_WAV":
-				//type==MUS_MOD_MODPLUG?"MUS_MOD_MODPLUG":
-				type==MUS_MOD?"MUS_MOD":
-				type==MUS_MID?"MUS_MID":
-				type==MUS_OGG?"MUS_OGG":
-				type==MUS_MP3?"MUS_MP3":
-//				type==MUS_MP3_MAD?"MUS_MP3_MAD":
-				type==MUS_FLAC?"MUS_FLAC":
-				"Unknown");
-	}
-	// set the post mix processor up
-	Mix_SetPostMix(postmix,argv[1]);
-	
-	SDL_FillRect(s,NULL,black);
-	SDL_Flip(s);
-	SDL_FillRect(s,NULL,black);
-	SDL_Flip(s);
-	// start playing and displaying the wav
-	// wait for escape key of the quit event to finish
-	t=SDL_GetTicks();
-	if(Mix_PlayMusic(music, 1)==-1)
-		cleanExit("Mix_PlayMusic(0x%p,1)",music);
-	Mix_VolumeMusic(volume);
-
-	while((Mix_PlayingMusic() || Mix_PausedMusic()) && !done)
-	{
-		SDL_Event e;
-		while(SDL_PollEvent(&e))
-		{
-			switch(e.type)
-			{
-				case SDL_KEYDOWN:
-					switch(e.key.keysym.sym)
-					{
-						case SDLK_ESCAPE:
-							done=1;
-							break;
-						case SDLK_LEFT:
-							if(e.key.keysym.mod&KMOD_SHIFT)
-							{
-								Mix_RewindMusic();
-								position=0;
-							}
-							else
-							{
-								int pos=position/audio_rate-1;
-								if(pos<0)
-									pos=0;
-								Mix_SetMusicPosition(pos);
-								position=pos*audio_rate;
-							}
-							break;
-						case SDLK_RIGHT:
-							switch(Mix_GetMusicType(NULL))
-							{
-								case MUS_MP3:
-									Mix_SetMusicPosition(+5);
-									position+=5*audio_rate;
-									break;
-								case MUS_OGG:
-								case MUS_FLAC:
-//								case MUS_MP3_MAD:
-								//case MUS_MOD_MODPLUG:
-									Mix_SetMusicPosition(position/audio_rate+1);
-									position+=audio_rate;
-									break;
-								default:
-									printf("cannot fast-forward this type of music\n");
-									break;
-							}
-							break;
-						case SDLK_UP:
-							volume=(volume+1)<<1;
-							if(volume>SDL_MIX_MAXVOLUME)
-								volume=SDL_MIX_MAXVOLUME;
-							Mix_VolumeMusic(volume);
-							break;
-						case SDLK_DOWN:
-							volume>>=1;
-							Mix_VolumeMusic(volume);
-							break;
-						case SDLK_SPACE:
-							if(Mix_PausedMusic())
-								Mix_ResumeMusic();
-							else
-								Mix_PauseMusic();
-							break;
-						default:
-							break;
-					}
-					break;
-				case SDL_QUIT:
-					done=1;
-					break;
-				default:
-					break;
-			}
-		}
-		// the postmix processor tells us when there's new data to draw
-		if(need_refresh)
-			refresh();
-		SDL_Delay(0);
-	}
-	t=SDL_GetTicks()-t;
-	
-	// free & close
-	Mix_FreeMusic(music);
-	Mix_CloseAudio();
-	SDL_Quit();
-	// show a silly statistic
-	printf("fps=%.2f\n",((float)flips)/(t/1000.0));
-	return(0);
-}
-*/
-
 //added by Mike, 2021110
 //Reference: https://stackoverflow.com/questions/55786004/play-one-sound-after-another-with-sdl-mixer;
 //last accessed: 2021110
@@ -509,7 +311,7 @@ int executeSDLWaveSoundPrev(int argc, char **argv)
 
 	// initialize SDL for audio and video
 	if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)<0)
-		cleanExit("SDL_Init");
+		cleanExit((char*) "SDL_Init"); //edited by Mike, 20211122
 	atexit(SDL_Quit);
 	
 	int initted=Mix_Init(0);
@@ -550,11 +352,11 @@ int executeSDLWaveSoundPrev(int argc, char **argv)
 	//last accessed: 20211005
 	//answer by: Bartlomiej Lewandowski, 20170525T1951
 	//TO-DO: -reverify: with non-Windows, e.g. Linux, machine
-	putenv("SDL_AUDIODRIVER=DirectSound");
+	putenv((char*) "SDL_AUDIODRIVER=DirectSound"); //edited by Mike, 20211122
 	
 	// initialize sdl mixer, open up the audio device
 	if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,BUFFER)<0)
-		cleanExit("Mix_OpenAudio");
+		cleanExit((char*)"Mix_OpenAudio"); //edited by Mike, 20211122
 
 	// we play no samples, so deallocate the default 8 channels...
 	Mix_AllocateChannels(0);
@@ -586,7 +388,7 @@ int executeSDLWaveSoundPrev(int argc, char **argv)
 	
 	// load the song
 	if(!(music=Mix_LoadMUS(argv[1])))
-		cleanExit("Mix_LoadMUS(\"%s\")",argv[1]);
+		cleanExit((char*) "Mix_LoadMUS(\"%s\")",argv[1]);  //edited by Mike, 20211122
 
 	{
 		Mix_MusicType type=Mix_GetMusicType(music);
@@ -621,7 +423,7 @@ int executeSDLWaveSoundPrev(int argc, char **argv)
 	//note: 1 = play x1; -1 = play as loop
 //	if(Mix_PlayMusic(music, 1)==-1)
 	if(Mix_PlayMusic(music, -1)==-1) {
-		cleanExit("Mix_PlayMusic(0x%p,1)",music);
+		cleanExit((char*) "Mix_PlayMusic(0x%p,1)",music); //edited by Mike, 20211122
 	}
 	Mix_VolumeMusic(volume);
 
@@ -655,132 +457,6 @@ int executeSDLWaveSoundPrev(int argc, char **argv)
 		iCount++;    	
 	}
 
-
-/* //TO-DO: -reverify: this
-//Reference: https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer.html#SEC30;
-//last accessed: 20211110
-// fade out music to finish 3 seconds from now
-while(!Mix_FadeOutMusic(3000) && Mix_PlayingMusic()) {
-	printf("playing music \n");
-
-    // wait for any fades to complete
-    SDL_Delay(100);
-}
-*/
-
-/*
-	SDL_Event e;
-	int iDone=0;
-	while(!iDone){	
-	    while (SDL_PollEvent(&e)){
-	    	switch(e.type)
-			{
-				case SDL_KEYDOWN:
-					switch(e.key.keysym.sym)
-					{
-						case SDLK_ESCAPE:
-							iDone=1;
-							break;
-					}
-			}
-	    }
-
-//		printf(">>HALLO!\n");
-
-		// the postmix processor tells us when there's new data to draw
-		if(need_refresh) {
-			refresh();
-		}
-	}
-*/
-	
-/*	//removed by Mike, 20211107
-	while((Mix_PlayingMusic() || Mix_PausedMusic()) && !done)
-	{
-		SDL_Event e;
-		while(SDL_PollEvent(&e))
-		{
-			switch(e.type)
-			{
-				case SDL_KEYDOWN:
-					switch(e.key.keysym.sym)
-					{
-						case SDLK_ESCAPE:
-							done=1;
-							break;
-						case SDLK_LEFT:
-							if(e.key.keysym.mod&KMOD_SHIFT)
-							{
-								Mix_RewindMusic();
-								position=0;
-							}
-							else
-							{
-								int pos=position/audio_rate-1;
-								if(pos<0)
-									pos=0;
-								Mix_SetMusicPosition(pos);
-								position=pos*audio_rate;
-							}
-							break;
-						case SDLK_RIGHT:
-							switch(Mix_GetMusicType(NULL))
-							{
-								case MUS_MP3:
-									Mix_SetMusicPosition(+5);
-									position+=5*audio_rate;
-									break;
-								case MUS_OGG:
-								case MUS_FLAC:
-//								case MUS_MP3_MAD:
-								//case MUS_MOD_MODPLUG:
-									Mix_SetMusicPosition(position/audio_rate+1);
-									position+=audio_rate;
-									break;
-								default:
-									printf("cannot fast-forward this type of music\n");
-									break;
-							}
-							break;
-						case SDLK_UP:
-							volume=(volume+1)<<1;
-							if(volume>SDL_MIX_MAXVOLUME)
-								volume=SDL_MIX_MAXVOLUME;
-							Mix_VolumeMusic(volume);
-							break;
-						case SDLK_DOWN:
-							volume>>=1;
-							Mix_VolumeMusic(volume);
-							break;
-						case SDLK_SPACE:
-							if(Mix_PausedMusic())
-								Mix_ResumeMusic();
-							else
-								Mix_PauseMusic();
-							break;
-						default:
-							break;
-					}
-					break;
-				case SDL_QUIT:
-					done=1;
-					break;
-				default:
-					break;
-			}
-		}
-*/
-
-/*	//removed by Mike, 20211107
-		// the postmix processor tells us when there's new data to draw
-		if(need_refresh)
-			refresh();
-			
-		SDL_Delay(0);
-*/
-/*	//removed by Mike, 20211107
-	}
-*/	
 	t=SDL_GetTicks()-t;
 
 		printf(">>>>> 3\n");
@@ -789,14 +465,6 @@ while(!Mix_FadeOutMusic(3000) && Mix_PlayingMusic()) {
 	Mix_FreeMusic(music);
 	Mix_CloseAudio();
 	
-/* //removed by Mike, 20211107
-	SDL_Quit();
-*/
-
-/* //removed by Mike, 20211107
-	// show a silly statistic
-	printf("fps=%.2f\n",((float)flips)/(t/1000.0));
-*/
 	return(0);
 }
 
