@@ -118,6 +118,9 @@ int iStepY;
 //added by Mike, 20211121
 int iCountIpisDestroyed;
 
+//added by Mike, 20211122
+bool bIsMissionComplete;
+
 //added by Mike, 20211116
 Ipis *myIpis[MAX_IPIS];
 
@@ -310,11 +313,17 @@ void doInput(void)
 				break;
 
 			case SDL_KEYDOWN:
-				keyDown(&event.key);
+				//edited by Mike, 20211122
+				if (!bIsMissionComplete) {
+					keyDown(&event.key);
+				}
 				break;
 
 			case SDL_KEYUP:
-				keyUp(&event.key);
+				//edited by Mike, 20211122
+				if (!bIsMissionComplete) {
+					keyUp(&event.key);
+				}
 				break;
 
 			default:
@@ -446,6 +455,8 @@ void init() {
 	iStepY=1; //2;//1;
 
 	iCountIpisDestroyed=0;
+	 
+	bIsMissionComplete=false;	 
 	    
   iCountTileAnimationFrame=0;
   
@@ -1181,9 +1192,36 @@ int main(int argc, char *argv[])
 	{
 		prepareScene();
 
+
+		//edited by Mike, 20211122
+//		doInput();
+//		update();
+
+		if (iCountIpisDestroyed>=10) { //update to be 360
+			bIsMissionComplete=true;
+		}
+			
 		doInput();
 		
-		update();
+		if (!bIsMissionComplete) {
+			update();
+		}
+		else {
+			//add: display "MISSION COMPLETE: 
+			//
+			//				IPIS DESTROYED: 360
+			//
+			//				level 1 IPIS count: 
+			//				level 2 IPIS count:
+			//				level 3 IPIS Count:
+			//				
+			//				PLEASE MAKE TIME FOR FACE-TO-FACE INTERACTION.
+			//				WORK CONTRIBUTES TO COMMUNITY・FAMILY・COMPANY.
+			//
+			//				ELAPSED TIME: HH:MM:SS
+			//				
+		}
+		
 								
 		//edited by Mike, 20211112
 //		draw(texture, iPilotX, iPilotY);
