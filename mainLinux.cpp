@@ -118,8 +118,12 @@ int iStepY;
 //added by Mike, 20211121
 int iCountIpisDestroyed;
 
+//added by Mike, 20211123
+int iCountMissedToHitIpis;
+
 //added by Mike, 20211122
 bool bIsMissionComplete;
+bool bHasHitIpis;
 
 //added by Mike, 20211116
 Ipis *myIpis[MAX_IPIS];
@@ -403,7 +407,7 @@ void executeTimerCount() {
 	usleep(1000); //TO-DO: -reverify: with Windows machine
 
 	while (counter>=1) {
-		printf("Time count: %i\n",counter);
+//		printf("Time count: %i\n",counter);
 		usleep(1000);
 		counter--;
 		
@@ -455,6 +459,7 @@ void init() {
 	iStepY=1; //2;//1;
 
 	iCountIpisDestroyed=0;
+	iCountMissedToHitIpis=0; //added by Mike, 20211122
 	 
 	bIsMissionComplete=false;	 
 	    
@@ -579,6 +584,9 @@ void init() {
 	myArrayOfInputStringsBeatSound = (char **)malloc(2 * sizeof(char *)); //for only 1 item
  	myArrayOfInputStringsBeatSound [0] = (char *)"./sdlwav"; //add this, albeit NOT used; arg count 1 as filename used
  	myArrayOfInputStringsBeatSound [1] = (char *)"sounds/tugonBeat1.mp3"; //OK
+
+ 	//added by Mike, 20211122 	
+ 	bHasHitIpis=false;
  	
  	//added by Mike, 20211122
  	//load and execute immediately to fix noticeable loading time
@@ -1080,11 +1088,16 @@ void update() {
 					
 
     			//added by Mike, 20211118
+    			bHasHitIpis=false;
     			for (int iCount=0; iCount<MAX_IPIS; iCount++) {
-						myUnit->collideWith(myIpis[iCount]);
+    				//edited by Mike, 20211122
+						//myUnit->collideWith(myIpis[iCount]);
+						if (myUnit->collideWith(myIpis[iCount])) {
+							bHasHitIpis=true;
+						}
 					}
 
-					if (iDestroyBugShakeDelayCount==iDestroyBugShakeDelayMax) {
+					if (iDestroyBugShakeDelayCount==iDestroyBugShakeDelayMax) {		
 				  	myKeysDown[KEY_K] = FALSE;
     				bIsExecutingDestroyBug = false;					
     				iDestroyBugShakeDelayCount=0;
@@ -1092,6 +1105,16 @@ void update() {
     			else {
 						iDestroyBugShakeDelayCount+=1;					
     			}    			
+					
+					//added by Mike, 20211122
+					//TO-DO: -reverify: this
+					if (iDestroyBugShakeDelayCount==0) {
+						if (!bHasHitIpis) {
+							iCountMissedToHitIpis++;
+							printf(">>>iCountMissedToHitIpis: %i\n",iCountMissedToHitIpis);
+						}	    			
+					}			
+
 			}		
 			else {
   			iCurrentOffsetWidth=iBaseOffsetWidth;

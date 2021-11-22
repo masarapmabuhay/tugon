@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B. 
  * @date created: 20211116
- * @date updated: 20211117
+ * @date updated: 20211122
  * @website address: http://www.usbong.ph
  *
  */
@@ -97,19 +97,25 @@ bool MyDynamicObject::isIntersectingRect(MyDynamicObject* mdo1, MyDynamicObject*
     return true;
 }
 
-void MyDynamicObject::collideWith(MyDynamicObject* mdo)
+//edited by Mike, 20211122
+//void MyDynamicObject::collideWith(MyDynamicObject* mdo)
+bool MyDynamicObject::collideWith(MyDynamicObject* mdo)
 {
     if ((!checkIsCollidable())||(!mdo->checkIsCollidable()))    
     {
 //    		printf(">>>>>NOT COLLIDABLE");
-        return;
+        return false;
     }
 
     if (isIntersectingRect(this, mdo))
     {
         this->hitBy(mdo);
         mdo->hitBy(this);
+        
+        return true;
     }
+    
+    return false;
 }
 
 void MyDynamicObject::destroy()

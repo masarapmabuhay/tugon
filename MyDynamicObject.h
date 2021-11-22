@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211112
- * @date updated: 20211121
+ * @date updated: 20211122
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -258,7 +258,11 @@ public:
     void move(int iKeyInput);
     
     bool checkCollision(MyDynamicObject* mdo1, MyDynamicObject* mdo2);
-    void collideWith(MyDynamicObject* mdo);   
+    
+    //edited by Mike, 20211122
+    //void collideWith(MyDynamicObject* mdo);   
+    bool collideWith(MyDynamicObject* mdo);   
+    
     virtual bool isIntersectingRect(MyDynamicObject* mdo1, MyDynamicObject* mdo2);        
     virtual void setCurrentMovingState(int iMovingState) {
         currentMovingState = iMovingState;
