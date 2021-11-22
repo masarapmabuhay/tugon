@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211112
- * @date updated: 20211122
+ * @date updated: 20211123
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -152,7 +152,8 @@ public:
     
     ~MyDynamicObject();
     
-    bool isActive(){
+    //edited by Mike, 20211123
+    bool isActiveState(){
         if (currentState==ACTIVE_STATE) {
             return true;
         }
@@ -174,6 +175,15 @@ public:
     //added by Mike, 20211120
     void setToInactiveState(){
         currentState=INACTIVE_STATE;
+    }
+
+    bool isMovingState(){
+        if (currentState==MOVING_STATE) {
+            return true;
+        }
+        else {
+        	return false;
+        }
     }
 
 

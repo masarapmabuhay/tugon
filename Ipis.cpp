@@ -317,7 +317,10 @@ void Ipis::reset(int iXPosInput, int iYPosInput)
     iMyXPosAsPixel=iXPosInput;
     iMyYPosAsPixel=iYPosInput;  
 
-    changeState(INITIALIZING_STATE);
+	//edited by Mike, 20211123
+//    changeState(INITIALIZING_STATE);
+    changeState(MOVING_STATE);
+
     setCollidable(true);
     iDeathAnimationCounter=0;
     

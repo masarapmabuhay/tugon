@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211122
+ * @date updated: 20211123
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -262,7 +262,10 @@ void keyDown(SDL_KeyboardEvent *event)
 */				
 				//note: already executed once, despite pressed and hold
         myKeysDown[KEY_K] = TRUE;
+
     		bIsExecutingDestroyBug = true;	
+    		
+    		iDestroyBugShakeDelayCount=0; //added by Mike, 20211122
     }
 	}
 }
@@ -929,8 +932,6 @@ void update() {
 				}
 				
 				//after 1 loop based on destroyed ipis start index, increase speed
-				//TO-DO: -fix: Unit stuck at right-down corner when with shake, et cetera
-
 //				if (iCount==IPIS_START_INDEX) {
 				if (iCountIpisDestroyed>=14) {
 					if ((myKeysDown[KEY_D]) || (myKeysDown[KEY_A])) {
@@ -1079,7 +1080,7 @@ void update() {
 		
 			if (bIsExecutingDestroyBug) {
   				iCurrentOffsetWidth+=2;
-					iCurrentOffsetHeight-=2;			
+				iCurrentOffsetHeight-=2;			
 
 					//added by Mike, 20211120
 					//TO-DO: -add: miss count; excess destroy ipis action
@@ -1089,15 +1090,30 @@ void update() {
 
     			//added by Mike, 20211118
     			bHasHitIpis=false;
-    			for (int iCount=0; iCount<MAX_IPIS; iCount++) {
-    				//edited by Mike, 20211122
-						//myUnit->collideWith(myIpis[iCount]);
+    			int iCount;
+    			for (iCount=0; iCount<MAX_IPIS; iCount++) {
+    				//edited by Mike, 20211123
+					//myUnit->collideWith(myIpis[iCount]);
+    				
+//    				printf(">>myIpis[iCount]->isMovingState(): %d\n",myIpis[iCount]->isMovingState());
+//      			printf(">>myIpis[iCount] currentState: %i\n",myIpis[iCount]->currentState);
+  				
+    				if (myIpis[iCount]->isMovingState()) {
 						if (myUnit->collideWith(myIpis[iCount])) {
 							bHasHitIpis=true;
 						}
 					}
+				}
 
-					if (iDestroyBugShakeDelayCount==iDestroyBugShakeDelayMax) {		
+				//added by Mike, 20211123
+				if (iDestroyBugShakeDelayCount==0) {
+					if (!bHasHitIpis) {
+						iCountMissedToHitIpis++;
+						printf(">>>iCountMissedToHitIpis: %i\n",iCountMissedToHitIpis);
+					}	    			
+				}			
+
+				if (iDestroyBugShakeDelayCount==iDestroyBugShakeDelayMax) {		
 				  	myKeysDown[KEY_K] = FALSE;
     				bIsExecutingDestroyBug = false;					
     				iDestroyBugShakeDelayCount=0;
@@ -1105,19 +1121,9 @@ void update() {
     			else {
 						iDestroyBugShakeDelayCount+=1;					
     			}    			
-					
-					//added by Mike, 20211122
-					//TO-DO: -reverify: this
-					if (iDestroyBugShakeDelayCount==0) {
-						if (!bHasHitIpis) {
-							iCountMissedToHitIpis++;
-							printf(">>>iCountMissedToHitIpis: %i\n",iCountMissedToHitIpis);
-						}	    			
-					}			
-
 			}		
 			else {
-  			iCurrentOffsetWidth=iBaseOffsetWidth;
+  				iCurrentOffsetWidth=iBaseOffsetWidth;
 				iCurrentOffsetHeight=iBaseOffsetHeight;				
 			}
 
