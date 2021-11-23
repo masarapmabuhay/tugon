@@ -764,7 +764,10 @@ void drawBackgroundTile(int iTileId, int x, int y)
   SrcR.w = iTileWidth;
   SrcR.h = iTileHeight;
 
-  DestR.x = x+iCurrentOffsetWidth;
+	//edited by Mike, 20211123
+//  DestR.x = x+iCurrentOffsetWidth;
+  DestR.x = x;
+
   DestR.y = y;
     
   DestR.w = fGridSquareWidth;
@@ -1012,32 +1015,58 @@ void drawLevel()
 	//added by Mike, 20211118; edited by Mike, 20211119
 	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,8*fGridSquareHeight);
-//	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,7*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,8*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,9*fGridSquareHeight);	
+	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,9*fGridSquareHeight);
+
 	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,9*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,9*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,9*fGridSquareHeight);
 
 	//note: water tile count, if NOT correct, no animation sequence
-	drawBackgroundTile(WATER_TILE,0*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,0*fGridSquareWidth,3*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth,3*fGridSquareHeight);
+
+	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth,4*fGridSquareHeight);
+
+	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth,5*fGridSquareHeight);
+
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,7*fGridSquareHeight);
+
+	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth,7*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,5*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth,9*fGridSquareHeight);
 	drawBackgroundTile(WATER_TILE,5*fGridSquareWidth,9*fGridSquareHeight);
 	drawBackgroundTile(WATER_TILE,6*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,7*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,8*fGridSquareWidth,9*fGridSquareHeight);
 
+	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,5*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,3*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,3*fGridSquareWidth,9*fGridSquareHeight);
+
+/*
 	drawBackgroundTile(TREE_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(TREE_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(TREE_TILE,4*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(TREE_TILE,5*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth,8*fGridSquareHeight);
 	drawBackgroundTile(TREE_TILE,7*fGridSquareWidth,9*fGridSquareHeight);
-
+*/
 }
 
 
