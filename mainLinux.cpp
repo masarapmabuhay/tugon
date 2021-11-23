@@ -10,7 +10,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License./home/unit_member/Documents/USBONG/tugon-ma
  *
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
@@ -120,6 +120,11 @@ int iCountIpisDestroyed;
 
 //added by Mike, 20211123
 int iCountMissedToHitIpis;
+
+//added by Mike, 20211123
+int iSecondCount;
+int iMinuteCount;
+int iHourCount;
 
 //added by Mike, 20211122
 bool bIsMissionComplete;
@@ -403,9 +408,9 @@ void drawShieldPrev()
   }
 }
 
-//added by Mike, 20211122
+//added by Mike, 20211122; edited by Mike, 20211123
 //TO-DO: -add: HH:MM:SS
-void executeTimerCount() {
+void executeTimerCountPrev() {
 	int counter = 60;
 	usleep(1000); //TO-DO: -reverify: with Windows machine
 
@@ -416,6 +421,32 @@ void executeTimerCount() {
 		
 		if (counter==0) {
 			counter=60;
+		}
+	}
+}
+
+//TO-DO: -reverify: with Windows machine
+void executeTimerCount() {
+//	usleep(1000000); //OK per second
+
+	while (iSecondCount<=60) {
+		printf("Time count: %i:%i:%i\n",iHourCount,iMinuteCount,iSecondCount);
+
+		usleep(1000000); //OK per second
+		iSecondCount++;
+		
+		if (iSecondCount>=60) {
+			iSecondCount=0;
+			iMinuteCount++;
+			
+			if (iMinuteCount>=60) {
+				iMinuteCount=0;
+				iHourCount++;			
+			}
+
+			if (iHourCount>=24) {
+				iHourCount=0;			
+			}			
 		}
 	}
 }
@@ -464,6 +495,11 @@ void init() {
 	iCountIpisDestroyed=0;
 	iCountMissedToHitIpis=0; //added by Mike, 20211122
 	 
+	//added by Mike, 20211123
+	iSecondCount=0;
+	iMinuteCount=0; //59;
+	iHourCount=0; //25;
+ 	 
 	bIsMissionComplete=false;	 
 	    
   iCountTileAnimationFrame=0;
@@ -776,8 +812,13 @@ void drawDestroyedIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
   DestR.y = y;
 */
 
+/* //edited by Mike, 20211123
   DestR.x = x+iCurrentOffsetWidth+iTileWidth*iDigitFromLeft;
   DestR.y = y;
+*/
+  DestR.x = x+iTileWidth*iDigitFromLeft;
+  DestR.y = y;
+
 
  //edited by Mike, 20211123    
   DestR.w = fGridSquareWidth;
@@ -847,6 +888,103 @@ void drawMissedToHitIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
   SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR); //default: white
 }
 
+//added by Mike, 20211123
+void drawTimeCount(int iDigitValue,int iDigitFromLeft, int x, int y)
+{
+	int iTileWidth=64;
+	int iTileHeight=64;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+ 
+  
+/*
+  SrcR.x = 0;
+  SrcR.y = 0;
+*/
+
+//printf(">>>>>>>>>> iCountIpisDestroyed: %i\n",iCountIpisDestroyed);
+
+  if (iDigitValue==0) {
+  	SrcR.x = 0+iTileWidth*(1); 
+  	SrcR.y = 0+iTileHeight*(2); 
+  }
+  else {
+  	SrcR.x = 0+iTileWidth*((iDigitValue-1)%4); 
+  	SrcR.y = 0+iTileHeight*((iDigitValue-1)/4); 
+  }
+
+	
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+/*	//edited by Mike, 20211123
+  DestR.x = x+iCurrentOffsetWidth+iTileWidth*iDigitFromLeft;
+  DestR.y = y;
+*/
+
+  DestR.x = x+fGridSquareWidth/2*iDigitFromLeft;
+  DestR.y = y;
+
+/* //edited by Mike, 20211123    
+  DestR.w = fGridSquareWidth;
+  DestR.h = fGridSquareHeight;
+*/
+    
+  DestR.w = fGridSquareWidth/2;
+  DestR.h = fGridSquareHeight/2;
+
+
+  //added by Mike, 20211123
+  SDL_SetTextureColorMod(textureFont, 255, 255*0.79, 0); //output: gold
+  SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR); //default: white
+}
+
+//added by Mike, 20211123
+void drawColon(int iDigitFromLeft, int x, int y)
+{
+	int iTileWidth=64;
+	int iTileHeight=64;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+ 
+  
+/*
+  SrcR.x = 0;
+  SrcR.y = 0;
+*/
+
+
+  SrcR.x = 0+iTileWidth*(2); 
+  SrcR.y = 0+iTileHeight*(2); 
+
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+/*	//edited by Mike, 20211123
+  DestR.x = x+iCurrentOffsetWidth+iTileWidth*iDigitFromLeft;
+  DestR.y = y;
+*/
+
+  DestR.x = x+fGridSquareWidth/2*iDigitFromLeft;
+  DestR.y = y;
+
+/* //edited by Mike, 20211123    
+  DestR.w = fGridSquareWidth;
+  DestR.h = fGridSquareHeight;
+*/
+    
+  DestR.w = fGridSquareWidth/2;
+  DestR.h = fGridSquareHeight/2;
+
+  SDL_SetTextureColorMod(textureFont, 255, 255*0.79, 0); //output: gold
+  SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR); //default: white
+}
 
 void drawLevel()
 {
@@ -954,24 +1092,24 @@ void draw(int x, int y)
 	//-----
   	//note: 3 digits
   	if (iCountIpisDestroyed==0) {
-		drawDestroyedIpisCount(0,0,4*fGridSquareWidth,0*fGridSquareHeight);
-		drawDestroyedIpisCount(0,1,4*fGridSquareWidth,0*fGridSquareHeight);
-		drawDestroyedIpisCount(0,2,4*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(0,0,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(0,1,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(0,2,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
   	}
   	else if (iCountIpisDestroyed<10) {
-		drawDestroyedIpisCount(0,0,4*fGridSquareWidth,0*fGridSquareHeight);
-		drawDestroyedIpisCount(0,1,4*fGridSquareWidth,0*fGridSquareHeight);
-		drawDestroyedIpisCount(iCountIpisDestroyed,2,4*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(0,0,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(0,1,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(iCountIpisDestroyed,2,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
   	}
   	else if (iCountIpisDestroyed<100) {
-		drawDestroyedIpisCount(0,0,4*fGridSquareWidth,0*fGridSquareHeight);
-		drawDestroyedIpisCount(iCountIpisDestroyed/10,1,4*fGridSquareWidth,0*fGridSquareHeight);
-		drawDestroyedIpisCount(iCountIpisDestroyed%10,2,4*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(0,0,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(iCountIpisDestroyed/10,1,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(iCountIpisDestroyed%10,2,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
   	}
   	else {
- 		drawDestroyedIpisCount(iCountIpisDestroyed/100,0,4*fGridSquareWidth,0*fGridSquareHeight);
-		drawDestroyedIpisCount((iCountIpisDestroyed/10)%10,1,4*fGridSquareWidth,0*fGridSquareHeight);
-		drawDestroyedIpisCount(iCountIpisDestroyed%10,2,4*fGridSquareWidth,0*fGridSquareHeight);
+ 			drawDestroyedIpisCount(iCountIpisDestroyed/100,0,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount((iCountIpisDestroyed/10)%10,1,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
+			drawDestroyedIpisCount(iCountIpisDestroyed%10,2,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
   	}
 	//-----
 
@@ -983,27 +1121,82 @@ void draw(int x, int y)
   	}
 
   	if (iCountMissedToHitIpis==0) {
-		drawMissedToHitIpisCount(0,0,0,1*fGridSquareHeight);
-		drawMissedToHitIpisCount(0,1,0,1*fGridSquareHeight);
-		drawMissedToHitIpisCount(0,2,0,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(0,0,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(0,1,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(0,2,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
   	}
   	else if (iCountMissedToHitIpis<10) {
-		drawMissedToHitIpisCount(0,0,0,1*fGridSquareHeight);
-		drawMissedToHitIpisCount(0,1,0,1*fGridSquareHeight);
-		drawMissedToHitIpisCount(iCountMissedToHitIpis,2,0,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(0,0,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(0,1,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(iCountMissedToHitIpis,2,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
   	}
   	else if (iCountMissedToHitIpis<100) {
-		drawMissedToHitIpisCount(0,0,0,1*fGridSquareHeight);
-		drawMissedToHitIpisCount(iCountMissedToHitIpis/10,1,0,1*fGridSquareHeight);
-		drawMissedToHitIpisCount(iCountMissedToHitIpis%10,2,0,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(0,0,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(iCountMissedToHitIpis/10,1,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(iCountMissedToHitIpis%10,2,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
   	}
   	else {
- 		drawMissedToHitIpisCount(iCountMissedToHitIpis/100,0,0,1*fGridSquareHeight);
-		drawMissedToHitIpisCount((iCountMissedToHitIpis/10)%10,1,0,1*fGridSquareHeight);
-		drawMissedToHitIpisCount(iCountMissedToHitIpis%10,2,0,1*fGridSquareHeight);
+ 			drawMissedToHitIpisCount(iCountMissedToHitIpis/100,0,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
+			drawMissedToHitIpisCount((iCountMissedToHitIpis/10)%10,1,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
+			drawMissedToHitIpisCount(iCountMissedToHitIpis%10,2,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
   	}
 	//-----
+	
+	//added by Mike, 20211123
+	//-----
 
+	//added by Mike, 20211123
+/*	
+		if (iSecondCount<10) {
+			drawTimeCount(0,0,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iSecondCount,1,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
+		else {
+			drawTimeCount(iSecondCount/10,0,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iSecondCount%10,1,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
+		
+		drawColon(1,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+
+		if (iMinuteCount<10) {
+			drawTimeCount(0,1,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iMinuteCount,0,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
+		else {
+			drawTimeCount(iMinuteCount/10,1,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iMinuteCount%10,1,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
+*/		
+		if (iSecondCount<10) {
+			drawTimeCount(0,0,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iSecondCount,1,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
+		else {
+			drawTimeCount(iSecondCount/10,0,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iSecondCount%10,1,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
+		
+		drawColon(1,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+
+		if (iMinuteCount<10) {
+			drawTimeCount(0,1,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iMinuteCount,0,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
+		else {
+			drawTimeCount(iMinuteCount/10,1,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iMinuteCount%10,2,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
+
+		drawColon(0,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+
+		if (iHourCount<10) {
+			drawTimeCount(0,0,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iHourCount,1,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
+		else {
+			drawTimeCount(iHourCount/10,0,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+			drawTimeCount(iHourCount%10,1,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+		}
 
 }
 
