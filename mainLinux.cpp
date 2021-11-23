@@ -734,7 +734,6 @@ void drawBackgroundTile(int iTileId, int x, int y)
   DestR.w = fGridSquareWidth;
   DestR.h = fGridSquareHeight;
 
-
   SDL_RenderCopy(mySDLRenderer, texture, &SrcR, &DestR);
 
 }
@@ -780,13 +779,74 @@ void drawDestroyedIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
   DestR.x = x+iCurrentOffsetWidth+iTileWidth*iDigitFromLeft;
   DestR.y = y;
 
-    
+ //edited by Mike, 20211123    
   DestR.w = fGridSquareWidth;
   DestR.h = fGridSquareHeight;
 
-
+/*	//scaled down OK    
+  DestR.w = fGridSquareWidth/2;
+  DestR.h = fGridSquareHeight/2;
+*/
+  
+  //added by Mike, 20211123
+  SDL_SetTextureColorMod(textureFont, 255, 255, 0); //output: yellow
   SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR);
 }
+
+void drawMissedToHitIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
+{
+	int iTileWidth=64;
+	int iTileHeight=64;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+ 
+  
+/*
+  SrcR.x = 0;
+  SrcR.y = 0;
+*/
+
+//printf(">>>>>>>>>> iCountIpisDestroyed: %i\n",iCountIpisDestroyed);
+
+  if (iDigitValue==0) {
+  	SrcR.x = 0+iTileWidth*(1); 
+  	SrcR.y = 0+iTileHeight*(2); 
+  }
+  else {
+  	SrcR.x = 0+iTileWidth*((iDigitValue-1)%4); 
+  	SrcR.y = 0+iTileHeight*((iDigitValue-1)/4); 
+  }
+
+	
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+/*	//edited by Mike, 20211123
+  DestR.x = x+iCurrentOffsetWidth+iTileWidth*iDigitFromLeft;
+  DestR.y = y;
+*/
+
+  DestR.x = x+fGridSquareWidth/2*iDigitFromLeft;
+  DestR.y = y;
+
+/* //edited by Mike, 20211123    
+  DestR.w = fGridSquareWidth;
+  DestR.h = fGridSquareHeight;
+*/
+    
+  DestR.w = fGridSquareWidth/2;
+  DestR.h = fGridSquareHeight/2;
+
+
+//  SDL_SetTextureColorMod(textureFont, 255, 255, 0); //output: yellow
+//  SDL_SetTextureColorMod(textureFont, 255, 0, 0); //output: red
+  SDL_SetTextureColorMod(textureFont, 255, 255, 255); //output: white
+  SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR); //default: white
+}
+
 
 void drawLevel()
 {
@@ -891,7 +951,7 @@ void draw(int x, int y)
 
 	//added by Mike, 20211121
 	//drawDestroyedIpisCount(3*fGridSquareWidth,0*fGridSquareHeight);
-
+	//-----
   	//note: 3 digits
   	if (iCountIpisDestroyed==0) {
 		drawDestroyedIpisCount(0,0,4*fGridSquareWidth,0*fGridSquareHeight);
@@ -913,6 +973,37 @@ void draw(int x, int y)
 		drawDestroyedIpisCount((iCountIpisDestroyed/10)%10,1,4*fGridSquareWidth,0*fGridSquareHeight);
 		drawDestroyedIpisCount(iCountIpisDestroyed%10,2,4*fGridSquareWidth,0*fGridSquareHeight);
   	}
+	//-----
+
+	//added by Mike, 20211123
+	//-----
+  	//note: 3 digits
+  	if (iCountMissedToHitIpis>999) {
+  		iCountMissedToHitIpis=999;
+  	}
+
+  	if (iCountMissedToHitIpis==0) {
+		drawMissedToHitIpisCount(0,0,0,1*fGridSquareHeight);
+		drawMissedToHitIpisCount(0,1,0,1*fGridSquareHeight);
+		drawMissedToHitIpisCount(0,2,0,1*fGridSquareHeight);
+  	}
+  	else if (iCountMissedToHitIpis<10) {
+		drawMissedToHitIpisCount(0,0,0,1*fGridSquareHeight);
+		drawMissedToHitIpisCount(0,1,0,1*fGridSquareHeight);
+		drawMissedToHitIpisCount(iCountMissedToHitIpis,2,0,1*fGridSquareHeight);
+  	}
+  	else if (iCountMissedToHitIpis<100) {
+		drawMissedToHitIpisCount(0,0,0,1*fGridSquareHeight);
+		drawMissedToHitIpisCount(iCountMissedToHitIpis/10,1,0,1*fGridSquareHeight);
+		drawMissedToHitIpisCount(iCountMissedToHitIpis%10,2,0,1*fGridSquareHeight);
+  	}
+  	else {
+ 		drawMissedToHitIpisCount(iCountMissedToHitIpis/100,0,0,1*fGridSquareHeight);
+		drawMissedToHitIpisCount((iCountMissedToHitIpis/10)%10,1,0,1*fGridSquareHeight);
+		drawMissedToHitIpisCount(iCountMissedToHitIpis%10,2,0,1*fGridSquareHeight);
+  	}
+	//-----
+
 
 }
 
