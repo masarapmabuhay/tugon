@@ -109,6 +109,9 @@ int iBaseOffsetHeight;
 int iCurrentOffsetWidth;
 int iCurrentOffsetHeight;
 
+//added by Mike, 20211124
+int iNonWideScreenOffsetWidth;
+
 int iDestroyBugShakeDelayCount;
 int iDestroyBugShakeDelayMax;
 
@@ -481,9 +484,15 @@ void init() {
   //TO-DO: -add: this  
   iBaseOffsetHeight=0;
   
+  //added by Mike, 20211124
+  printf(">>iBaseOffsetWidth: %i\n",iBaseOffsetWidth);
+  printf(">>fGridSquareWidth: %f\n",fGridSquareWidth);
+  
+  iNonWideScreenOffsetWidth=iBaseOffsetWidth*2/fGridSquareWidth-1;
+  
   iCurrentOffsetWidth=iBaseOffsetWidth;
-	iCurrentOffsetHeight=iBaseOffsetHeight;
-	bIsExecutingDestroyBug=false;
+  iCurrentOffsetHeight=iBaseOffsetHeight;
+  bIsExecutingDestroyBug=false;
 
 	iDestroyBugShakeDelayCount=0;
 	iDestroyBugShakeDelayMax=5;
@@ -1007,6 +1016,156 @@ void drawColon(int iDigitFromLeft, int x, int y)
 
 void drawLevel()
 {
+/* //removed by Mike, 20211123
+	//note: count starts at zero	
+  drawMovementTile(ROAD_UP_RIGHT_TILE, 1*fGridSquareWidth,3*fGridSquareHeight);
+	for (int iRowCount=4; iRowCount<7; iRowCount++) {
+  		drawMovementTile(ROAD_UP_TILE, 1*fGridSquareWidth,iRowCount*fGridSquareHeight);
+	}
+  drawMovementTile(ROAD_LEFT_UP_TILE, 1*fGridSquareWidth,7*fGridSquareHeight);
+
+  drawMovementTile(ROAD_RIGHT_DOWN_TILE, 8*fGridSquareWidth,3*fGridSquareHeight);
+	for (int iRowCount=4; iRowCount<8; iRowCount++) {
+  		drawMovementTile(ROAD_DOWN_TILE, 8*fGridSquareWidth,iRowCount*fGridSquareHeight);
+	}
+  drawMovementTile(ROAD_DOWN_LEFT_TILE, 8*fGridSquareWidth,7*fGridSquareHeight);
+
+	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+  		drawMovementTile(ROAD_RIGHT_TILE, iColumnCount*fGridSquareWidth,3*fGridSquareHeight);
+	}
+	
+	for (int iColumnCount=2; iColumnCount<8; iColumnCount++) {
+  		drawMovementTile(ROAD_LEFT_TILE, iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
+	}
+*/
+	
+	//added by Mike, 20211118; edited by Mike, 20211119
+	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,7*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);	
+	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+	
+	//added by Mike, 20211123
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,7*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,7*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,3*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,3*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,3*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,0*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,0*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
+
+
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-1*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,0*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-2*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,0*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-3*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,0*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-4*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,0*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-5*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,0*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-1*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-2*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-3*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-4*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-5*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-6*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-1*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-2*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-3*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-4*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-5*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
+
+	//note: water tile count, if NOT correct, no animation sequence
+	drawBackgroundTile(WATER_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,3*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,3*fGridSquareHeight);
+
+	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+
+	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,7*fGridSquareHeight);
+/*
+	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,7*fGridSquareHeight);
+*/	
+	drawBackgroundTile(GRASS_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,7*fGridSquareHeight);
+
+	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+/*
+	drawBackgroundTile(WATER_TILE,5*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+*/
+	
+	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,5*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,6*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,7*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,8*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+	drawBackgroundTile(WATER_TILE,9*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+
+	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,5*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+/*
+	drawBackgroundTile(TREE_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+*/
+	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);
+
+	drawBackgroundTile(TREE_TILE,2*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,8*fGridSquareHeight);	
+	drawBackgroundTile(TREE_TILE,3*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
+
+	//added by Mike, 20211123
+/*
+	drawBackgroundTile(TREE_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+*/
+	drawBackgroundTile(GRASS_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,4*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+
+	//added by Mike, 20211123
+	drawBackgroundTile(HOUSE_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(HOUSE_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(HOUSE_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(HOUSE_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(HOUSE_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,7*fGridSquareHeight);
+
+	//added by Mike, 20211123
+	drawBackgroundTile(MOUNTAIN_TILE,0*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,0*fGridSquareHeight);
+	drawBackgroundTile(MOUNTAIN_TILE,1*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+
+	drawBackgroundTile(MOUNTAIN_TILE,myWindowWidthAsPixel-6*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,0*fGridSquareHeight);
+	drawBackgroundTile(MOUNTAIN_TILE,myWindowWidthAsPixel-7*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
+	drawBackgroundTile(MOUNTAIN_TILE,myWindowWidthAsPixel-6*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
+
+	//added by Mike, 20211123
 	//note: count starts at zero	
   drawMovementTile(ROAD_UP_RIGHT_TILE, 1*fGridSquareWidth,3*fGridSquareHeight);
 	for (int iRowCount=4; iRowCount<7; iRowCount++) {
@@ -1028,118 +1187,6 @@ void drawLevel()
   		drawMovementTile(ROAD_LEFT_TILE, iColumnCount*fGridSquareWidth,7*fGridSquareHeight);
 	}
 	
-	//added by Mike, 20211118; edited by Mike, 20211119
-	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,7*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,8*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,9*fGridSquareHeight);	
-	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,9*fGridSquareHeight);
-	
-	//added by Mike, 20211123
-	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,6*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,7*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth,9*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,4*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,7*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,4*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,4*fGridSquareWidth,4*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,3*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,3*fGridSquareWidth,3*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,4*fGridSquareWidth,3*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,0*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,1*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,1*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,0*fGridSquareWidth,2*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,1*fGridSquareWidth,2*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,0*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,1*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,2*fGridSquareWidth,2*fGridSquareHeight);
-
-
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-1*fGridSquareWidth,0*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-2*fGridSquareWidth,0*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-4*fGridSquareWidth,0*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-5*fGridSquareWidth,0*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-1*fGridSquareWidth,1*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-2*fGridSquareWidth,1*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-3*fGridSquareWidth,1*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-4*fGridSquareWidth,1*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-5*fGridSquareWidth,1*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-6*fGridSquareWidth,1*fGridSquareHeight);
-
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-1*fGridSquareWidth,2*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-2*fGridSquareWidth,2*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-3*fGridSquareWidth,2*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-4*fGridSquareWidth,2*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-5*fGridSquareWidth,2*fGridSquareHeight);
-
-	//note: water tile count, if NOT correct, no animation sequence
-	drawBackgroundTile(WATER_TILE,0*fGridSquareWidth,3*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth,3*fGridSquareHeight);
-
-	drawBackgroundTile(WATER_TILE,1*fGridSquareWidth,4*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth,4*fGridSquareHeight);
-
-	drawBackgroundTile(WATER_TILE,2*fGridSquareWidth,5*fGridSquareHeight);
-
-	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,5*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,6*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,6*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,3*fGridSquareWidth,7*fGridSquareHeight);
-
-	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth,7*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,5*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,4*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,5*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,6*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,7*fGridSquareWidth,9*fGridSquareHeight);
-	drawBackgroundTile(WATER_TILE,8*fGridSquareWidth,9*fGridSquareHeight);
-
-	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,5*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,3*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,2*fGridSquareWidth,8*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,3*fGridSquareWidth,9*fGridSquareHeight);
-
-	//added by Mike, 20211123
-	drawBackgroundTile(TREE_TILE,4*fGridSquareWidth,5*fGridSquareHeight);
-	drawBackgroundTile(TREE_TILE,4*fGridSquareWidth,6*fGridSquareHeight);
-
-
-	//added by Mike, 20211123
-	drawBackgroundTile(HOUSE_TILE,0*fGridSquareWidth,5*fGridSquareHeight);
-	drawBackgroundTile(HOUSE_TILE,1*fGridSquareWidth,5*fGridSquareHeight);
-	drawBackgroundTile(HOUSE_TILE,0*fGridSquareWidth,6*fGridSquareHeight);
-	drawBackgroundTile(HOUSE_TILE,1*fGridSquareWidth,6*fGridSquareHeight);
-	drawBackgroundTile(HOUSE_TILE,1*fGridSquareWidth,7*fGridSquareHeight);
-
-	//added by Mike, 20211123
-	drawBackgroundTile(MOUNTAIN_TILE,0*fGridSquareWidth,0*fGridSquareHeight);
-	drawBackgroundTile(MOUNTAIN_TILE,1*fGridSquareWidth,1*fGridSquareHeight);
-
-	drawBackgroundTile(MOUNTAIN_TILE,myWindowWidthAsPixel-6*fGridSquareWidth,0*fGridSquareHeight);
-	drawBackgroundTile(MOUNTAIN_TILE,myWindowWidthAsPixel-7*fGridSquareWidth,1*fGridSquareHeight);
-	drawBackgroundTile(MOUNTAIN_TILE,myWindowWidthAsPixel-6*fGridSquareWidth,2*fGridSquareHeight);
-
 }
 
 
