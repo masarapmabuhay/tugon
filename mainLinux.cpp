@@ -479,7 +479,9 @@ void init() {
   fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax;
   fGridSquareWidth = fGridSquareHeight;
   
-  //wide screen; portrait mode
+  //wide screen; portrait mode;
+  //example: 1366 x 768; width x height; 
+  //iBaseOffsetWidth: 299; fGridSquareWidth: 76.000000
   iBaseOffsetWidth=(myWindowWidthAsPixel-myWindowHeightAsPixel)/2;
   //TO-DO: -add: this  
   iBaseOffsetHeight=0;
@@ -488,7 +490,13 @@ void init() {
   printf(">>iBaseOffsetWidth: %i\n",iBaseOffsetWidth);
   printf(">>fGridSquareWidth: %f\n",fGridSquareWidth);
   
-  iNonWideScreenOffsetWidth=iBaseOffsetWidth*2/fGridSquareWidth-1;
+  //iBaseOffsetWidth/fGridSquareWidth = 3.9; wide screen
+  if (iBaseOffsetWidth/fGridSquareWidth>=3) {
+		iNonWideScreenOffsetWidth=0;
+  }
+  else {  
+  	iNonWideScreenOffsetWidth=iBaseOffsetWidth*2/fGridSquareWidth-1;
+	}
   
   iCurrentOffsetWidth=iBaseOffsetWidth;
   iCurrentOffsetHeight=iBaseOffsetHeight;

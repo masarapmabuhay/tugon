@@ -10,11 +10,12 @@
 # @company: USBONG
 # @author: SYSON, MICHAEL B.
 # @date created: 20211115
-# @last updated: 20211115
+# @last updated: 20211124
 # @website address: http://www.usbong.ph
 
 #note: sequence
-./make.sh
+#removed by Mike, 20211124
+#sudo ./make.sh
 
 cd ./output
-./UsbongTugonLinux
+sudo ./UsbongTugonLinux

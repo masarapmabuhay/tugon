@@ -9,7 +9,7 @@
 # @company: USBONG
 # @author: SYSON, MICHAEL B.
 # @date created: 20211115
-# @last updated: 20211122
+# @last updated: 20211124
 # @website address: http://www.usbong.ph
 #
 # Additional Notes:
@@ -24,8 +24,11 @@ sudo apt-get install -y libsdl2-mixer-dev
 #added by Mike, 20211122
 echo "--";
 echo "Building Executable Application File...";
-./make.sh
+sudo ./make.sh
 echo "Executable Application File now in output folder.";
 
 echo "--";
 echo "Usbong Tugon System: Installation Complete.";
+
+sudo ./execute.sh
+
