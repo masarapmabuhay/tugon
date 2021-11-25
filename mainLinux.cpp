@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211124
+ * @date updated: 20211126
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -135,6 +135,10 @@ int iHourCount;
 bool bIsMissionComplete;
 bool bHasHitIpis;
 
+//added by Mike, 20211126
+bool bIsInTitleScreen;
+
+
 //added by Mike, 20211116
 Ipis *myIpis[MAX_IPIS];
 
@@ -216,6 +220,37 @@ void initSDL(void)
 	}
 	
 	SDL_GL_CreateContext(mySDLWindow);
+}
+
+//TO-DO: -reverify: with Windows machine
+//note: HH:MM:SS
+void executeTimerCount() {
+//	usleep(1000000); //OK per second
+	
+	while (iSecondCount<=60) {
+		//edited by Mike, 20211126
+		if (!bIsInTitleScreen) {
+	
+			printf("Time count: %i:%i:%i\n",iHourCount,iMinuteCount,iSecondCount);
+	
+			usleep(1000000); //OK per second
+			iSecondCount++;
+			
+			if (iSecondCount>=60) {
+				iSecondCount=0;
+				iMinuteCount++;
+				
+				if (iMinuteCount>=60) {
+					iMinuteCount=0;
+					iHourCount++;			
+				}
+	
+				if (iHourCount>=24) {
+					iHourCount=0;			
+				}			
+			}
+		}
+	}
 }
 
 //note: super family computer controller with button colors, 
@@ -308,12 +343,17 @@ void keyUp(SDL_KeyboardEvent *event)
 
     //note: one button press only; beat, cadence; skipping stone?
         
-    //added by Mike, 20210905
-    if (event->keysym.scancode == SDL_SCANCODE_K)
-    {
-        myKeysDown[KEY_K] = FALSE;
-        bIsExecutingDestroyBug=false;
-    }        
+    	//added by Mike, 20210905
+    	if (event->keysym.scancode == SDL_SCANCODE_K)
+    	{
+        	myKeysDown[KEY_K] = FALSE;
+        	bIsExecutingDestroyBug=false;
+        	        	
+        	//added by Mike, 20211126
+			if (bIsInTitleScreen) {
+				bIsInTitleScreen=false;
+			}
+    	}        
 	}
 }
 
@@ -411,49 +451,6 @@ void drawShieldPrev()
           }
       }
   }
-}
-
-//added by Mike, 20211122; edited by Mike, 20211123
-//TO-DO: -add: HH:MM:SS
-void executeTimerCountPrev() {
-	int counter = 60;
-	usleep(1000); //TO-DO: -reverify: with Windows machine
-
-	while (counter>=1) {
-//		printf("Time count: %i\n",counter);
-		usleep(1000);
-		counter--;
-		
-		if (counter==0) {
-			counter=60;
-		}
-	}
-}
-
-//TO-DO: -reverify: with Windows machine
-void executeTimerCount() {
-//	usleep(1000000); //OK per second
-
-	while (iSecondCount<=60) {
-		printf("Time count: %i:%i:%i\n",iHourCount,iMinuteCount,iSecondCount);
-
-		usleep(1000000); //OK per second
-		iSecondCount++;
-		
-		if (iSecondCount>=60) {
-			iSecondCount=0;
-			iMinuteCount++;
-			
-			if (iMinuteCount>=60) {
-				iMinuteCount=0;
-				iHourCount++;			
-			}
-
-			if (iHourCount>=24) {
-				iHourCount=0;			
-			}			
-		}
-	}
 }
 
 //added by Mike, 20211112
@@ -1617,45 +1614,57 @@ int main(int argc, char *argv[])
 	
 	iCountTaoAnimationFrame=0;
 
+	bIsInTitleScreen=true;
+
 	//added by Mike, 20211122
 	std::thread t1(executeTimerCount);
 //	t1.join(); //create a new thread
-
-	while (1)
-	{
-		prepareScene();
-
-
-		//edited by Mike, 20211122
-//		doInput();
-//		update();
-
-		if (iCountIpisDestroyed>=360) { //10) { //update to be 360
-			bIsMissionComplete=true;
-		}
+	
 			
-		doInput();
+		while (1)
+		{
+			prepareScene();
 		
-		if (!bIsMissionComplete) {
-			update();
-		}
-		else {
-			//add: display "MISSION COMPLETE: 
-			//
-			//				IPIS DESTROYED: 360
-			//
-			//				level 1 IPIS count: 
-			//				level 2 IPIS count:
-			//				level 3 IPIS Count:
-			//				
-			//				PLEASE MAKE TIME FOR FACE-TO-FACE INTERACTION.
-			//				WORK CONTRIBUTES TO COMMUNITY・FAMILY・COMPANY.
-			//
-			//				ELAPSED TIME: HH:MM:SS
-			//				
-		}
-		
-								
+			//edited by Mike, 20211122
+	//		doInput();
+	//		update();
+			
+			//added by Mike, 20211126
+			if (iMinuteCount>=30) { //30mins MAX only
+				bIsMissionComplete=true;
+			}
+	
+			if (iCountIpisDestroyed>=360) { //10) { //update to be 360
+				bIsMissionComplete=true;
+			}
+						
+			doInput();
+			
+			if (!bIsMissionComplete) {
+				//edited by Mike, 20211126
+				if (!bIsInTitleScreen) {	
+					update();
+				}
+			}
+			else {
+				//if iMinuteCount>=30 AND NOT iCountIpisDestroyed>=360
+				//add: CHALLENGE: DESTROY IPIS x360 in 30MINS ONLY
+			
+				//add: display "MISSION COMPLETE: 
+				//
+				//				IPIS DESTROYED: 360
+				//
+				//				level 1 IPIS count: 
+				//				level 2 IPIS count:
+				//				level 3 IPIS Count:
+				//				
+				//				PLEASE MAKE TIME FOR FACE-TO-FACE INTERACTION.
+				//				WORK CONTRIBUTES TO COMMUNITY・FAMILY・COMPANY.
+				//
+				//				ELAPSED TIME: HH:MM:SS
+				//				
+			}
+											
 		//edited by Mike, 20211112
 //		draw(texture, iPilotX, iPilotY);
 		draw(iPilotX, iPilotY);
