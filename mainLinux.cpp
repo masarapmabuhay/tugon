@@ -147,6 +147,8 @@ bool bHasHitIpis;
 //added by Mike, 20211126
 bool bIsInTitleScreen;
 
+//added by Mike, 20211126
+bool bHasAnimatedWaterTile;
 
 //added by Mike, 20211116
 Ipis *myIpis[MAX_IPIS];
@@ -503,8 +505,9 @@ void init() {
 		iNonWideScreenOffsetWidth=0;
   }
   else {  
-  	iNonWideScreenOffsetWidth=iBaseOffsetWidth*2/fGridSquareWidth-1;
-	}
+  	//edited by Mike, 20211126
+  	iNonWideScreenOffsetWidth=iBaseOffsetWidth*2/fGridSquareWidth;//-1;
+  }
   
   iCurrentOffsetWidth=iBaseOffsetWidth;
   iCurrentOffsetHeight=iBaseOffsetHeight;
@@ -528,6 +531,10 @@ void init() {
 	iHourCount=0; //25;
  	 
 	bIsMissionComplete=false;	 
+	    
+	//added by Mike, 20211126
+	bHasAnimatedWaterTile=false;
+	    	
 	    
   iCountTileAnimationFrame=0;
   
@@ -769,7 +776,21 @@ void drawBackgroundTile(int iTileId, int x, int y)
 //  printf(">>iCountTileAnimationFrame: %i\n",iCountTileAnimationFrame);
 
 	if (iTileId==WATER_TILE) { //water
-	  iCountTileAnimationFrame=iCountTileAnimationFrame+1;		               																				
+		
+	  //edited by Mike, 20211126
+	  //iCountTileAnimationFrame=iCountTileAnimationFrame+1;		               							
+	  if(iNonWideScreenOffsetWidth==0) {
+	  	iCountTileAnimationFrame=iCountTileAnimationFrame+1;		               							
+	  }
+	  else {
+		  if (!bHasAnimatedWaterTile) {
+	  		iCountTileAnimationFrame=iCountTileAnimationFrame+1;
+		  	bHasAnimatedWaterTile=true;
+		  }
+	  }
+									
+//printf("iCountTileAnimationFrame: %i\n",iCountTileAnimationFrame);
+	  		
 	  if (iCountTileAnimationFrame>=2) { //2 frames of animation only
 			iCountTileAnimationFrame=0;
 	  }
@@ -1142,8 +1163,8 @@ void drawLevel()
 	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-3*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
 	drawBackgroundTile(MOUNTAIN_TILE,myWindowWidthAsPixel-4*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
 	//drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-5*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
-	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-6*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
 
+drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-6*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-1*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
 	drawBackgroundTile(TREE_TILE,myWindowWidthAsPixel-2*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-3*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
@@ -1295,7 +1316,7 @@ drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-7*fGridSquareWidth+iNonWideSc
 drawBackgroundTile(HOUSE_TILE,myWindowWidthAsPixel-6*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
 drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-7*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,9*fGridSquareHeight);
 
-
+/* //edited by Mike, 20211126
 	//added by Mike, 20211126
 	drawBackgroundTile(MUNISIPIYO_TOP_LEFT_TILE,7*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
 	drawBackgroundTile(MUNISIPIYO_TOP_CENTER_LEFT_TILE,8*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
@@ -1306,13 +1327,26 @@ drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-7*fGridSquareWidth+iNonWideSc
 	drawBackgroundTile(MUNISIPIYO_BOTTOM_CENTER_LEFT_TILE,8*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
 	drawBackgroundTile(MUNISIPIYO_BOTTOM_CENTER_RIGHT_TILE,9*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
 	drawBackgroundTile(MUNISIPIYO_BOTTOM_RIGHT_TILE,10*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
-	
+*/	
+
+	//added by Mike, 20211126
+	drawBackgroundTile(MUNISIPIYO_TOP_LEFT_TILE,myWindowWidthAsPixel/2-2*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_TOP_CENTER_LEFT_TILE,myWindowWidthAsPixel/2-1*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_TOP_CENTER_RIGHT_TILE,myWindowWidthAsPixel/2-0*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_TOP_RIGHT_TILE,myWindowWidthAsPixel/2+1*fGridSquareWidth,4*fGridSquareHeight);
+
+	drawBackgroundTile(MUNISIPIYO_BOTTOM_LEFT_TILE,myWindowWidthAsPixel/2-2*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_BOTTOM_CENTER_LEFT_TILE,myWindowWidthAsPixel/2-1*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_BOTTOM_CENTER_RIGHT_TILE,myWindowWidthAsPixel/2-0*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_BOTTOM_RIGHT_TILE,myWindowWidthAsPixel/2+1*fGridSquareWidth,5*fGridSquareHeight);
+
+/*	
 	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
 	drawBackgroundTile(TREE_TILE,11*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
 
 	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
 	drawBackgroundTile(TREE_TILE,11*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
-	
+
 	drawBackgroundTile(GRASS_TILE,6*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,11*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
 		
@@ -1320,6 +1354,20 @@ drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel-7*fGridSquareWidth+iNonWideSc
 	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
 	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+*/
+	drawBackgroundTile(TREE_TILE,myWindowWidthAsPixel/2-3*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,myWindowWidthAsPixel/2+2*fGridSquareWidth,4*fGridSquareHeight);
+
+	drawBackgroundTile(TREE_TILE,myWindowWidthAsPixel/2-3*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,myWindowWidthAsPixel/2+2*fGridSquareWidth,6*fGridSquareHeight);
+	
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel/2-3*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel/2+2*fGridSquareWidth,5*fGridSquareHeight);
+		
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel/2-2*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel/2-1*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel/2-0*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,myWindowWidthAsPixel/2+1*fGridSquareWidth,6*fGridSquareHeight);
 
 
 	//added by Mike, 20211123
@@ -1507,7 +1555,14 @@ void draw(int x, int y)
 }
 
 void update() {
-			//added by Mike, 20211118
+		//added by Mike, 20211126
+		if (iNonWideScreenOffsetWidth==0) {
+		}
+		else {
+			bHasAnimatedWaterTile=false;
+		}
+
+		//added by Mike, 20211118
     	for (int iCount=0; iCount<MAX_IPIS; iCount++) {
     		myIpis[iCount]->update();
     		    		
@@ -1760,6 +1815,10 @@ int main(int argc, char *argv[])
 */
 	iPilotX=fGridSquareWidth*1+iCurrentOffsetWidth;
 	iPilotY=fGridSquareHeight*3;
+	
+	//added by Mike, 20211126	
+	myUnit->setXPosAsPixel(iPilotX);
+	myUnit->setYPosAsPixel(iPilotY);
 
 	printf("myWindowWidthAsPixel: %i\n",myWindowWidthAsPixel);
 	printf("myWindowHeightAsPixel: %i\n",myWindowHeightAsPixel);
