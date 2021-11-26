@@ -145,6 +145,10 @@ bool bIsMissionComplete;
 bool bHasHitIpis;
 
 //added by Mike, 20211126
+int iWaitCountBeforeExitOK;
+int iWaitCountBeforeExitOKMax;
+
+//added by Mike, 20211126
 bool bIsInTitleScreen;
 
 //added by Mike, 20211126
@@ -237,35 +241,47 @@ void initSDL(void)
 //note: HH:MM:SS
 void executeTimerCount() {
 //	usleep(1000000); //OK per second
-	
-	while (iSecondCount<=60) {
-		//edited by Mike, 20211126
-//		if (!bIsInTitleScreen) {
-		if ((!bIsInTitleScreen) && (!bIsMissionComplete)) {
-//			printf("Time count: %i:%i:%i\n",iHourCount,iMinuteCount,iSecondCount);
-	
-			usleep(1000000); //OK per second
-			iSecondCount++;
-			
-			if (iSecondCount>=60) {
-				iSecondCount=0;
-				iMinuteCount++;
-				
-				if (iMinuteCount>=60) {
-					iMinuteCount=0;
-					iHourCount++;			
-				}
-	
-				if (iHourCount>=24) {
-					iHourCount=0;			
-				}			
-			}
-		}
- 		//added by Mike, 20211126		
-		else if (bIsMissionComplete) {
-			iMinuteCount=iMinuteCount-1;
-		}
+
+/* 
+ 	//added by Mike, 20211126		
+	if (bIsMissionComplete) {
+		iMinuteCount=iMinuteCount-1;
 	}
+	else {
+*/
+		while (iSecondCount<=60) {
+			//edited by Mike, 20211126
+	//		if (!bIsInTitleScreen) {
+			if ((!bIsInTitleScreen) && (!bIsMissionComplete)) {
+	//			printf("Time count: %i:%i:%i\n",iHourCount,iMinuteCount,iSecondCount);
+		
+				usleep(1000000); //OK per second
+				iSecondCount++;
+				
+				if (iSecondCount>=60) {
+					iSecondCount=0;
+					iMinuteCount++;
+					
+					if (iMinuteCount>=60) {
+						iMinuteCount=0;
+						iHourCount++;			
+					}
+		
+					if (iHourCount>=24) {
+						iHourCount=0;			
+					}			
+				}
+			}
+			
+			if (bIsMissionComplete) {
+				//printf(">>wakas\n");
+				iSecondCount=iSecondCount-1;
+				return;
+			}	
+		}
+/*		
+	}
+*/	
 }
 
 //note: super family computer controller with button colors, 
@@ -365,9 +381,9 @@ void keyUp(SDL_KeyboardEvent *event)
         	bIsExecutingDestroyBug=false;
         	        	
         	//added by Mike, 20211126
-					if (bIsInTitleScreen) {
-						bIsInTitleScreen=false;
-					}					
+			if (bIsInTitleScreen) {
+				bIsInTitleScreen=false;
+			}								
     	}        
 	}
 }
@@ -389,6 +405,12 @@ void doInput(void)
 				if (!bIsMissionComplete) {
 					keyDown(&event.key);
 				}
+/*				//removed by Mike, 20211126
+				//added by Mike, 20211126
+				else {
+					exit(0);
+				}
+*/				
 				break;
 
 			case SDL_KEYUP:
@@ -396,10 +418,12 @@ void doInput(void)
 				if (!bIsMissionComplete) {
 					keyUp(&event.key);
 				}
-				//added by Mike, 20211126
+    			//added by Mike, 20211126
 				else {
-					exit(0);
-				}
+					if (iWaitCountBeforeExitOK>=iWaitCountBeforeExitOKMax) {
+						exit(0);
+					}
+				}	
 				break;
 
 			default:
@@ -542,9 +566,13 @@ void init() {
 	    
 	//added by Mike, 20211126
 	bHasAnimatedWaterTile=false;
-	    	
-	    
-  iCountTileAnimationFrame=0;
+	    		    
+	iCountTileAnimationFrame=0;
+
+	//added by Mike, 20211126  
+  	iWaitCountBeforeExitOK=0;
+  	iWaitCountBeforeExitOKMax=10;
+  
   
   for (int iCount=0; iCount<4; iCount++) { //directional keys only
 		myKeysDown[iCount]=FALSE;
@@ -1012,8 +1040,10 @@ void drawTimeCount(int iDigitValue,int iDigitFromLeft, int x, int y)
 */
 
 //printf(">>>>>>>>>> iCountIpisDestroyed: %i\n",iCountIpisDestroyed);
-
-  if (iDigitValue==0) {
+  
+  //edited by Mike, 20211126
+//  if (iDigitValue==0) {
+  if (iDigitValue<=0) {  
   	SrcR.x = 0+iTileWidth*(1); 
   	SrcR.y = 0+iTileHeight*(2); 
   }
@@ -1848,10 +1878,8 @@ int main(int argc, char *argv[])
 	//		update();
 			
 			//added by Mike, 20211126
-//			if (iMinuteCount>=30) { //30mins MAX only
-			//TO-DO: -reverify: this
-			if (iMinuteCount>=1) { //1min MAX only
-//			if (iMinuteCount>=0) { //0min MAX only
+			if (iMinuteCount>=30) { //30mins MAX only
+//			if (iMinuteCount>=1) { //1min MAX only
 				bIsMissionComplete=true;
 			}
 	
@@ -1884,6 +1912,13 @@ int main(int argc, char *argv[])
 				//
 				//				ELAPSED TIME: HH:MM:SS
 				//				
+				
+				//added by Mike, 20211126				
+//				printf(">>iWaitCountBeforeExitOK: %i\n",iWaitCountBeforeExitOK);
+				
+				if (iWaitCountBeforeExitOK<iWaitCountBeforeExitOKMax) {
+					iWaitCountBeforeExitOK++;
+				}
 			}
 											
 		//edited by Mike, 20211112
