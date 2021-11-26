@@ -65,6 +65,15 @@
 #define TREE_TILE 3
 #define HOUSE_TILE 4
 #define MOUNTAIN_TILE 5
+//added by Mike, 20211126
+#define MUNISIPIYO_TOP_LEFT_TILE 6
+#define MUNISIPIYO_TOP_CENTER_LEFT_TILE 7
+#define MUNISIPIYO_TOP_CENTER_RIGHT_TILE 8
+#define MUNISIPIYO_TOP_RIGHT_TILE 9
+#define MUNISIPIYO_BOTTOM_LEFT_TILE 10
+#define MUNISIPIYO_BOTTOM_CENTER_LEFT_TILE 11
+#define MUNISIPIYO_BOTTOM_CENTER_RIGHT_TILE 12
+#define MUNISIPIYO_BOTTOM_RIGHT_TILE 13
 
 //added by Mike, 20211119
 #define ROAD_RIGHT_TILE 4
@@ -229,9 +238,9 @@ void executeTimerCount() {
 	
 	while (iSecondCount<=60) {
 		//edited by Mike, 20211126
-		if (!bIsInTitleScreen) {
-	
-			printf("Time count: %i:%i:%i\n",iHourCount,iMinuteCount,iSecondCount);
+//		if (!bIsInTitleScreen) {
+		if ((!bIsInTitleScreen) && (!bIsMissionComplete)) {
+//			printf("Time count: %i:%i:%i\n",iHourCount,iMinuteCount,iSecondCount);
 	
 			usleep(1000000); //OK per second
 			iSecondCount++;
@@ -785,6 +794,39 @@ void drawBackgroundTile(int iTileId, int x, int y)
   	  SrcR.x = 0+iTileWidth*(iCountTileAnimationFrame+2); //x;
   	  SrcR.y = 0+iTileHeight*(2); //y;
    }   
+	 //added by Mike, 20211126
+ 	 else if (iTileId==MUNISIPIYO_TOP_LEFT_TILE) { 	    
+  	  SrcR.x = 0+iTileWidth*1; //x;
+  	  SrcR.y = 0+iTileHeight*3; //y;
+   }         
+ 	 else if (iTileId==MUNISIPIYO_TOP_CENTER_LEFT_TILE) { 	    
+  	  SrcR.x = 0+iTileWidth*2; //x;
+  	  SrcR.y = 0+iTileHeight*3; //y;
+   }         
+ 	 else if (iTileId==MUNISIPIYO_TOP_CENTER_RIGHT_TILE) { 	    
+  	  SrcR.x = 0+iTileWidth*3; //x;
+  	  SrcR.y = 0+iTileHeight*3; //y;
+   }         
+ 	 else if (iTileId==MUNISIPIYO_TOP_RIGHT_TILE) { 	    
+  	  SrcR.x = 0+iTileWidth*4; //x;
+  	  SrcR.y = 0+iTileHeight*3; //y;
+   }         
+ 	 else if (iTileId==MUNISIPIYO_BOTTOM_LEFT_TILE) { 	    
+  	  SrcR.x = 0+iTileWidth*1; //x;
+  	  SrcR.y = 0+iTileHeight*4; //y;
+   }         
+ 	 else if (iTileId==MUNISIPIYO_BOTTOM_CENTER_LEFT_TILE) { 	    
+  	  SrcR.x = 0+iTileWidth*2; //x;
+  	  SrcR.y = 0+iTileHeight*4; //y;
+   }         
+ 	 else if (iTileId==MUNISIPIYO_BOTTOM_CENTER_RIGHT_TILE) { 	    
+  	  SrcR.x = 0+iTileWidth*3; //x;
+  	  SrcR.y = 0+iTileHeight*4; //y;
+   }         
+ 	 else if (iTileId==MUNISIPIYO_BOTTOM_RIGHT_TILE) { 	    
+  	  SrcR.x = 0+iTileWidth*4; //x;
+  	  SrcR.y = 0+iTileHeight*4; //y;
+   }         
    else {
   	  SrcR.x = 0+iTileWidth*0; //x;
   	  SrcR.y = 0+iTileHeight*(iTileId); //y;
@@ -1170,6 +1212,32 @@ void drawLevel()
 	drawBackgroundTile(MOUNTAIN_TILE,myWindowWidthAsPixel-7*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,1*fGridSquareHeight);
 	drawBackgroundTile(MOUNTAIN_TILE,myWindowWidthAsPixel-6*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,2*fGridSquareHeight);
 
+	//added by Mike, 20211126
+	drawBackgroundTile(MUNISIPIYO_TOP_LEFT_TILE,7*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_TOP_CENTER_LEFT_TILE,8*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_TOP_CENTER_RIGHT_TILE,9*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_TOP_RIGHT_TILE,10*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+
+	drawBackgroundTile(MUNISIPIYO_BOTTOM_LEFT_TILE,7*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_BOTTOM_CENTER_LEFT_TILE,8*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_BOTTOM_CENTER_RIGHT_TILE,9*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(MUNISIPIYO_BOTTOM_RIGHT_TILE,10*fGridSquareWidth+iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	
+	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,11*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,4*fGridSquareHeight);
+
+	drawBackgroundTile(TREE_TILE,6*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(TREE_TILE,11*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	
+	drawBackgroundTile(GRASS_TILE,6*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,11*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,5*fGridSquareHeight);
+		
+	drawBackgroundTile(GRASS_TILE,7*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,8*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,9*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+	drawBackgroundTile(GRASS_TILE,10*fGridSquareWidth-iNonWideScreenOffsetWidth*fGridSquareWidth,6*fGridSquareHeight);
+
+
 	//added by Mike, 20211123
 	//note: count starts at zero	
   drawMovementTile(ROAD_UP_RIGHT_TILE, 1*fGridSquareWidth,3*fGridSquareHeight);
@@ -1366,7 +1434,7 @@ void update() {
 				
 				if (iCountOutput!=0) {
 					iCountIpisDestroyed++;
-					printf(">>iCountIpisDestroyed: %i\n",iCountIpisDestroyed);
+//					printf(">>iCountIpisDestroyed: %i\n",iCountIpisDestroyed);
 				}
 				
 				//after 1 loop based on destroyed ipis start index, increase speed
@@ -1547,7 +1615,7 @@ void update() {
 				if (iDestroyBugShakeDelayCount==0) {
 					if (!bHasHitIpis) {
 						iCountMissedToHitIpis++;
-						printf(">>>iCountMissedToHitIpis: %i\n",iCountMissedToHitIpis);
+//						printf(">>>iCountMissedToHitIpis: %i\n",iCountMissedToHitIpis);
 					}	    			
 				}			
 
