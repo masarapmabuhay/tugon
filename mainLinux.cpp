@@ -261,6 +261,10 @@ void executeTimerCount() {
 				}			
 			}
 		}
+ 		//added by Mike, 20211126		
+		else if (bIsMissionComplete) {
+			iMinuteCount=iMinuteCount-1;
+		}
 	}
 }
 
@@ -361,9 +365,9 @@ void keyUp(SDL_KeyboardEvent *event)
         	bIsExecutingDestroyBug=false;
         	        	
         	//added by Mike, 20211126
-			if (bIsInTitleScreen) {
-				bIsInTitleScreen=false;
-			}
+					if (bIsInTitleScreen) {
+						bIsInTitleScreen=false;
+					}					
     	}        
 	}
 }
@@ -391,6 +395,10 @@ void doInput(void)
 				//edited by Mike, 20211122
 				if (!bIsMissionComplete) {
 					keyUp(&event.key);
+				}
+				//added by Mike, 20211126
+				else {
+					exit(0);
 				}
 				break;
 
@@ -1830,8 +1838,7 @@ int main(int argc, char *argv[])
 	//added by Mike, 20211122
 	std::thread t1(executeTimerCount);
 //	t1.join(); //create a new thread
-	
-			
+				
 		while (1)
 		{
 			prepareScene();
@@ -1841,7 +1848,10 @@ int main(int argc, char *argv[])
 	//		update();
 			
 			//added by Mike, 20211126
-			if (iMinuteCount>=30) { //30mins MAX only
+//			if (iMinuteCount>=30) { //30mins MAX only
+			//TO-DO: -reverify: this
+			if (iMinuteCount>=1) { //1min MAX only
+//			if (iMinuteCount>=0) { //0min MAX only
 				bIsMissionComplete=true;
 			}
 	
