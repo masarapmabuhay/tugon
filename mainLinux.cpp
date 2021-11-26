@@ -406,7 +406,9 @@ void prepareScene(void)
 	//edited by Mike, 20211119
 //	SDL_SetRenderDrawColor(mySDLRenderer, 0, 0, 0, 255); //black
 //	SDL_SetRenderDrawColor(mySDLRenderer, 193, 246, 253, 255); //sky blue
-	SDL_SetRenderDrawColor(mySDLRenderer, 233, 214, 146, 255); //sand
+	//edited by Mike, 20211126
+//	SDL_SetRenderDrawColor(mySDLRenderer, 233, 214, 146, 255); //sand
+	SDL_SetRenderDrawColor(mySDLRenderer, 255*0.318,  255*0.569, 255*0.063, 255); //grass
 	
 	SDL_RenderClear(mySDLRenderer);
 }
