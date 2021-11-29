@@ -497,10 +497,12 @@ void init() {
   iBaseOffsetWidth=(myWindowWidthAsPixel-myWindowHeightAsPixel)/2;
   //TO-DO: -add: this  
   iBaseOffsetHeight=0;
-  
+
+/*	//removed by Mike, 20211129  
   //added by Mike, 20211124
   printf(">>iBaseOffsetWidth: %i\n",iBaseOffsetWidth);
   printf(">>fGridSquareWidth: %f\n",fGridSquareWidth);
+*/
   
   //iBaseOffsetWidth/fGridSquareWidth = 3.9; wide screen
   if (iBaseOffsetWidth/fGridSquareWidth>=3) {
@@ -544,7 +546,7 @@ void init() {
 
 	//added by Mike, 20211126  
   	iWaitCountBeforeExitOK=0;
-  	iWaitCountBeforeExitOKMax=10;
+  	iWaitCountBeforeExitOKMax=1000; //edited by Mike, 20211129
   
   
   for (int iCount=0; iCount<4; iCount++) { //directional keys only
@@ -1656,7 +1658,7 @@ void drawAccuracyCountAsSet() {
 		float fAccuracyPercentileDenominator=(iCountIpisDestroyed+iCountMissedToHitIpis*1.0f);
 		int iAccuracyPercentile = 0;
 		
-		if ((int)fAccuracyPercentileDenominator==iCountIpisDestroyed) {
+		if ((iCountIpisDestroyed>0) && (iCountMissedToHitIpis==0)) {
 			iAccuracyPercentile=100;
 		}
 		else {
@@ -1668,21 +1670,25 @@ void drawAccuracyCountAsSet() {
 
 //iAccuracyPercentile=5;//0; //86;
 
- 		//note: 3 digits 		
   	if (iAccuracyPercentile==0) {
-			drawAccuracyCount(0,0,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
-			drawAccuracyCount(0,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+//			drawAccuracyCount(0,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(0,2,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
   	}
   	else if (iAccuracyPercentile<10) {
-			drawAccuracyCount(0,0,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
-			drawAccuracyCount(iAccuracyPercentile,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(0,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(iAccuracyPercentile,2,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
   	}
   	else if (iAccuracyPercentile<100) {
-			drawAccuracyCount(iAccuracyPercentile/10,0,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
-			drawAccuracyCount(iAccuracyPercentile%10,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(iAccuracyPercentile/10,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(iAccuracyPercentile%10,2,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+  	}
+  	else if (iAccuracyPercentile>=100) {
+			drawAccuracyCount(1,0,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(iAccuracyPercentile/10,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(iAccuracyPercentile%10,2,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
   	}
 
-		drawPercentileMark(2,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+		drawPercentileMark(2,myWindowWidthAsPixel/2+1*fGridSquareWidth/2, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
   	  	
 }
 
@@ -1773,8 +1779,6 @@ void drawTimeCountAsSet(int type) {
   		}
   		//mission complete
   		else {  		  		
-  				drawPressK(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel-1*fGridSquareHeight);
-
 					if (iSecondCount<10) {
 						drawTimeCount(0,0,myWindowWidthAsPixel/2+fGridSquareWidth, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
 						drawTimeCount(iSecondCount,1,myWindowWidthAsPixel/2+fGridSquareWidth, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
@@ -2210,12 +2214,14 @@ int main(int argc, char *argv[])
 	//		update();
 			
 			//added by Mike, 20211126
-			if (iMinuteCount>=30) { //30mins MAX only
+//			if (iMinuteCount>=30) { //30mins MAX only
+			if (iMinuteCount>=5) { //5mins MAX only
 //			if (iMinuteCount>=1) { //1min MAX only
 				bIsMissionComplete=true;
 			}
 	
-			if (iCountIpisDestroyed>=360) { //10) { //update to be 360
+//			if (iCountIpisDestroyed>=10) { //360) { //10) { //update to be 360
+			if (iCountIpisDestroyed>=180) {
 				bIsMissionComplete=true;
 			}
 						
@@ -2254,7 +2260,7 @@ int main(int argc, char *argv[])
 			iPressKCount=iPressKCount+1;
 		}
 		
-		if (1) {//(bIsMissionComplete) {
+		if (bIsMissionComplete) { //(1)
 				//if iMinuteCount>=30 AND NOT iCountIpisDestroyed>=360
 				//add: CHALLENGE: DESTROY IPIS x360 in 30MINS ONLY
 			
@@ -2284,16 +2290,20 @@ int main(int argc, char *argv[])
 			
 			drawTimeCountAsSet(1);
 			
-			//			if ((iPressKCount)%4==0) {
-			if (iPressKCount<10) {//5) {
-				drawPressK(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel-1*fGridSquareHeight);
-			}
-			else {
-				if (iPressKCount>20) {//10) {
-					iPressKCount=0;
+			//edited by Mike, 20211129
+			if (iWaitCountBeforeExitOK>=iWaitCountBeforeExitOKMax) {
+				//			if ((iPressKCount)%4==0) {
+				if (iPressKCount<10) {//5) {
+					drawPressK(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel-1*fGridSquareHeight);
 				}
-			}			
-			iPressKCount=iPressKCount+1;
+				else {
+					if (iPressKCount>20) {//10) {
+						iPressKCount=0;
+					}
+				}			
+				iPressKCount=iPressKCount+1;
+			}
+				
 		}
 		
 		presentScene();
