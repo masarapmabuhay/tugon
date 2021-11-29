@@ -460,46 +460,12 @@ SDL_Texture *loadTexture(char *filename)
 {
 	SDL_Texture *texture;
 
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
+	//removed by Mike, 20211129
+//	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
 
 	texture = IMG_LoadTexture(mySDLRenderer, filename);
 
 	return texture;
-}
-
-//added by Mike, 20211112
-//Reference: https://stackoverflow.com/questions/28346989/drawing-and-filling-a-circle
-//last accessed: 20211112
-//answer by: Edgar Luque, 20170127T2024
-//note: excess space; due to 1366 x 768; width x height?
-void drawShieldPrev()
-{
-  int iRowCountMax=10;
-  int iColumnCountMax=18;
-  
-  float fGridSquareWidth = (myWindowWidthAsPixel)/iColumnCountMax; //example: 136.60
-  float fGridSquareHeight = (myWindowHeightAsPixel)/iRowCountMax; //example: 76.80
-
-	SDL_Point center = {myWindowWidthAsPixel/2, myWindowHeightAsPixel/2};
-
-	int radius = fGridSquareHeight; //fGridSquareWidth
-	
-  //note: SDL color max 255; GIMP color max 100
-	SDL_SetRenderDrawColor(mySDLRenderer, 255*1, 0, 0, 255); //red
-    
-	for (int w = 0; w < radius * 2; w++)
-  {
-      for (int h = 0; h < radius * 2; h++)
-      {
-          int dx = radius - w; //horizontal offset
-          int dy = radius - h; //vertical offset
-          if ((dx*dx + dy*dy) <= (radius * radius))
-          {
-//              SDL_RenderDrawPoint(mySDLRenderer, center.x + dx, center.y + dy);
-              SDL_RenderDrawPoint(mySDLRenderer, center.x + dx - w/2, center.y + dy - h/2);
-          }
-      }
-  }
 }
 
 //added by Mike, 20211112
@@ -915,9 +881,10 @@ void drawBackgroundTile(int iTileId, int x, int y)
 
 }
 
+//edited by Mike, 20211129
 //note: max 3 digits; start from zero
 //void drawDestroyedIpisCount(bool isSetAsZeroDigit,int iDigitFromLeft, int x, int y)
-void drawDestroyedIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
+void drawDestroyedIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y, int type)
 {
 	int iTileWidth=64;
 	int iTileHeight=64;
@@ -926,8 +893,7 @@ void drawDestroyedIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
   //and target (on the screen) for rendering our textures.
   SDL_Rect SrcR;
   SDL_Rect DestR;
- 
-  
+   
 /*
   SrcR.x = 0;
   SrcR.y = 0;
@@ -957,14 +923,28 @@ void drawDestroyedIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
   DestR.x = x+iCurrentOffsetWidth+iTileWidth*iDigitFromLeft;
   DestR.y = y;
 */
+
+/* //edited by Mike, 20211129
   DestR.x = x+iTileWidth*iDigitFromLeft;
   DestR.y = y;
+*/
 
-
- //edited by Mike, 20211123    
-  DestR.w = fGridSquareWidth;
-  DestR.h = fGridSquareHeight;
-
+ //edited by Mike, 20211129
+  if (type==0) {
+  	DestR.x = x+iTileWidth*iDigitFromLeft;
+  	DestR.y = y;
+	
+  	DestR.w = fGridSquareWidth;
+  	DestR.h = fGridSquareHeight;
+	}
+	else {
+  	DestR.x = x+iTileWidth/2*iDigitFromLeft;
+  	DestR.y = y;
+	
+  	DestR.w = fGridSquareWidth/2;
+  	DestR.h = fGridSquareHeight/2;
+	}
+	
 /*	//scaled down OK    
   DestR.w = fGridSquareWidth/2;
   DestR.h = fGridSquareHeight/2;
@@ -976,6 +956,61 @@ void drawDestroyedIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
 }
 
 void drawMissedToHitIpisCount(int iDigitValue,int iDigitFromLeft, int x, int y)
+{
+	int iTileWidth=64;
+	int iTileHeight=64;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+ 
+  
+/*
+  SrcR.x = 0;
+  SrcR.y = 0;
+*/
+
+//printf(">>>>>>>>>> iCountIpisDestroyed: %i\n",iCountIpisDestroyed);
+
+  if (iDigitValue==0) {
+  	SrcR.x = 0+iTileWidth*(1); 
+  	SrcR.y = 0+iTileHeight*(2); 
+  }
+  else {
+  	SrcR.x = 0+iTileWidth*((iDigitValue-1)%4); 
+  	SrcR.y = 0+iTileHeight*((iDigitValue-1)/4); 
+  }
+
+	
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+/*	//edited by Mike, 20211123
+  DestR.x = x+iCurrentOffsetWidth+iTileWidth*iDigitFromLeft;
+  DestR.y = y;
+*/
+
+  DestR.x = x+fGridSquareWidth/2*iDigitFromLeft;
+  DestR.y = y;
+
+/* //edited by Mike, 20211123    
+  DestR.w = fGridSquareWidth;
+  DestR.h = fGridSquareHeight;
+*/
+    
+  DestR.w = fGridSquareWidth/2;
+  DestR.h = fGridSquareHeight/2;
+
+
+//  SDL_SetTextureColorMod(textureFont, 255, 255, 0); //output: yellow
+//  SDL_SetTextureColorMod(textureFont, 255, 0, 0); //output: red
+  SDL_SetTextureColorMod(textureFont, 255, 255, 255); //output: white
+  SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR); //default: white
+}
+
+//added by Mike, 20211129
+void drawAccuracyCount(int iDigitValue,int iDigitFromLeft, int x, int y)
 {
 	int iTileWidth=64;
 	int iTileHeight=64;
@@ -1130,6 +1165,50 @@ void drawColon(int iDigitFromLeft, int x, int y)
 }
 
 //added by Mike, 20211129
+void drawPercentileMark(int iDigitFromLeft, int x, int y)
+{
+	int iTileWidth=64;
+	int iTileHeight=64;
+	
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+ 
+  
+/*
+  SrcR.x = 0;
+  SrcR.y = 0;
+*/
+
+
+  SrcR.x = 0+iTileWidth*(3); 
+  SrcR.y = 0+iTileHeight*(2); 
+
+  SrcR.w = iTileWidth;
+  SrcR.h = iTileHeight;
+
+/*	//edited by Mike, 20211123
+  DestR.x = x+iCurrentOffsetWidth+iTileWidth*iDigitFromLeft;
+  DestR.y = y;
+*/
+
+  DestR.x = x+fGridSquareWidth/2*iDigitFromLeft;
+  DestR.y = y;
+
+/* //edited by Mike, 20211123    
+  DestR.w = fGridSquareWidth;
+  DestR.h = fGridSquareHeight;
+*/
+    
+  DestR.w = fGridSquareWidth/2;
+  DestR.h = fGridSquareHeight/2;
+
+//  SDL_SetTextureColorMod(textureFont, 255, 255*0.79, 0); //output: gold
+  SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR); //default: white
+}
+
+//added by Mike, 20211129
 void drawTitleNote(int x, int y)
 {
 	int iTileWidth=64;
@@ -1211,6 +1290,36 @@ void drawPressK(int x, int y)
 //  SDL_SetTextureColorMod(textureFont, 255, 255, 0); //output: yellow
   SDL_RenderCopy(mySDLRenderer, textureNote, &SrcR, &DestR);
 }
+
+
+//added by Mike, 20211129
+void drawMissionCompleteNote(int x, int y)
+{
+	int iTileWidth=64;
+	int iTileHeight=64;
+
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+  
+  SrcR.x = 0+iTileWidth*(0); 
+  SrcR.y = 0+iTileHeight*(0); 
+
+  SrcR.w = iTileWidth*(5);
+  SrcR.h = iTileHeight*(7);
+
+  DestR.x = x;
+  DestR.y = y;
+
+  DestR.w = fGridSquareWidth*5;
+  DestR.h = fGridSquareHeight*7;
+  
+  //added by Mike, 20211123
+//  SDL_SetTextureColorMod(textureFont, 255, 255, 0); //output: yellow
+  SDL_RenderCopy(mySDLRenderer, textureNote, &SrcR, &DestR);
+}
+
 
 void drawLevel()
 {
@@ -1543,6 +1652,151 @@ void drawGrid()
    }
 }
 
+void drawAccuracyCountAsSet() { 		
+		float fAccuracyPercentileDenominator=(iCountIpisDestroyed+iCountMissedToHitIpis*1.0f);
+		int iAccuracyPercentile = 0;
+		
+		if ((int)fAccuracyPercentileDenominator==iCountIpisDestroyed) {
+			iAccuracyPercentile=100;
+		}
+		else {
+ 			iAccuracyPercentile = iCountIpisDestroyed/fAccuracyPercentileDenominator*100;
+		}
+
+//iAccuracyPercentile =86;
+//printf("iAccuracyPercentile: %i",iAccuracyPercentile);
+
+//iAccuracyPercentile=5;//0; //86;
+
+ 		//note: 3 digits 		
+  	if (iAccuracyPercentile==0) {
+			drawAccuracyCount(0,0,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(0,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+  	}
+  	else if (iAccuracyPercentile<10) {
+			drawAccuracyCount(0,0,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(iAccuracyPercentile,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+  	}
+  	else if (iAccuracyPercentile<100) {
+			drawAccuracyCount(iAccuracyPercentile/10,0,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+			drawAccuracyCount(iAccuracyPercentile%10,1,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+  	}
+
+		drawPercentileMark(2,myWindowWidthAsPixel/2+0*fGridSquareWidth, myWindowHeightAsPixel/2-1*fGridSquareHeight-1*fGridSquareHeight/3);
+  	  	
+}
+
+//added by Mike, 20211129
+void drawDestroyedIpisCountAsSet(int type) {
+	if (type==0) {
+ 		//note: 3 digits
+  		if (iCountIpisDestroyed==0) {
+				drawDestroyedIpisCount(0,0,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+				drawDestroyedIpisCount(0,1,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+				drawDestroyedIpisCount(0,2,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+  		}
+  		else if (iCountIpisDestroyed<10) {
+				drawDestroyedIpisCount(0,0,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+				drawDestroyedIpisCount(0,1,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+				drawDestroyedIpisCount(iCountIpisDestroyed,2,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+  		}
+  		else if (iCountIpisDestroyed<100) {
+				drawDestroyedIpisCount(0,0,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+				drawDestroyedIpisCount(iCountIpisDestroyed/10,1,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+				drawDestroyedIpisCount(iCountIpisDestroyed%10,2,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+  		}
+  		else {
+ 					drawDestroyedIpisCount(iCountIpisDestroyed/100,0,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+					drawDestroyedIpisCount((iCountIpisDestroyed/10)%10,1,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+					drawDestroyedIpisCount(iCountIpisDestroyed%10,2,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight,type);
+  			}
+  		}
+  		//mission complete
+  		else {  		  		
+ 				//note: 3 digits
+  			if (iCountIpisDestroyed==0) {
+					drawDestroyedIpisCount(0,0,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+					drawDestroyedIpisCount(0,1,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+					drawDestroyedIpisCount(0,2,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+  			}
+  			else if (iCountIpisDestroyed<10) {
+					drawDestroyedIpisCount(0,0,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+					drawDestroyedIpisCount(0,1,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+					drawDestroyedIpisCount(iCountIpisDestroyed,2,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+  			}
+  			else if (iCountIpisDestroyed<100) {
+					drawDestroyedIpisCount(0,0,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+					drawDestroyedIpisCount(iCountIpisDestroyed/10,1,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+					drawDestroyedIpisCount(iCountIpisDestroyed%10,2,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+  			}
+  			else {
+ 					drawDestroyedIpisCount(iCountIpisDestroyed/100,0,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+					drawDestroyedIpisCount((iCountIpisDestroyed/10)%10,1,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+					drawDestroyedIpisCount(iCountIpisDestroyed%10,2,myWindowWidthAsPixel/2+1*fGridSquareWidth, myWindowHeightAsPixel/2-2*fGridSquareHeight,type);
+  			}
+  		}
+}
+
+//added by Mike, 20211129
+void drawTimeCountAsSet(int type) {
+			if (type==0) {
+				if (iSecondCount<10) {
+					drawTimeCount(0,0,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+					drawTimeCount(iSecondCount,1,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+				}
+				else {
+					drawTimeCount(iSecondCount/10,0,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+					drawTimeCount(iSecondCount%10,1,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+				}
+				
+				drawColon(1,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		
+				if (iMinuteCount<10) {
+					drawTimeCount(0,1,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+					drawTimeCount(iMinuteCount,0,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+				}
+				else {
+					drawTimeCount(iMinuteCount/10,1,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+					drawTimeCount(iMinuteCount%10,2,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+				}
+		
+				drawColon(0,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
+		
+				if (iHourCount<10) {
+					drawTimeCount(0,0,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+					drawTimeCount(iHourCount,1,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+				}
+				else {
+					drawTimeCount(iHourCount/10,0,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+					drawTimeCount(iHourCount%10,1,0,myWindowHeightAsPixel-1*fGridSquareHeight);
+				}
+  		}
+  		//mission complete
+  		else {  		  		
+  				drawPressK(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel-1*fGridSquareHeight);
+
+					if (iSecondCount<10) {
+						drawTimeCount(0,0,myWindowWidthAsPixel/2+fGridSquareWidth, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
+						drawTimeCount(iSecondCount,1,myWindowWidthAsPixel/2+fGridSquareWidth, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
+					}
+					else {
+						drawTimeCount(iSecondCount/10,0,myWindowWidthAsPixel/2+fGridSquareWidth, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
+						drawTimeCount(iSecondCount%10,1,myWindowWidthAsPixel/2+fGridSquareWidth, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
+					}
+					
+					drawColon(1,myWindowWidthAsPixel/2-fGridSquareWidth+1*fGridSquareWidth, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
+			
+					if (iMinuteCount<10) {
+						drawTimeCount(0,0,myWindowWidthAsPixel/2-fGridSquareWidth/2, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
+						drawTimeCount(iMinuteCount,1,myWindowWidthAsPixel/2-fGridSquareWidth/2, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
+					}
+					else {
+						drawTimeCount(iMinuteCount/10,0,myWindowWidthAsPixel/2-fGridSquareWidth/2, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
+						drawTimeCount(iMinuteCount%10,1,myWindowWidthAsPixel/2-fGridSquareWidth/2, myWindowHeightAsPixel-3*fGridSquareHeight+1*fGridSquareHeight/2);
+					}
+  		}
+}
+
 
 //edited by Mike, 20211118
 void draw(int x, int y)
@@ -1572,6 +1826,9 @@ void draw(int x, int y)
 	//added by Mike, 20211121
 	//drawDestroyedIpisCount(3*fGridSquareWidth,0*fGridSquareHeight);
 	//-----
+		//added by Mike, 20211129
+		drawDestroyedIpisCountAsSet(0);
+/*	//removed by Mike, 20211129
   	//note: 3 digits
   	if (iCountIpisDestroyed==0) {
 			drawDestroyedIpisCount(0,0,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
@@ -1593,6 +1850,8 @@ void draw(int x, int y)
 			drawDestroyedIpisCount((iCountIpisDestroyed/10)%10,1,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
 			drawDestroyedIpisCount(iCountIpisDestroyed%10,2,myWindowWidthAsPixel-3*fGridSquareWidth,0*fGridSquareHeight);
   	}
+*/
+  	
 	//-----
 
 	//added by Mike, 20211123
@@ -1628,27 +1887,7 @@ void draw(int x, int y)
 	//-----
 
 	//added by Mike, 20211123
-/*	
-		if (iSecondCount<10) {
-			drawTimeCount(0,0,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
-			drawTimeCount(iSecondCount,1,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
-		}
-		else {
-			drawTimeCount(iSecondCount/10,0,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
-			drawTimeCount(iSecondCount%10,1,2*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
-		}
-		
-		drawColon(1,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
-
-		if (iMinuteCount<10) {
-			drawTimeCount(0,1,0,myWindowHeightAsPixel-1*fGridSquareHeight);
-			drawTimeCount(iMinuteCount,0,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
-		}
-		else {
-			drawTimeCount(iMinuteCount/10,1,0,myWindowHeightAsPixel-1*fGridSquareHeight);
-			drawTimeCount(iMinuteCount%10,1,1*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
-		}
-*/		
+/* //edited by Mike, 20211129	
 		if (iSecondCount<10) {
 			drawTimeCount(0,0,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
 			drawTimeCount(iSecondCount,1,3*fGridSquareWidth,myWindowHeightAsPixel-1*fGridSquareHeight);
@@ -1679,7 +1918,8 @@ void draw(int x, int y)
 			drawTimeCount(iHourCount/10,0,0,myWindowHeightAsPixel-1*fGridSquareHeight);
 			drawTimeCount(iHourCount%10,1,0,myWindowHeightAsPixel-1*fGridSquareHeight);
 		}
-
+*/
+		drawTimeCountAsSet(0);
 }
 
 void update() {
@@ -1988,6 +2228,33 @@ int main(int argc, char *argv[])
 				}
 			}
 			else {
+				if (iWaitCountBeforeExitOK<iWaitCountBeforeExitOKMax) {
+					iWaitCountBeforeExitOK++;
+				}
+			}
+											
+		//edited by Mike, 20211112
+//		draw(texture, iPilotX, iPilotY);
+		draw(iPilotX, iPilotY);
+		
+		if (bIsInTitleScreen) {	
+			drawTitleNote(myWindowWidthAsPixel/2-2*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2-2*fGridSquareHeight);
+			
+			drawTitleNotePart2(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2-1*fGridSquareHeight+fGridSquareHeight/4);
+			
+//			if ((iPressKCount)%4==0) {
+			if (iPressKCount<10) {//5) {
+				drawPressK(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2+3*fGridSquareHeight);
+			}
+			else {
+				if (iPressKCount>20) {//10) {
+					iPressKCount=0;
+				}
+			}			
+			iPressKCount=iPressKCount+1;
+		}
+		
+		if (1) {//(bIsMissionComplete) {
 				//if iMinuteCount>=30 AND NOT iCountIpisDestroyed>=360
 				//add: CHALLENGE: DESTROY IPIS x360 in 30MINS ONLY
 			
@@ -2008,23 +2275,18 @@ int main(int argc, char *argv[])
 				//added by Mike, 20211126				
 //				printf(">>iWaitCountBeforeExitOK: %i\n",iWaitCountBeforeExitOK);
 				
-				if (iWaitCountBeforeExitOK<iWaitCountBeforeExitOKMax) {
-					iWaitCountBeforeExitOK++;
-				}
-			}
-											
-		//edited by Mike, 20211112
-//		draw(texture, iPilotX, iPilotY);
-		draw(iPilotX, iPilotY);
-		
-		if (bIsInTitleScreen) {	
-			drawTitleNote(myWindowWidthAsPixel/2-2*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2-2*fGridSquareHeight);
+			drawMissionCompleteNote(myWindowWidthAsPixel/2-2*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2-3*fGridSquareHeight);
 			
-			drawTitleNotePart2(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2-1*fGridSquareHeight+fGridSquareHeight/4);
+			//added by Mike, 20211129
+			drawDestroyedIpisCountAsSet(1);
 			
-//			if ((iPressKCount)%4==0) {
+			drawAccuracyCountAsSet();
+			
+			drawTimeCountAsSet(1);
+			
+			//			if ((iPressKCount)%4==0) {
 			if (iPressKCount<10) {//5) {
-				drawPressK(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2+3*fGridSquareHeight);
+				drawPressK(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel-1*fGridSquareHeight);
 			}
 			else {
 				if (iPressKCount>20) {//10) {

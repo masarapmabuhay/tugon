@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B. 
  * @date created: 20211116
- * @date updated: 20211122
+ * @date updated: 20211129
  * @website address: http://www.usbong.ph
  *
  */
@@ -64,7 +64,8 @@ SDL_Texture* MyDynamicObject::loadTexture(char *filename)
 {
 	SDL_Texture *texture;
 
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
+	//removed by Mike, 20211129
+//	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
 
 	texture = IMG_LoadTexture(mySDLRenderer, filename);
 
