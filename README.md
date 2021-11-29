@@ -1,6 +1,8 @@
 # Tugon
-GitHUB Game Off 2021: BUG Entry<br/>
-https://itch.io/jam/game-off-2021
+<b>GitHUB Game Off 2021: BUG Entry</b><br/>
+https://itch.io/jam/game-off-2021<br/>
+<b>ITCH.IO Project Page</b><br/>
+https://masarapmabuhay.itch.io/tugon
 
 <img src="https://github.com/masarapmabuhay/tugon/blob/main/screenshots/submitted/tugonCoverPage.jpg" width="60%"><br/>
 <b>
