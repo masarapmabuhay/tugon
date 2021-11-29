@@ -2,6 +2,22 @@
 GitHUB Game Off 2021: BUG Entry<br/>
 https://itch.io/jam/game-off-2021
 
+<img src="https://github.com/masarapmabuhay/tugon/blob/main/screenshots/submitted/tugonCoverPage.jpg" width="60%"><br/>
+<b>
+TUGON = "RESPONSE"<br/>
+<br/>
+MISSION:<br/>
+<br/>
+WORK TO SAVE THE TOWN!<br/>
+<br/>
+DESTROY "IPIS" BUGS X180 IN 5MINS.<br/>
+<br/>
+PRESS ONLY THE "K" BUTTON.<br/>
+<br/>
+<img src="https://github.com/masarapmabuhay/tugon/blob/main/screenshots/submitted/tugonInAction.jpg" width="60%"><br/>
+<br/>
+KEYWORDS: ACTION, RYTHM
+</b>
 ## 1. Application Execution
 --> verified: with [LUBUNTU Operating System (version: LTS 20.04)](https://lubuntu.me/)<br/>
 --> Double-click the <b>execute.sh</b> file.<br/>
