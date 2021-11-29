@@ -15,7 +15,7 @@
  * @company: USBONG
  * @author: SYSON, MICHAEL B.
  * @date created: 20211111
- * @date updated: 20211126
+ * @date updated: 20211129
  * @website address: http://www.usbong.ph
  *
  * Notes:
@@ -151,6 +151,9 @@ int iWaitCountBeforeExitOKMax;
 //added by Mike, 20211126
 bool bIsInTitleScreen;
 
+//added by Mike, 20211129
+int iPressKCount;
+
 //added by Mike, 20211126
 bool bHasAnimatedWaterTile;
 
@@ -172,6 +175,7 @@ char **myArrayOfInputStringsBeatSound;
 
 SDL_Texture *texture;
 SDL_Texture *textureFont; //added by Mike, 20211121
+SDL_Texture *textureNote; //added by Mike, 20211129
 
 #define TRUE 1
 #define FALSE 0
@@ -563,6 +567,9 @@ void init() {
 	iHourCount=0; //25;
  	 
 	bIsMissionComplete=false;	 
+	
+	//added by Mike, 20211129
+	iPressKCount=0;
 	    
 	//added by Mike, 20211126
 	bHasAnimatedWaterTile=false;
@@ -1120,6 +1127,89 @@ void drawColon(int iDigitFromLeft, int x, int y)
 
   SDL_SetTextureColorMod(textureFont, 255, 255*0.79, 0); //output: gold
   SDL_RenderCopy(mySDLRenderer, textureFont, &SrcR, &DestR); //default: white
+}
+
+//added by Mike, 20211129
+void drawTitleNote(int x, int y)
+{
+	int iTileWidth=64;
+	int iTileHeight=64;
+
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+  
+  SrcR.x = 0+iTileWidth*(0); 
+  SrcR.y = 0+iTileHeight*(7); 
+
+  SrcR.w = iTileWidth*5;
+  SrcR.h = iTileHeight;
+
+  DestR.x = x;
+  DestR.y = y;
+
+  DestR.w = fGridSquareWidth*5;
+  DestR.h = fGridSquareHeight;
+  
+  //added by Mike, 20211123
+//  SDL_SetTextureColorMod(textureFont, 255, 255, 0); //output: yellow
+  SDL_RenderCopy(mySDLRenderer, textureNote, &SrcR, &DestR);
+}
+
+//added by Mike, 20211129
+void drawTitleNotePart2(int x, int y)
+{
+	int iTileWidth=32;
+	int iTileHeight=32;
+
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+  
+  SrcR.x = 0+iTileWidth*(10); 
+  SrcR.y = 0+iTileHeight*(9); 
+
+  SrcR.w = iTileWidth*6;
+  SrcR.h = iTileHeight*7;
+
+  DestR.x = x;
+  DestR.y = y;
+
+  DestR.w = fGridSquareWidth*6/2;
+  DestR.h = fGridSquareHeight*7/2;
+  
+  //added by Mike, 20211123
+//  SDL_SetTextureColorMod(textureFont, 255, 255, 0); //output: yellow
+  SDL_RenderCopy(mySDLRenderer, textureNote, &SrcR, &DestR);
+}
+
+void drawPressK(int x, int y)
+{
+	int iTileWidth=32;
+	int iTileHeight=32;
+
+  //Rectangles for drawing which will specify source (inside the texture)
+  //and target (on the screen) for rendering our textures.
+  SDL_Rect SrcR;
+  SDL_Rect DestR;
+  
+  SrcR.x = 0+iTileWidth*(10); 
+  SrcR.y = 0+iTileHeight*(7); 
+
+  SrcR.w = iTileWidth*6;
+  SrcR.h = iTileHeight*2;
+
+  DestR.x = x;
+  DestR.y = y;
+
+  DestR.w = fGridSquareWidth*6/2;
+  DestR.h = fGridSquareHeight*2/2;
+  
+  //added by Mike, 20211123
+//  SDL_SetTextureColorMod(textureFont, 255, 255, 0); //output: yellow
+  SDL_RenderCopy(mySDLRenderer, textureNote, &SrcR, &DestR);
 }
 
 void drawLevel()
@@ -1842,6 +1932,8 @@ int main(int argc, char *argv[])
 //	SDL_Texture *texture = loadTexture((char*)"textures/hq.png");
 	texture = loadTexture((char*)"textures/hq.png");
 	textureFont = loadTexture((char*)"textures/count.png"); //added by Mike, 20211121
+	textureNote = loadTexture((char*)"textures/tugonNote.png"); //added by Mike, 20211129
+
 
 /*	//edited by Mike, 20211113
 	iPilotX=myWindowWidthAsPixel/2;
@@ -1924,7 +2016,24 @@ int main(int argc, char *argv[])
 		//edited by Mike, 20211112
 //		draw(texture, iPilotX, iPilotY);
 		draw(iPilotX, iPilotY);
-
+		
+		if (bIsInTitleScreen) {	
+			drawTitleNote(myWindowWidthAsPixel/2-2*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2-2*fGridSquareHeight);
+			
+			drawTitleNotePart2(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2-1*fGridSquareHeight+fGridSquareHeight/4);
+			
+//			if ((iPressKCount)%4==0) {
+			if (iPressKCount<10) {//5) {
+				drawPressK(myWindowWidthAsPixel/2-1*fGridSquareWidth-fGridSquareWidth/2, myWindowHeightAsPixel/2+3*fGridSquareHeight);
+			}
+			else {
+				if (iPressKCount>20) {//10) {
+					iPressKCount=0;
+				}
+			}			
+			iPressKCount=iPressKCount+1;
+		}
+		
 		presentScene();
 
 		//TO-DO: add: auto-identify delay input count
