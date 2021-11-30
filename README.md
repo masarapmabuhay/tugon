@@ -18,7 +18,7 @@ PRESS ONLY THE "K" BUTTON.<br/>
 <br/>
 <img src="https://github.com/masarapmabuhay/tugon/blob/main/screenshots/submitted/tugonInAction.jpg" width="60%"><br/>
 <br/>
-KEYWORDS: ACTION, RYTHM<br/>
+KEYWORDS: ACTION, RHYTHM<br/>
 <br/>
 <img src="https://github.com/masarapmabuhay/tugon/blob/main/screenshots/submitted/tugonMissionCompleteChallengeBeatBestHitAccuracyAndElapsedTimeV20211130T0840.jpg" width="60%"><br/>
 <br/>
