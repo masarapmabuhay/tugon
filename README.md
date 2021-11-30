@@ -19,10 +19,13 @@ PRESS ONLY THE "K" BUTTON.<br/>
 <img src="https://github.com/masarapmabuhay/tugon/blob/main/screenshots/submitted/tugonInAction.jpg" width="60%"><br/>
 <br/>
 KEYWORDS: ACTION, RYTHM<br/>
-</b>
 <br/>
 <img src="https://github.com/masarapmabuhay/tugon/blob/main/screenshots/submitted/tugonMissionCompleteChallengeBeatBestHitAccuracyAndElapsedTimeV20211130T0840.jpg" width="60%"><br/>
 <br/>
+CHALLENGE: BEAT BEST HIT ACCURACY & ELAPSED TIME<br/>
+<br/>
+</b>
+
 ## 1. Application Execution
 --> verified: with [LUBUNTU Operating System (version: LTS 20.04)](https://lubuntu.me/)<br/>
 --> Double-click the <b>execute.sh</b> file.<br/>
