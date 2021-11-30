@@ -35,7 +35,8 @@ CHALLENGE: BEAT BEST HIT ACCURACY & ELAPSED TIME<br/>
 
 ### 2.1. Simple Directmedia Layer (SDL): SDL version 2.0, SDL Image, & SDL Mixer (Audio)
 https://www.libsdl.org/download-2.0.php; last accessed: 20211120<br/>
---> <b>Objective:</b> Reuse Image Compression instructions, e.g. loading of .png image files  
+--> <b>Objective#1:</b> Reuse Image Compression instructions, e.g. loading of .png image files<br/>
+--> <b>Objective#2:</b> Reuse Audio Compression instructions, e.g. loading of .mp3 audio files  
 
 #### 2.1.1. Linux Download and Installation
 --> verified: with [LUBUNTU Operating System (version: LTS 20.04)](https://lubuntu.me/)<br/>
