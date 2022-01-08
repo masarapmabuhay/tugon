@@ -53,3 +53,7 @@
     </td>
   </tr>  
 </table>
+
+## TUGON Rating Distribution
+<img src="https://github.com/masarapmabuhay/tugon/blob/main/results/res/gitHubGameOff2021tugonRatingDistribution.png" width="100%">
+
