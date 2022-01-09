@@ -2,11 +2,15 @@
 <b>GitHUB Game Off 2021: BUG Entry</b><br/>
 https://itch.io/jam/game-off-2021<br/>
 <br/>
+<b>ITCH.IO Project Page</b><br/>
+https://masarapmabuhay.itch.io/tugon<br/>
+<br/>
 <b>Results</b><br/>
 https://github.com/masarapmabuhay/tugon/blob/main/results/GitHubGameOff2021Results.md<br/>
 <br/>
-<b>ITCH.IO Project Page</b><br/>
-https://masarapmabuhay.itch.io/tugon
+<b>Lessons-learned Report</b><br/>
+https://github.com/masarapmabuhay/tugon/blob/main/results/GitHubGameOff2021LessonsLearned.md<br/>
+<br/>
 
 <img src="https://github.com/masarapmabuhay/tugon/blob/main/screenshots/submitted/tugonCoverPage.jpg" width="60%"><br/>
 <b>
