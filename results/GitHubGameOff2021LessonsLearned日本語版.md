@@ -4,31 +4,32 @@ TO-DO: -udate: this
 
 ## 名前　（ラストネーム、ファストネーム）*
 
-SYSON, MICHAEL B.
+サイソン、マイケル
 
 ## 1) 仕事の目標は達成されたか？*
 
-YES
+はい
 
 ## 2) 仕事は成功できたか?*
 
-YES
+はい
 
 ## 3) #1と#2のお考え？*
 
-Despite the variances in what we expected to be the required inputs and outputs to WIN in GitHub Game Off 2021, we were able to finish using SAVED TIME that we received from system efficiency with work. This is without adding excess stress by attempting to add more with decreasing available TIME.
+GitHub Game Off 2021に勝つには、推測した必要な入力と出力が差があったが、仕事のシステム効率からためた時間で　完成ができた。　また、少なくなる時間で、より多くのモノを入れることなく、余計なストレスを入れてなかった。
 
 ## 4) プロジェクトマネジメントの使うツールとやり方について、コメントを下さい。*
 
-We did NOT need to create a GANTT CHART; Instead, we attempted to create an application during GitHub Game Off 2021, without having a FINAL application in a plan ready at the start.
-
-With the Intel Game Development Competition Year 2008, we already had such plan; Based on my existing notes, we were looking into the gameplay of God of War.
-
-In addition, for GitHub Game Off 2021, we intended the output application to be executable even with recycled, albeit unused machines.
-
-We further reduced the output file size by using select Libraries to execute compression techniques, e.g. for Image and Audio files. We did NOT add the Open Graphics Library (OpenGL) anymore due to noticeable lags in execution with the machines.
-
-The output file size CAN fit in a diskette (<1.44MB).
+GANTT CHARTを作らなくていい。その代わりに、GitHub Game Off 2021の時に、プランにあるファイナルアプリケーションを最初から持ってなく、アプリケーションを作ろうとした。<br/>
+<br/>
+2008年のIntel Game Development Competitionで、そういうプランを持っていた。ノートからによると、God of Warのゲームプレイを見ていた。<br/>
+<br/>
+それに加えて、GitHub Game Off 2021には、出力したアプリケーションが、リサイクルしたが、誰も使ってないマシンで実行できると、意図的にやった。<br/>
+<br/>
+出力したファイルのサイズを小さくするには、画像や音声の圧縮できるライブラリーを使った。<br/>
+マシンから観られるラグで、Open Graphics Library (OpenGL)を、すでに、使わないことにした。<br/>
+<br/>
+出力ファイルサイズで、ディスケット(<1.44MB)に入れる。
 
 ## 5) 差の原因は何なの　（すなわち、推測したモノと実現したモノとの違い）?*
 
