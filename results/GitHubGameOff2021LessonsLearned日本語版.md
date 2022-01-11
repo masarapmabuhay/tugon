@@ -1,4 +1,4 @@
-# GitHub Game Off 2021　学んだ事に関するレポート
+# GitHub Game Off 2021 学んだ事に関するレポート
 
 TO-DO: -udate: this
 
@@ -16,11 +16,11 @@ TO-DO: -udate: this
 
 ## 3) #1と#2のお考え？*
 
-GitHub Game Off 2021に勝つには、推測した必要な入力と出力が差があったが、仕事のシステム効率からためた時間で　完成ができた。　また、少なくなる時間で、より多くのモノを入れることなく、余計なストレスを入れてなかった。
+GitHub Game Off 2021に勝つには、期待した必要な入力と出力が差があったが、仕事のシステム効率からためた時間で　完成ができた。　また、少なくなる時間で、より多くのモノを入れることなく、余計なストレスを入れてなかった。
 
 ## 4) プロジェクトマネジメントの使うツールとやり方について、コメントを下さい。*
 
-GANTT CHARTを作らなくていい。その代わりに、GitHub Game Off 2021の時に、プランにあるファイナルアプリケーションを最初から持ってなく、アプリケーションを作ろうとした。<br/>
+GANTT CHARTを作る必要はなかった。その代わりに、GitHub Game Off 2021の時に、プランにあるファイナルアプリケーションを最初から持ってなく、アプリケーションを作ろうとした。<br/>
 <br/>
 2008年のIntel Game Development Competitionで、そういうプランを持っていた。ノートからによると、God of Warのゲームプレイを見ていた。<br/>
 <br/>
@@ -31,17 +31,15 @@ GANTT CHARTを作らなくていい。その代わりに、GitHub Game Off 2021�
 <br/>
 出力ファイルサイズで、ディスケット(<1.44MB)に入れる。
 
-## 5) 差の原因は何なの　（すなわち、推測したモノと実現したモノとの違い）?*
+## 5) 差の原因は何なの　（すなわち、期待したモノと実現したモノとの違い）?*
 
-What are the causes of variances (i.e. difference between what is expected and what is actually accomplished)?*
-
-observed: updates in the JAM's chosen ITCH.IO platform during GitHub Game Off 2021
---> Example#1: Applications were NOT downloadable immediately at select regions
---> Example#2: Comments began to include the Developer's Submitted Entry
-
-learned: after verifying end results, overall RANKING was based on the number of RATINGs;
---> Example#1: Those who received 7 RATINGS were given higher RANK than those with lesser RATINGS;
---> This is despite the scores from the Entry with the lesser RATING were higher.
+観た：　GitHub Game Off 2021時に、JAMが選んだITCH.IOプラットフォームに関する更新があった。<br/>
+--> 例#1:　アプリケーションが、ある地域で、直ぐにダウンロードができなかった。<br/>
+--> 例#２:　コメントに、開発者の提出したエントリーが付けるようになった。<br/>
+<br/>
+学んだ：　結果を調べてから、オーバーオールランクは評価の数に基づいていた；<br/>
+--> 例#1:　評価数で、７を貰ったら、より少ない評価数より、高いランクを得ることとなった。<br/>
+--> より少ない評価数の実評価が高くても、構わない。<br/>
 
 ## 6) 直すための選んだ行動に関する理由は?*
 
