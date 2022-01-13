@@ -31,11 +31,11 @@ GANTT CHARTを作る必要はなかった。その代わりに、GitHub Game Off
 <br/>
 出力ファイルサイズで、ディスケット(<1.44MB)に入れる。
 
-## 5) 差の原因は何なの　（すなわち、期待したモノと実現したモノとの違い）?*
+## 5) 差の原因は何でしょう（すなわち、期待したモノと実現したモノとの違い）?*
 
 観た：　GitHub Game Off 2021時に、JAMが選んだITCH.IOプラットフォームに関する更新があった。<br/>
---> 例#1:　アプリケーションが、ある地域で、直ぐにダウンロードができなかった。<br/>
---> 例#２:　コメントに、開発者の提出したエントリーが付けるようになった。<br/>
+--> 例#1:　アプリケーションが、ある地域で、直ぐにダウンロードができなかったので、更新が来た。<br/>
+--> 例#2:　コメントに、開発者の提出したエントリーが付けるようになった。<br/>
 <br/>
 学んだ：　結果を調べてから、オーバーオールランクは評価の数に基づいていた；<br/>
 --> 例#1:　評価数で、７を貰ったら、より少ない評価数より、高いランクを得ることとなった。<br/>
@@ -43,19 +43,18 @@ GANTT CHARTを作る必要はなかった。その代わりに、GitHub Game Off
 
 ## 6) 直すための選んだ行動に関する理由は?*
 
-What is your reasoning behind the corrective actions that your team chose?*
-
-We started by verifying instructions from our existing applications that executed on Windows machines. However, due to there were more unused Linux machines available, we quickly created a Linux version. We also used the macOS and the GarageBand Tool to convert to .mp3 file format the Audio file that we recorded using an Android telephone.
+先ず、WINDOWSマシンで実行するアプリケーションのソースコードを調べ始めた。しかし、使ってないLinuxマシンがより多くて、LINUX版を速く作ることにした。また、macOSとGarageBandツールで、アンドロイドケータイ電話で記録した音声を、.mp3ファイル式に変更した。
 
 ## 7) うまく行ったことを一つ下さい。*
 
-We did NOT experience stress caused by attempting to add more with decreasing available TIME during development.
+残り時間が少なくなり、より多くのモノを入れようとしないため、ストレスを感じなかった。
 
 ## 8) うまく行かなかったことを一つ下さい。*
 
-I set the COMMENTS to off in our GitHub Game Off 2021 Project page after observing that it appeared that those who did NOT even Submit an Entry could POST a comment; After re-verification, there was an update, such that comments began to include the Developer's Submitted Entry.
+何のエントリーも提出してないのに、コメントができることに観えて、GitHub Game Off 2021 Projectのページで、コメントをＯＦＦにした。　しかし、また調べたら、更新があり、コメントに開発者の提出したエントリーが付けるようになった。
 
-## 9) この役割の積んだ経験から、次の役割に異なる行動は何か？
+## 9) この役割の積んだ経験から、次の役割に異なる行動は何か？*
+
 What will you do differently on the next role based on your experience working on this role?*
 
 I shall encourage even more Filipinos, with people, particularly in Southeast Asia, to increase know-how in computers/robots/machines. The output of this action is reduced cost for us all.
