@@ -60,5 +60,4 @@ GANTT CHARTを作る必要はなかった。その代わりに、GitHub Game Off
 人に直ぐ任せるより、ジョブタスクを先ず自分で実行してみること。そうすると、あるアプリケーションの一定的な結果となったことがわかるようになる。そして、こういうことにも気づく。開発中に、開発者が似てるパス（道）で働き、選んだパスで、最終出力に着たこと。
 
 # 参照:
-    Schwalbe, K. (2008). "Information Technology Project Management, Fifth Edition". Philippines: Cengage Learning Asia Pte Ltd.
-
+Schwalbe, K. (2008). "Information Technology Project Management, Fifth Edition". Philippines: Cengage Learning Asia Pte Ltd.
