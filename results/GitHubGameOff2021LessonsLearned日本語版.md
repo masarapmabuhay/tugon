@@ -55,9 +55,7 @@ GANTT CHARTを作る必要はなかった。その代わりに、GitHub Game Off
 
 ## 9) この役割の積んだ経験から、次の役割に異なる行動は何か？*
 
-What will you do differently on the next role based on your experience working on this role?*
-
-I shall encourage even more Filipinos, with people, particularly in Southeast Asia, to increase know-how in computers/robots/machines. The output of this action is reduced cost for us all.
+より多いフィリピン人、そして、特に東南アジアにいる人々と、コンピュータ・ロボット・マシンに関するノウハウを増やすように、促すことにする。この行動の出力（結果）は、われわれ、みんな、コストダウンである。
 
 ## 10) チームの経験から、個人的な知恵を一言を下さい。*
 Give your personal words of wisdom based on your team's experiences.*
