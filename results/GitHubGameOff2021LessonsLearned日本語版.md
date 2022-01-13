@@ -1,12 +1,10 @@
 # GitHub Game Off 2021 学んだ事に関するレポート
 
-TO-DO: -udate: this
-
 ## 名前　（ラストネーム、ファストネーム）*
 
 サイソン、マイケル
 
-## 1) 仕事の目標は達成されたか？*
+## 1) 仕事の目標は達成できたか？*
 
 はい
 
@@ -16,7 +14,7 @@ TO-DO: -udate: this
 
 ## 3) #1と#2のお考え？*
 
-GitHub Game Off 2021に勝つには、期待した必要な入力と出力が差があったが、仕事のシステム効率からためた時間で　完成ができた。　また、少なくなる時間で、より多くのモノを入れることなく、余計なストレスを入れてなかった。
+GitHub Game Off 2021に勝つには、期待した必要な入力と出力に差があったが、仕事のシステム効率からためた時間で、完成ができた。　また、少なくなる時間で、より多くのモノを入れることなく、余計なストレスを入れてなかった。
 
 ## 4) プロジェクトマネジメントの使うツールとやり方について、コメントを下さい。*
 
@@ -58,9 +56,8 @@ GANTT CHARTを作る必要はなかった。その代わりに、GitHub Game Off
 より多いフィリピン人、そして、特に東南アジアにいる人々と、コンピュータ・ロボット・マシンに関するノウハウを増やすように、促すことにする。この行動の出力（結果）は、われわれ、みんな、コストダウンである。
 
 ## 10) チームの経験から、個人的な知恵を一言を下さい。*
-Give your personal words of wisdom based on your team's experiences.*
 
-Execute tasks yourself instead of immediately delegating them to people; We learn how select applications became a certain way after noticing during development that select developers were also working on a similar path, and reached their END Output based on the paths that they chose.
+人に直ぐ任せるより、ジョブタスクを先ず自分で実行してみること。そうすると、あるアプリケーションの一定的な結果となったことがわかるようになる。そして、こういうことにも気づく。開発中に、開発者が似てるパス（道）で働き、選んだパスで、最終出力に着たこと。
 
 # 参照:
     Schwalbe, K. (2008). "Information Technology Project Management, Fifth Edition". Philippines: Cengage Learning Asia Pte Ltd.
