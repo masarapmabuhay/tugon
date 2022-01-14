@@ -8,10 +8,9 @@ https://masarapmabuhay.itch.io/tugon<br/>
 <b>Results</b><br/>
 https://github.com/masarapmabuhay/tugon/blob/main/results/GitHubGameOff2021Results.md<br/>
 <br/>
-<b>Lessons-learned Report</b><br/>
-https://github.com/masarapmabuhay/tugon/blob/main/results/GitHubGameOff2021LessonsLearned.md<br/>
+<b>Lessons-learned Report</b> ([English](https://github.com/masarapmabuhay/tugon/blob/main/results/GitHubGameOff2021LessonsLearned.md); [日本語](https://github.com/masarapmabuhay/tugon/blob/main/results/GitHubGameOff2021LessonsLearned%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88.md
+))<br/>
 <br/>
-
 <img src="https://github.com/masarapmabuhay/tugon/blob/main/screenshots/submitted/tugonCoverPage.jpg" width="60%"><br/>
 <b>
 TUGON = "RESPONSE"<br/>
